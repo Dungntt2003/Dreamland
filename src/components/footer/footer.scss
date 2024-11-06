@@ -1,0 +1,34 @@
+.footer-container {
+  padding: 24px 16px;
+  background-color: var(--primary-color);
+  color: var(--white-color);
+  font-size: 15px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.footer-item-wrap {
+  flex: 1;
+}
+
+.footer-icon {
+  margin-right: 16px;
+}
+
+.footer-item {
+  margin: 12px 0;
+}
+
+.footer-logo {
+  width: 100px;
+}
+
+.footer-download {
+  display: flex;
+  flex-direction: row;
+}
+
+.footer-download-img {
+  width: 40%;
+}

@@ -1,4 +1,5 @@
 import Header from "components/header/header";
+import Footer from "components/footer/footer";
 const MainLayout = (props) => {
   return (
     <div>
@@ -9,7 +10,9 @@ const MainLayout = (props) => {
         {/* Your main content goes here */}
         {props.component}
       </main>
-      <footer></footer>
+      <footer>
+        <Footer />
+      </footer>
     </div>
   );
 };

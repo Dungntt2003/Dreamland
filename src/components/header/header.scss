@@ -1,5 +1,26 @@
 .navbar {
   background-color: var(--primary-color) !important;
-  padding-left: 32px !important;
-  padding-right: 32px !important;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  flex-wrap: wrap;
+}
+
+.button-register {
+  color: var(--primary-color);
+  font-weight: 400;
+  font-size: 16px;
+  border: 1px solid var(--primary-color);
+}
+
+.language-img {
+  width: 20px;
+  height: 20px;
+}
+.set-margin {
+  margin: 0 4px;
 }
