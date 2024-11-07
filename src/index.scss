@@ -13,6 +13,7 @@ body {
   margin: 0;
   padding: 0;
   color: var(--text-color);
+  background-color: #f2f7f3;
 }
 
 .header1 {
@@ -48,4 +49,13 @@ body {
 
 .white-color {
   color: var(--white-color) !important;
+}
+
+.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.ant-checkbox-checked::after {
+  border-color: var(--white-color);
 }
