@@ -6,8 +6,14 @@ import VN from "assets/image/vietnamese.png";
 import EN from "assets/image/english.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPhone } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const Header = () => {
+  const { t, i18n } = useTranslation();
+  const handleChange = (value) => {
+    i18n.changeLanguage(value);
+  };
   return (
     <div>
       <Navbar className="navbar">
@@ -25,18 +31,18 @@ const Header = () => {
         <Navbar.Collapse className="justify-content-end">
           <Navbar.Text className="set-margin white-color">
             <FontAwesomeIcon icon={faPhone} style={{ marginRight: "4px" }} />
-            Hotline: 09352192002
+            {t("hotline")}: 09352192002
           </Navbar.Text>
           <Select
-            defaultValue="vietnamese"
+            defaultValue="vi"
             className="button-register set-margin"
             style={{
               minWidth: "120px",
             }}
-            // onChange={handleChange}
+            onChange={handleChange}
             options={[
               {
-                value: "vietnamese",
+                value: "vi",
                 label: (
                   <>
                     <img src={VN} alt="vietnamese" className="language-img" />
@@ -45,7 +51,7 @@ const Header = () => {
                 ),
               },
               {
-                value: "english",
+                value: "en",
                 label: (
                   <>
                     <img src={EN} alt="english" className="language-img" />
@@ -56,10 +62,14 @@ const Header = () => {
             ]}
           />
           <Button variant="outlined" className="button-register set-margin">
-            Đăng ký
+            <Link to="/register" className="link">
+              {t("register")}
+            </Link>
           </Button>
           <Button variant="outlined" className="button-register set-margin">
-            Đăng nhập
+            <Link to="/login" className="link">
+              {t("login")}
+            </Link>
           </Button>
         </Navbar.Collapse>
       </Navbar>

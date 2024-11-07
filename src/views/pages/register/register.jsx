@@ -4,6 +4,7 @@ import { Button, Checkbox, Form, Input, Select, Image, Upload } from "antd";
 import { useEffect, useState } from "react";
 import publicApi from "api/publicApi";
 import { PlusOutlined } from "@ant-design/icons";
+import { Link } from "react-router-dom";
 
 const Register = () => {
   const [provinces, setProvinces] = useState([]);
@@ -378,10 +379,10 @@ const Register = () => {
               Đăng ký
             </Button>
             <div className="register-had-account" style={{ marginTop: "16px" }}>
-              Bạn đã có tài khoản?
-              <a href="#" className="register-link">
+              Bạn đã có tài khoản?{" "}
+              <Link to="/login" className="link">
                 Đăng nhập
-              </a>
+              </Link>
             </div>
           </Form.Item>
         </Form>
