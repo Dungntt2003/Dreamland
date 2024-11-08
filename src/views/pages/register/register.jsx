@@ -1,12 +1,25 @@
 import "./register.scss";
 // import { useTranslation } from "react-i18next";
-import { Button, Checkbox, Form, Input, Select, Image, Upload } from "antd";
+import {
+  Button,
+  Checkbox,
+  Form,
+  Input,
+  Select,
+  Image,
+  Upload,
+  Tooltip,
+} from "antd";
 import { useEffect, useState } from "react";
 import publicApi from "api/publicApi";
 import { PlusOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import loginApi from "api/loginApi";
+import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const navigate = useNavigate();
   const [provinces, setProvinces] = useState([]);
   const [check, setCheck] = useState(false);
   const [text1, setText1] = useState("CCCD mặt trước");
@@ -21,22 +34,68 @@ const Register = () => {
       }
     };
     getProvinces();
-  });
+  }, []);
   const onFinish = (values) => {
-    console.log("Success:", values);
+    // console.log(values);
     const formData = new FormData();
+    formData.append("name", values.name);
+    formData.append("phone", "0" + values.phone);
+    formData.append("address", values.address);
     formData.append("email", values.email);
     formData.append("password", values.password);
+    if (values.business_register) {
+      switch (values.business_type) {
+        case "hotel":
+          formData.append("role", "hotel_admin");
+          break;
+        case "restaurant":
+          formData.append("role", "restaurant_admin");
+          break;
+        case "shop":
+          formData.append("role", "food_admin");
+          break;
+      }
+      formData.append("business_type", values.register_type);
+    } else formData.append("role", "user");
+
     if (fileList[0]?.originFileObj) {
-      formData.append("cccd_front", fileList[0].originFileObj);
+      formData.append("front_image", fileList[0].originFileObj);
     }
     if (fileList1[0]?.originFileObj) {
-      formData.append("cccd_end", fileList1[0].originFileObj);
+      formData.append("back_image", fileList1[0].originFileObj);
     }
 
-    for (let pair of formData.entries()) {
-      console.log(`${pair[0]}:`, pair[1]);
-    }
+    const register = async () => {
+      try {
+        const response = await loginApi.register(formData);
+        toast.success(response.data.message, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
+      } catch (error) {
+        console.log(error);
+        toast.error(error.response.data.error, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+    };
+    register();
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -47,18 +106,20 @@ const Register = () => {
       setText2("Giấy phép kinh doanh mặt sau");
     }
   };
+  const beforeUpload = (file) => {
+    setFileList([...fileList, file]);
+    return false;
+  };
+  const beforeUpload1 = (file) => {
+    setFileList1([...fileList1, file]);
+    return false;
+  };
   const prefixSelector = (
     <Form.Item name="prefix" noStyle>
       +84
     </Form.Item>
   );
-  const onChange = (value) => {
-    console.log(`selected ${value}`);
-  };
 
-  const onSearch = (value) => {
-    console.log("search:", value);
-  };
   const handleCheck = (e) => {
     setCheck(e.target.checked);
   };
@@ -85,7 +146,9 @@ const Register = () => {
     setPreviewImage(file.url || file.preview);
     setPreviewOpen(true);
   };
-  const handleChange = (info) => setFileList(info.fileList);
+  const handleChange = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
+  };
 
   const handlePreview1 = async (file) => {
     if (!file.url && !file.preview) {
@@ -94,7 +157,9 @@ const Register = () => {
     setPreviewImage1(file.url || file.preview);
     setPreviewOpen1(true);
   };
-  const handleChange1 = (info) => setFileList1(info.fileList);
+  const handleChange1 = ({ fileList1: newFileList1 }) => {
+    setFileList(newFileList1);
+  };
   const uploadButton = (
     <button
       style={{
@@ -151,7 +216,11 @@ const Register = () => {
             <Form.Item
               className="register-item"
               name="phone"
-              label="SĐT"
+              label={
+                <Tooltip title="Số điện thoại từ 9-11 chữ số">
+                  <span>SĐT</span>
+                </Tooltip>
+              }
               rules={[
                 {
                   required: true,
@@ -202,8 +271,8 @@ const Register = () => {
                 showSearch
                 placeholder="Chọn tỉnh/thành phố"
                 optionFilterProp="label"
-                onChange={onChange}
-                onSearch={onSearch}
+                // onChange={onChange}
+                // onSearch={onSearch}
                 options={options}
               />
             </Form.Item>
@@ -212,7 +281,11 @@ const Register = () => {
           <div className="register-wrap-item">
             <Form.Item
               className="register-item"
-              label="Mật khẩu"
+              label={
+                <Tooltip title="Mật khẩu có 6-16 ký tự, ít nhất có 1 ký tự đặc biệt">
+                  <span>Mật khẩu</span>
+                </Tooltip>
+              }
               name="password"
               rules={[
                 {
@@ -252,7 +325,7 @@ const Register = () => {
           </div>
 
           <Form.Item
-            name="business-register"
+            name="business_register"
             valuePropName="checked"
             onChange={handleCheck}
             wrapperCol={{
@@ -280,7 +353,7 @@ const Register = () => {
                   placeholder="Chọn đối tượng kinh doanh"
                   optionFilterProp="label"
                   onChange={onChangeRegisterType}
-                  onSearch={onSearch}
+                  // onSearch={onSearch}
                   options={[
                     { value: "person", label: "Cá nhân" },
                     { value: "company", label: "Tổ chức" },
@@ -301,8 +374,8 @@ const Register = () => {
                   showSearch
                   placeholder="Chọn loại hình kinh doanh"
                   optionFilterProp="label"
-                  onChange={onChange}
-                  onSearch={onSearch}
+                  // onChange={onChange}
+                  // onSearch={onSearch}
                   options={[
                     { value: "hotel", label: "Cơ sở lưu trú" },
                     { value: "restaurant", label: "Cơ sở ẩm thực" },
@@ -317,6 +390,7 @@ const Register = () => {
                   fileList={fileList}
                   onPreview={handlePreview}
                   onChange={handleChange}
+                  beforeUpload={beforeUpload}
                 >
                   {fileList.length >= 1 ? null : uploadButton}
                 </Upload>
@@ -342,6 +416,7 @@ const Register = () => {
                   fileList={fileList1}
                   onPreview={handlePreview1}
                   onChange={handleChange1}
+                  beforeUpload={beforeUpload1}
                 >
                   {fileList1.length >= 1 ? null : uploadButton}
                 </Upload>
@@ -392,6 +467,7 @@ const Register = () => {
           </Form.Item>
         </Form>
       </div>
+      <ToastContainer />
     </div>
   );
 };
