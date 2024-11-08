@@ -2,10 +2,45 @@ import "./login.scss";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input, Flex } from "antd";
 import { Link } from "react-router-dom";
+import loginApi from "api/loginApi";
+import { ToastContainer, toast } from "react-toastify";
+
 const Login = () => {
   const onFinish = (values) => {
-    console.log("Received values of form: ", values);
+    const params = {
+      email: values.email,
+      password: values.password,
+    };
+    const login = async () => {
+      try {
+        const response = await loginApi.login(params);
+        toast.success(response.data.message, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      } catch (error) {
+        console.log(error);
+        toast.error(error.response.data.error, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+    };
+    login();
   };
+
   return (
     <div className="register-container">
       <div className="header2 register-header">ĐĂNG NHẬP</div>
@@ -70,6 +105,7 @@ const Login = () => {
           </Form.Item>
         </Form>
       </div>
+      <ToastContainer />
     </div>
   );
 };

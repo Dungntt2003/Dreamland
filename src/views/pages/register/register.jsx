@@ -24,6 +24,19 @@ const Register = () => {
   });
   const onFinish = (values) => {
     console.log("Success:", values);
+    const formData = new FormData();
+    formData.append("email", values.email);
+    formData.append("password", values.password);
+    if (fileList[0]?.originFileObj) {
+      formData.append("cccd_front", fileList[0].originFileObj);
+    }
+    if (fileList1[0]?.originFileObj) {
+      formData.append("cccd_end", fileList1[0].originFileObj);
+    }
+
+    for (let pair of formData.entries()) {
+      console.log(`${pair[0]}:`, pair[1]);
+    }
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -62,6 +75,9 @@ const Register = () => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [fileList, setFileList] = useState([]);
+  const [fileList1, setFileList1] = useState([]);
+  const [previewOpen1, setPreviewOpen1] = useState(false);
+  const [previewImage1, setPreviewImage1] = useState("");
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
@@ -69,7 +85,16 @@ const Register = () => {
     setPreviewImage(file.url || file.preview);
     setPreviewOpen(true);
   };
-  const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
+  const handleChange = (info) => setFileList(info.fileList);
+
+  const handlePreview1 = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    setPreviewImage1(file.url || file.preview);
+    setPreviewOpen1(true);
+  };
+  const handleChange1 = (info) => setFileList1(info.fileList);
   const uploadButton = (
     <button
       style={{
@@ -113,7 +138,7 @@ const Register = () => {
             <Form.Item
               className="register-item"
               label="Họ và tên"
-              name="username"
+              name="name"
               rules={[
                 {
                   required: true,
@@ -286,18 +311,8 @@ const Register = () => {
                 />
               </Form.Item>
 
-              <Form.Item
-                label={text1}
-                name="cccd_front"
-                rules={[
-                  {
-                    required: true,
-                    message: `Hãy tải ${text1}!`,
-                  },
-                ]}
-              >
+              <Form.Item label={text1} name="cccd_front">
                 <Upload
-                  action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
                   listType="picture-card"
                   fileList={fileList}
                   onPreview={handlePreview}
@@ -321,37 +336,27 @@ const Register = () => {
                 )}
               </Form.Item>
 
-              <Form.Item
-                label={text2}
-                name="cccd_end"
-                rules={[
-                  {
-                    required: true,
-                    message: `Hãy tải ${text2}!`,
-                  },
-                ]}
-              >
+              <Form.Item label={text2} name="cccd_end">
                 <Upload
-                  action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
                   listType="picture-card"
-                  fileList={fileList}
-                  onPreview={handlePreview}
-                  onChange={handleChange}
+                  fileList={fileList1}
+                  onPreview={handlePreview1}
+                  onChange={handleChange1}
                 >
-                  {fileList.length >= 1 ? null : uploadButton}
+                  {fileList1.length >= 1 ? null : uploadButton}
                 </Upload>
-                {previewImage && (
+                {previewImage1 && (
                   <Image
                     wrapperStyle={{
                       display: "none",
                     }}
                     preview={{
-                      visible: previewOpen,
-                      onVisibleChange: (visible) => setPreviewOpen(visible),
+                      visible: previewOpen1,
+                      onVisibleChange: (visible) => setPreviewOpen1(visible),
                       afterOpenChange: (visible) =>
-                        !visible && setPreviewImage(""),
+                        !visible && setPreviewImage1(""),
                     }}
-                    src={previewImage}
+                    src={previewImage1}
                   />
                 )}
               </Form.Item>
