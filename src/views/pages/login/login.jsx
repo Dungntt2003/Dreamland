@@ -14,6 +14,7 @@ const Login = () => {
     const login = async () => {
       try {
         const response = await loginApi.login(params);
+        localStorage.setItem("token", response.data.token);
         toast.success(response.data.message, {
           position: "top-right",
           autoClose: 2000,
