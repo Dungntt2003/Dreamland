@@ -6,18 +6,13 @@ import loginApi from "api/loginApi";
 import { ToastContainer, toast } from "react-toastify";
 import { useAuth } from "context/authContext";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 const Login = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
-  const { login, isAuthenticated } = useAuth();
-  useEffect(() => {
-    if (isAuthenticated) {
-      setTimeout(() => {
-        navigate("/homepage");
-      }, 2000);
-    }
-  }, [isAuthenticated]);
+  const { login, role } = useAuth();
+
   const onFinish = (values) => {
     const params = {
       email: values.email,
@@ -38,6 +33,10 @@ const Login = () => {
           progress: undefined,
           theme: "light",
         });
+        setTimeout(() => {
+          if (role === "user") navigate("/homepage");
+          else if (role === "restaurant_admin") navigate("/admin-page");
+        }, 2000);
       } catch (error) {
         console.log(error);
         toast.error(error.response.data.error, {
@@ -57,7 +56,12 @@ const Login = () => {
 
   return (
     <div className="register-container">
-      <div className="header2 register-header">ĐĂNG NHẬP</div>
+      <div
+        className="header2 register-header"
+        style={{ textTransform: "uppercase" }}
+      >
+        {t("login")}
+      </div>
       <div className="register-form-container">
         <Form
           name="login"
@@ -83,7 +87,7 @@ const Login = () => {
             <Input prefix={<UserOutlined />} placeholder="Email" />
           </Form.Item>
           <Form.Item
-            name="password"
+            name={t("password")}
             rules={[
               {
                 required: true,
@@ -100,21 +104,21 @@ const Login = () => {
           <Form.Item>
             <Flex justify="space-between" align="center">
               <Form.Item name="remember" valuePropName="checked" noStyle>
-                <Checkbox>Nhớ tài khoản</Checkbox>
+                <Checkbox>{t("remember_me")}</Checkbox>
               </Form.Item>
               <Link to="/register" className="link">
-                Quên mật khẩu
+                {t("forgot_password")}
               </Link>
             </Flex>
           </Form.Item>
 
           <Form.Item>
             <Button block type="primary" htmlType="submit" className="button">
-              Đăng nhập
+              {t("login")}
             </Button>
-            hoặc{" "}
+            {t("or")}{" "}
             <Link to="/register" className="link">
-              Đăng ký ngay!
+              {t("register_now")}!
             </Link>
           </Form.Item>
         </Form>

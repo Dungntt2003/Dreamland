@@ -157,8 +157,8 @@ const Register = () => {
     setPreviewImage1(file.url || file.preview);
     setPreviewOpen1(true);
   };
-  const handleChange1 = ({ fileList1: newFileList1 }) => {
-    setFileList(newFileList1);
+  const handleChange1 = ({ fileList: newFileList1 }) => {
+    setFileList1(newFileList1);
   };
   const uploadButton = (
     <button
@@ -392,7 +392,9 @@ const Register = () => {
                   onChange={handleChange}
                   beforeUpload={beforeUpload}
                 >
-                  {fileList.length >= 1 ? null : uploadButton}
+                  {Array.isArray(fileList) && fileList.length >= 1
+                    ? null
+                    : uploadButton}
                 </Upload>
                 {previewImage && (
                   <Image
@@ -418,7 +420,9 @@ const Register = () => {
                   onChange={handleChange1}
                   beforeUpload={beforeUpload1}
                 >
-                  {fileList1.length >= 1 ? null : uploadButton}
+                  {Array.isArray(fileList1) && fileList1.length >= 1
+                    ? null
+                    : uploadButton}
                 </Upload>
                 {previewImage1 && (
                   <Image
