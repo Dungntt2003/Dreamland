@@ -4,17 +4,30 @@ import { Button, Checkbox, Form, Input, Flex } from "antd";
 import { Link } from "react-router-dom";
 import loginApi from "api/loginApi";
 import { ToastContainer, toast } from "react-toastify";
+import { useAuth } from "context/authContext";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const { login, isAuthenticated } = useAuth();
+  useEffect(() => {
+    if (isAuthenticated) {
+      setTimeout(() => {
+        navigate("/homepage");
+      }, 2000);
+    }
+  }, [isAuthenticated]);
   const onFinish = (values) => {
     const params = {
       email: values.email,
       password: values.password,
     };
-    const login = async () => {
+    const Login = async () => {
       try {
         const response = await loginApi.login(params);
         localStorage.setItem("token", response.data.token);
+        login(response.data.token);
         toast.success(response.data.message, {
           position: "top-right",
           autoClose: 2000,
@@ -39,7 +52,7 @@ const Login = () => {
         });
       }
     };
-    login();
+    Login();
   };
 
   return (

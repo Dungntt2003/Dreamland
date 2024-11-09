@@ -5,14 +5,19 @@ import { Button, Select } from "antd";
 import VN from "assets/image/vietnamese.png";
 import EN from "assets/image/english.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPhone } from "@fortawesome/free-solid-svg-icons";
+import { faPhone, faUser } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "context/authContext";
 
 const Header = () => {
+  const { isAuthenticated, logout } = useAuth();
   const { t, i18n } = useTranslation();
   const handleChange = (value) => {
     i18n.changeLanguage(value);
+  };
+  const handleLogout = () => {
+    logout();
   };
   return (
     <div>
@@ -61,16 +66,37 @@ const Header = () => {
               },
             ]}
           />
-          <Button variant="outlined" className="button-register set-margin">
-            <Link to="/register" className="link">
-              {t("register")}
-            </Link>
-          </Button>
-          <Button variant="outlined" className="button-register set-margin">
-            <Link to="/login" className="link">
-              {t("login")}
-            </Link>
-          </Button>
+          {isAuthenticated === true ? (
+            <>
+              <Navbar.Text className="set-margin white-color">
+                Xin chào
+                <FontAwesomeIcon
+                  icon={faUser}
+                  style={{ margin: "0px 8px 0 4px" }}
+                />
+              </Navbar.Text>
+              <Button
+                variant="outlined"
+                className="button-register set-margin"
+                onClick={handleLogout}
+              >
+                Đăng xuất
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="outlined" className="button-register set-margin">
+                <Link to="/register" className="link">
+                  {t("register")}
+                </Link>
+              </Button>
+              <Button variant="outlined" className="button-register set-margin">
+                <Link to="/login" className="link">
+                  {t("login")}
+                </Link>
+              </Button>
+            </>
+          )}
         </Navbar.Collapse>
       </Navbar>
     </div>

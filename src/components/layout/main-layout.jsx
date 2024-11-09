@@ -12,6 +12,7 @@ const MainLayout = (props) => {
           backgroundColor: "var(--white-color)",
           boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
           borderRadius: "20px",
+          // padding: "16px",
         }}
       >
         {/* Your main content goes here */}

@@ -1,6 +1,6 @@
 const Homepage = () => {
   return (
-    <div>
+    <div style={{ padding: "16px" }}>
       <h1>Welcome to Dreamland</h1>
       <p>
         This is the home page of our website. Feel free to explore our products,
