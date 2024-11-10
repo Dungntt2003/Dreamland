@@ -11,16 +11,19 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "context/authContext";
 
 const Header = () => {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, role } = useAuth();
   const { t, i18n } = useTranslation();
   const handleChange = (value) => {
     i18n.changeLanguage(value);
+  };
+  const handleChoose = (value) => {
+    console.log(value);
   };
   const handleLogout = () => {
     logout();
   };
   return (
-    <div>
+    <div className="header-wrap">
       <Navbar className="navbar">
         <Link to="/homepage" className="link">
           <Navbar.Brand className="white-color">
@@ -101,6 +104,40 @@ const Header = () => {
           )}
         </Navbar.Collapse>
       </Navbar>
+      {role === "user" ? (
+        <>
+          <div className="subHeader-container">
+            <div className="subHeader-item">
+              <Select
+                className="subHeader-select"
+                placeholder="Địa điểm"
+                onChange={handleChoose}
+                options={[
+                  { value: "place", label: "Địa điểm du lịch" },
+                  { value: "service", label: "Địa điểm tiện ích" },
+                ]}
+              />
+            </div>
+            <div className="subHeader-item">
+              <Link className="link">Tin tức & sự kiện</Link>
+            </div>
+            <div className="subHeader-item">
+              <Link className="link">Địa điểm ẩm thực</Link>
+            </div>
+            <div className="subHeader-item">
+              <Link className="link"> Địa điểm nghĩ dưỡng</Link>
+            </div>
+            <div className="subHeader-item">
+              <Link className="link">Đặc sản</Link>
+            </div>
+            <div className="subHeader-item">
+              <Link className="link">Giới thiệu</Link>
+            </div>
+          </div>
+        </>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

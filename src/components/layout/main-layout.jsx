@@ -8,7 +8,7 @@ const MainLayout = (props) => {
       </header>
       <main
         style={{
-          margin: "24px 16px",
+          margin: "134px 16px 24px",
           backgroundColor: "var(--white-color)",
           boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
           borderRadius: "20px",
