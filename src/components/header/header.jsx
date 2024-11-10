@@ -22,16 +22,18 @@ const Header = () => {
   return (
     <div>
       <Navbar className="navbar">
-        <Navbar.Brand href="#home" className="white-color">
-          <img
-            alt="logo"
-            src={Logo}
-            width="30"
-            height="30"
-            className="d-inline-block align-top"
-          />
-          Dalat Dreamland
-        </Navbar.Brand>
+        <Link to="/homepage" className="link">
+          <Navbar.Brand className="white-color">
+            <img
+              alt="logo"
+              src={Logo}
+              width="30"
+              height="30"
+              className="d-inline-block align-top"
+            />
+            Dalat Dreamland
+          </Navbar.Brand>
+        </Link>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
           <Navbar.Text className="set-margin white-color">

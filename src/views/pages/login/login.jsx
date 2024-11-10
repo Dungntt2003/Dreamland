@@ -33,10 +33,8 @@ const Login = () => {
           progress: undefined,
           theme: "light",
         });
-        setTimeout(() => {
-          if (role === "user") navigate("/homepage");
-          else if (role === "restaurant_admin") navigate("/admin-page");
-        }, 2000);
+        if (role === "user") navigate("/homepage");
+        else if (role === "restaurant_admin") navigate("/admin-page");
       } catch (error) {
         console.log(error);
         toast.error(error.response.data.error, {
@@ -87,7 +85,7 @@ const Login = () => {
             <Input prefix={<UserOutlined />} placeholder="Email" />
           </Form.Item>
           <Form.Item
-            name={t("password")}
+            name="password"
             rules={[
               {
                 required: true,
@@ -98,7 +96,7 @@ const Login = () => {
             <Input
               prefix={<LockOutlined />}
               type="password"
-              placeholder="Password"
+              placeholder={t("password")}
             />
           </Form.Item>
           <Form.Item>

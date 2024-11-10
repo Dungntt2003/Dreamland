@@ -1,13 +1,14 @@
-import { Navigate } from "react-router-dom";
 import { useAuth } from "context/authContext";
-
+import { Navigate } from "react-router-dom";
 const PrivateRoute = ({ children }) => {
   const { isAuthenticated, role } = useAuth();
-  if (isAuthenticated && role === "user") {
-    return <Navigate to="/homepage" />;
-  } else if (isAuthenticated && role === "restaurant_admin")
-    return <Navigate to="/admin-page" />;
-
+  if (isAuthenticated) {
+    if (role === "user") {
+      return <Navigate to="/homepage" />;
+    } else if (role === "restaurant_admin") {
+      return <Navigate to="/admin-page" />;
+    }
+  }
   return children;
 };
 

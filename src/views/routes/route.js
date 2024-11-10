@@ -7,9 +7,11 @@ import ProtectedRoute from "./protectedRoute";
 import NotFound from "views/pages/404/notFound";
 import AdminPage from "views/pages/admin-page/adminPage";
 import PrivateRoute from "./privateRoute";
+import LandingPage from "views/pages/landing-page/landingPage";
 const AllRoutes = () => {
   return (
     <Routes>
+      <Route path="/" element={<LandingPage />} />
       <Route
         path="/register"
         element={
