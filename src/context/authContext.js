@@ -7,6 +7,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [role, setRole] = useState(null);
+  const [id, setId] = useState(null);
   const login = (token) => {
     const sessionId = uuidv4();
     sessionStorage.setItem("sessionId", sessionId);
@@ -14,6 +15,7 @@ export const AuthProvider = ({ children }) => {
     setIsAuthenticated(true);
     const decodedToken = jwtDecode(token);
     setRole(decodedToken.role);
+    setId(decodedToken.id);
   };
 
   const logout = () => {
@@ -24,6 +26,7 @@ export const AuthProvider = ({ children }) => {
     }
     setIsAuthenticated(false);
     setRole(null);
+    setId(null);
   };
 
   useEffect(() => {
@@ -32,11 +35,12 @@ export const AuthProvider = ({ children }) => {
     if (token) {
       setIsAuthenticated(true);
       setRole(jwtDecode(token).role);
+      setId(jwtDecode(token).id);
     }
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, role, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, role, login, logout, id }}>
       {children}
     </AuthContext.Provider>
   );

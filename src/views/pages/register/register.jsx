@@ -179,299 +179,304 @@ const Register = () => {
     </button>
   );
   return (
-    <div className="register-container">
-      <div className="header2 register-header">ĐĂNG KÝ TÀI KHOẢN</div>
-      <div className="register-form-container">
-        <Form
-          name="basic"
-          className="register-form"
-          labelCol={{
-            span: 8,
-          }}
-          wrapperCol={{
-            span: 16,
-          }}
-          // layout="vertical"
-          initialValues={{
-            remember: true,
-          }}
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-          autoComplete="off"
-        >
-          <div className="register-wrap-item">
-            <Form.Item
-              className="register-item"
-              label="Họ và tên"
-              name="name"
-              rules={[
-                {
-                  required: true,
-                  message: "Hãy nhập họ và tên!",
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              className="register-item"
-              name="phone"
-              label={
-                <Tooltip title="Số điện thoại từ 9-11 chữ số">
-                  <span>SĐT</span>
-                </Tooltip>
-              }
-              rules={[
-                {
-                  required: true,
-                  message: "Hãy nhập số điện thoại!",
-                },
-              ]}
-            >
-              <Input
-                addonBefore={prefixSelector}
-                style={{
-                  width: "100%",
-                }}
-              />
-            </Form.Item>
-          </div>
-
-          <div className="register-wrap-item">
-            <Form.Item
-              className="register-item"
-              name="email"
-              label="E-mail"
-              rules={[
-                {
-                  type: "email",
-                  message: "Email không hợp lệ!",
-                },
-                {
-                  required: true,
-                  message: "Hãy nhập email!",
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
-              className="register-item"
-              label="Địa chỉ"
-              name="address"
-              rules={[
-                {
-                  required: true,
-                  message: "Hãy nhập địa chỉ!",
-                },
-              ]}
-            >
-              <Select
-                showSearch
-                placeholder="Chọn tỉnh/thành phố"
-                optionFilterProp="label"
-                // onChange={onChange}
-                // onSearch={onSearch}
-                options={options}
-              />
-            </Form.Item>
-          </div>
-
-          <div className="register-wrap-item">
-            <Form.Item
-              className="register-item"
-              label={
-                <Tooltip title="Mật khẩu có 6-16 ký tự, ít nhất có 1 ký tự đặc biệt">
-                  <span>Mật khẩu</span>
-                </Tooltip>
-              }
-              name="password"
-              rules={[
-                {
-                  required: true,
-                  message: "Hãy nhập mật khẩu!",
-                },
-              ]}
-            >
-              <Input.Password />
-            </Form.Item>
-
-            <Form.Item
-              className="register-item"
-              name="confirm"
-              label="Nhập lại mật khẩu"
-              dependencies={["password"]}
-              hasFeedback
-              rules={[
-                {
-                  required: true,
-                  message: "Hãy nhập lại mật khẩu!",
-                },
-                ({ getFieldValue }) => ({
-                  validator(_, value) {
-                    if (!value || getFieldValue("password") === value) {
-                      return Promise.resolve();
-                    }
-                    return Promise.reject(
-                      new Error("Nhập lại mật khẩu không trùng khớp!")
-                    );
-                  },
-                }),
-              ]}
-            >
-              <Input.Password />
-            </Form.Item>
-          </div>
-
-          <Form.Item
-            name="business_register"
-            valuePropName="checked"
-            onChange={handleCheck}
+    <div className="register-wrap-container">
+      <div className="register-container">
+        <div className="header2 register-header">ĐĂNG KÝ TÀI KHOẢN</div>
+        <div className="register-form-container">
+          <Form
+            name="basic"
+            className="register-form"
+            labelCol={{
+              span: 8,
+            }}
             wrapperCol={{
-              offset: 8,
               span: 16,
             }}
+            // layout="vertical"
+            initialValues={{
+              remember: true,
+            }}
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            autoComplete="off"
           >
-            <Checkbox>Đăng ký kinh doanh</Checkbox>
-          </Form.Item>
-
-          {check === true && (
-            <>
+            <div className="register-wrap-item">
               <Form.Item
-                label="Đối tượng đăng ký"
-                name="register_type"
+                className="register-item"
+                label="Họ và tên"
+                name="name"
                 rules={[
                   {
                     required: true,
-                    message: "Hãy chọn đối tượng kinh doanh!",
+                    message: "Hãy nhập họ và tên!",
                   },
                 ]}
               >
-                <Select
-                  showSearch
-                  placeholder="Chọn đối tượng kinh doanh"
-                  optionFilterProp="label"
-                  onChange={onChangeRegisterType}
-                  // onSearch={onSearch}
-                  options={[
-                    { value: "person", label: "Cá nhân" },
-                    { value: "company", label: "Tổ chức" },
-                  ]}
-                />
+                <Input />
               </Form.Item>
               <Form.Item
-                label="Loại hình kinh doanh"
-                name="business_type"
+                className="register-item"
+                name="phone"
+                label={
+                  <Tooltip title="Số điện thoại từ 9-11 chữ số">
+                    <span>SĐT</span>
+                  </Tooltip>
+                }
                 rules={[
                   {
                     required: true,
-                    message: "Hãy chọn loại hình kinh doanh!",
+                    message: "Hãy nhập số điện thoại!",
+                  },
+                ]}
+              >
+                <Input
+                  addonBefore={prefixSelector}
+                  style={{
+                    width: "100%",
+                  }}
+                />
+              </Form.Item>
+            </div>
+
+            <div className="register-wrap-item">
+              <Form.Item
+                className="register-item"
+                name="email"
+                label="E-mail"
+                rules={[
+                  {
+                    type: "email",
+                    message: "Email không hợp lệ!",
+                  },
+                  {
+                    required: true,
+                    message: "Hãy nhập email!",
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+
+              <Form.Item
+                className="register-item"
+                label="Địa chỉ"
+                name="address"
+                rules={[
+                  {
+                    required: true,
+                    message: "Hãy nhập địa chỉ!",
                   },
                 ]}
               >
                 <Select
                   showSearch
-                  placeholder="Chọn loại hình kinh doanh"
+                  placeholder="Chọn tỉnh/thành phố"
                   optionFilterProp="label"
                   // onChange={onChange}
                   // onSearch={onSearch}
-                  options={[
-                    { value: "hotel", label: "Cơ sở lưu trú" },
-                    { value: "restaurant", label: "Cơ sở ẩm thực" },
-                    { value: "shop", label: "Gian hàng trực tuyến" },
-                  ]}
+                  options={options}
                 />
               </Form.Item>
-
-              <Form.Item label={text1} name="cccd_front">
-                <Upload
-                  listType="picture-card"
-                  fileList={fileList}
-                  onPreview={handlePreview}
-                  onChange={handleChange}
-                  beforeUpload={beforeUpload}
-                >
-                  {Array.isArray(fileList) && fileList.length >= 1
-                    ? null
-                    : uploadButton}
-                </Upload>
-                {previewImage && (
-                  <Image
-                    wrapperStyle={{
-                      display: "none",
-                    }}
-                    preview={{
-                      visible: previewOpen,
-                      onVisibleChange: (visible) => setPreviewOpen(visible),
-                      afterOpenChange: (visible) =>
-                        !visible && setPreviewImage(""),
-                    }}
-                    src={previewImage}
-                  />
-                )}
-              </Form.Item>
-
-              <Form.Item label={text2} name="cccd_end">
-                <Upload
-                  listType="picture-card"
-                  fileList={fileList1}
-                  onPreview={handlePreview1}
-                  onChange={handleChange1}
-                  beforeUpload={beforeUpload1}
-                >
-                  {Array.isArray(fileList1) && fileList1.length >= 1
-                    ? null
-                    : uploadButton}
-                </Upload>
-                {previewImage1 && (
-                  <Image
-                    wrapperStyle={{
-                      display: "none",
-                    }}
-                    preview={{
-                      visible: previewOpen1,
-                      onVisibleChange: (visible) => setPreviewOpen1(visible),
-                      afterOpenChange: (visible) =>
-                        !visible && setPreviewImage1(""),
-                    }}
-                    src={previewImage1}
-                  />
-                )}
-              </Form.Item>
-            </>
-          )}
-
-          <Form.Item
-            name="remember"
-            valuePropName="checked"
-            wrapperCol={{
-              offset: 8,
-              span: 16,
-            }}
-          >
-            <Checkbox>Nhớ tài khoản</Checkbox>
-          </Form.Item>
-
-          <Form.Item
-            wrapperCol={{
-              offset: 8,
-              span: 16,
-            }}
-          >
-            <Button type="primary" htmlType="submit" className="button">
-              Đăng ký
-            </Button>
-            <div className="register-had-account" style={{ marginTop: "16px" }}>
-              Bạn đã có tài khoản?{" "}
-              <Link to="/login" className="link">
-                Đăng nhập
-              </Link>
             </div>
-          </Form.Item>
-        </Form>
+
+            <div className="register-wrap-item">
+              <Form.Item
+                className="register-item"
+                label={
+                  <Tooltip title="Mật khẩu có 6-16 ký tự, ít nhất có 1 ký tự đặc biệt">
+                    <span>Mật khẩu</span>
+                  </Tooltip>
+                }
+                name="password"
+                rules={[
+                  {
+                    required: true,
+                    message: "Hãy nhập mật khẩu!",
+                  },
+                ]}
+              >
+                <Input.Password />
+              </Form.Item>
+
+              <Form.Item
+                className="register-item"
+                name="confirm"
+                label="Nhập lại mật khẩu"
+                dependencies={["password"]}
+                hasFeedback
+                rules={[
+                  {
+                    required: true,
+                    message: "Hãy nhập lại mật khẩu!",
+                  },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue("password") === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(
+                        new Error("Nhập lại mật khẩu không trùng khớp!")
+                      );
+                    },
+                  }),
+                ]}
+              >
+                <Input.Password />
+              </Form.Item>
+            </div>
+
+            <Form.Item
+              name="business_register"
+              valuePropName="checked"
+              onChange={handleCheck}
+              wrapperCol={{
+                offset: 8,
+                span: 16,
+              }}
+            >
+              <Checkbox>Đăng ký kinh doanh</Checkbox>
+            </Form.Item>
+
+            {check === true && (
+              <>
+                <Form.Item
+                  label="Đối tượng đăng ký"
+                  name="register_type"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Hãy chọn đối tượng kinh doanh!",
+                    },
+                  ]}
+                >
+                  <Select
+                    showSearch
+                    placeholder="Chọn đối tượng kinh doanh"
+                    optionFilterProp="label"
+                    onChange={onChangeRegisterType}
+                    // onSearch={onSearch}
+                    options={[
+                      { value: "person", label: "Cá nhân" },
+                      { value: "company", label: "Tổ chức" },
+                    ]}
+                  />
+                </Form.Item>
+                <Form.Item
+                  label="Loại hình kinh doanh"
+                  name="business_type"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Hãy chọn loại hình kinh doanh!",
+                    },
+                  ]}
+                >
+                  <Select
+                    showSearch
+                    placeholder="Chọn loại hình kinh doanh"
+                    optionFilterProp="label"
+                    // onChange={onChange}
+                    // onSearch={onSearch}
+                    options={[
+                      { value: "hotel", label: "Cơ sở lưu trú" },
+                      { value: "restaurant", label: "Cơ sở ẩm thực" },
+                      { value: "shop", label: "Gian hàng trực tuyến" },
+                    ]}
+                  />
+                </Form.Item>
+
+                <Form.Item label={text1} name="cccd_front">
+                  <Upload
+                    listType="picture-card"
+                    fileList={fileList}
+                    onPreview={handlePreview}
+                    onChange={handleChange}
+                    beforeUpload={beforeUpload}
+                  >
+                    {Array.isArray(fileList) && fileList.length >= 1
+                      ? null
+                      : uploadButton}
+                  </Upload>
+                  {previewImage && (
+                    <Image
+                      wrapperStyle={{
+                        display: "none",
+                      }}
+                      preview={{
+                        visible: previewOpen,
+                        onVisibleChange: (visible) => setPreviewOpen(visible),
+                        afterOpenChange: (visible) =>
+                          !visible && setPreviewImage(""),
+                      }}
+                      src={previewImage}
+                    />
+                  )}
+                </Form.Item>
+
+                <Form.Item label={text2} name="cccd_end">
+                  <Upload
+                    listType="picture-card"
+                    fileList={fileList1}
+                    onPreview={handlePreview1}
+                    onChange={handleChange1}
+                    beforeUpload={beforeUpload1}
+                  >
+                    {Array.isArray(fileList1) && fileList1.length >= 1
+                      ? null
+                      : uploadButton}
+                  </Upload>
+                  {previewImage1 && (
+                    <Image
+                      wrapperStyle={{
+                        display: "none",
+                      }}
+                      preview={{
+                        visible: previewOpen1,
+                        onVisibleChange: (visible) => setPreviewOpen1(visible),
+                        afterOpenChange: (visible) =>
+                          !visible && setPreviewImage1(""),
+                      }}
+                      src={previewImage1}
+                    />
+                  )}
+                </Form.Item>
+              </>
+            )}
+
+            <Form.Item
+              name="remember"
+              valuePropName="checked"
+              wrapperCol={{
+                offset: 8,
+                span: 16,
+              }}
+            >
+              <Checkbox>Nhớ tài khoản</Checkbox>
+            </Form.Item>
+
+            <Form.Item
+              wrapperCol={{
+                offset: 8,
+                span: 16,
+              }}
+            >
+              <Button type="primary" htmlType="submit" className="button">
+                Đăng ký
+              </Button>
+              <div
+                className="register-had-account"
+                style={{ marginTop: "16px" }}
+              >
+                Bạn đã có tài khoản?{" "}
+                <Link to="/login" className="link">
+                  Đăng nhập
+                </Link>
+              </div>
+            </Form.Item>
+          </Form>
+        </div>
+        <ToastContainer />
       </div>
-      <ToastContainer />
     </div>
   );
 };

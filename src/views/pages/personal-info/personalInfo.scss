@@ -1,0 +1,11 @@
+.personal-container {
+  display: flex;
+}
+.personal-ava,
+.personal-info {
+  flex: 1;
+}
+.personal-wrap {
+  display: flex;
+  justify-content: center;
+}

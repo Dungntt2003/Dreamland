@@ -8,6 +8,7 @@ import NotFound from "views/pages/404/notFound";
 import AdminPage from "views/pages/admin-page/adminPage";
 import PrivateRoute from "./privateRoute";
 import LandingPage from "views/pages/landing-page/landingPage";
+import PersonalInfo from "views/pages/personal-info/personalInfo";
 const AllRoutes = () => {
   return (
     <Routes>
@@ -29,6 +30,10 @@ const AllRoutes = () => {
         }
       />
       <Route path="/notFound" element={<NotFound />} />
+      <Route
+        path="/personal-info/:id"
+        element={<MainLayout component={<PersonalInfo />} />}
+      />
       <Route element={<ProtectedRoute requiredRole="user" />}>
         <Route
           path="/homepage"

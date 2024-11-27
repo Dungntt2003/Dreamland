@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "context/authContext";
 
 const Header = () => {
-  const { isAuthenticated, logout, role } = useAuth();
+  const { isAuthenticated, logout, role, id } = useAuth();
   const { t, i18n } = useTranslation();
   const handleChange = (value) => {
     i18n.changeLanguage(value);
@@ -74,11 +74,13 @@ const Header = () => {
           {isAuthenticated === true ? (
             <>
               <Navbar.Text className="set-margin white-color">
-                Xin chào
-                <FontAwesomeIcon
-                  icon={faUser}
-                  style={{ margin: "0px 8px 0 4px" }}
-                />
+                <Link className="link white-color" to={`/personal-info/${id}`}>
+                  Xin chào
+                  <FontAwesomeIcon
+                    icon={faUser}
+                    style={{ margin: "0px 8px 0 4px" }}
+                  />
+                </Link>
               </Navbar.Text>
               <Button
                 variant="outlined"
