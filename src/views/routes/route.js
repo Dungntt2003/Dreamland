@@ -9,6 +9,9 @@ import AdminPage from "views/pages/admin-page/adminPage";
 import PrivateRoute from "./privateRoute";
 import LandingPage from "views/pages/landing-page/landingPage";
 import PersonalInfo from "views/pages/personal-info/personalInfo";
+import CreateTrip from "views/pages/trip/create-trip/createTrip";
+import Step1 from "views/pages/trip/create-trip/step1/step1";
+import SightDetail from "views/pages/sightseeing/sight-detail/sightDetail";
 const AllRoutes = () => {
   return (
     <Routes>
@@ -33,6 +36,18 @@ const AllRoutes = () => {
       <Route
         path="/personal-info/:id"
         element={<MainLayout component={<PersonalInfo />} />}
+      />
+      <Route
+        path="/create-trip-step1"
+        element={<MainLayout component={<Step1 />} />}
+      />
+      <Route
+        path="/create-trip"
+        element={<MainLayout component={<Step1 />} />}
+      />
+      <Route
+        path="/sight-seeing-detail"
+        element={<MainLayout component={<SightDetail />} />}
       />
       <Route element={<ProtectedRoute requiredRole="user" />}>
         <Route
