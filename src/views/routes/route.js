@@ -8,6 +8,8 @@ import NotFound from "views/pages/404/notFound";
 import AdminPage from "views/pages/admin-page/adminPage";
 import PrivateRoute from "./privateRoute";
 import LandingPage from "views/pages/landing-page/landingPage";
+import CreateTrip from "views/pages/trip/create-trip/createTrip";
+import Step1 from "views/pages/trip/create-trip/step1/step1";
 const AllRoutes = () => {
   return (
     <Routes>
@@ -29,6 +31,14 @@ const AllRoutes = () => {
         }
       />
       <Route path="/notFound" element={<NotFound />} />
+      <Route
+        path="/create-trip"
+        element={<MainLayout component={<CreateTrip />} />}
+      />
+      <Route
+        path="/create-trip-step1"
+        element={<MainLayout component={<Step1 />} />}
+      />
       <Route element={<ProtectedRoute requiredRole="user" />}>
         <Route
           path="/homepage"
