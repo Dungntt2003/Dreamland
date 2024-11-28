@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "antd";
 import { useState } from "react";
 import Heart from "react-heart";
+import { parseDes, parseList } from "utils/parseDescription";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -13,33 +14,14 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { faClock, faPlaceOfWorship } from "@fortawesome/free-solid-svg-icons";
 import { CaretRightOutlined } from "@ant-design/icons";
-import { Collapse, theme } from "antd";
-const text = `
-  A dog is a type of domesticated animal.
-  Known for its loyalty and faithfulness,
-  it can be found as a welcome guest in many households across the world.
-`;
-const getItems = (panelStyle) => [
-  {
-    key: "1",
-    label: "This is panel header 1",
-    children: <p>{text}</p>,
-    style: panelStyle,
-  },
-  {
-    key: "2",
-    label: "This is panel header 2",
-    children: <p>{text}</p>,
-    style: panelStyle,
-  },
-  {
-    key: "3",
-    label: "This is panel header 3",
-    children: <p>{text}</p>,
-    style: panelStyle,
-  },
-];
+import { Collapse } from "antd";
+import GoogleMapComponent from "components/google-maps/googleMaps";
+
 const SightDetail = () => {
+  window.initMap = () => {
+    console.log("Google Maps API đã sẵn sàng.");
+  };
+
   const [active, setActive] = useState(false);
   const img_url =
     "https://realbiz.vn/wp-content/uploads/2023/06/nui-Langbiang-da-lat.jpg";
@@ -66,19 +48,38 @@ const SightDetail = () => {
     startTime: 0,
     endTime: 24,
   };
-  // console.log(demoData);
-  // console.log(checkOpen(demoData.startTime, demoData.endTime));
   const [main, setMain] = useState(demoData.image[0]);
   const handleClickImg = (index, item) => {
-    // console.log(item, index);
     setMain(item);
   };
-  const { token } = theme.useToken();
   const panelStyle = {
-    marginBottom: 24,
-    background: token.colorFillAlter,
-    borderRadius: token.borderRadiusLG,
+    marginBottom: 16,
+    background: "var(--background-color)",
+    borderRadius: "10px",
     border: "none",
+    color: "var(--text-color)",
+  };
+  const parsedObject = parseDes(demoData.description);
+  const getItems = (panelStyle) => {
+    return Object.keys(parsedObject).map((key, index) => ({
+      key: (index + 1).toString(),
+      label: (
+        <div style={{ fontSize: "18px", color: "var(--primary-color)" }}>
+          {key}
+        </div>
+      ),
+      children:
+        key === "Cảnh đẹp" ? (
+          <div>
+            {parseList(parsedObject[key]).map((item, index) => (
+              <div style={{ margin: "6px 0" }}>{item}</div>
+            ))}
+          </div>
+        ) : (
+          <div>{parsedObject[key]}</div>
+        ),
+      style: panelStyle,
+    }));
   };
   return (
     <div>
@@ -159,10 +160,13 @@ const SightDetail = () => {
                 <CaretRightOutlined rotate={isActive ? 90 : 0} />
               )}
               style={{
-                background: token.colorBgContainer,
+                background: "var(--white-color)",
               }}
               items={getItems(panelStyle)}
             />
+          </div>
+          <div className="sight-detail-map">
+            <GoogleMapComponent address={demoData.address} />
           </div>
         </div>
       </div>
