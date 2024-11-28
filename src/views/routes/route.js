@@ -12,6 +12,7 @@ import PersonalInfo from "views/pages/personal-info/personalInfo";
 import CreateTrip from "views/pages/trip/create-trip/createTrip";
 import Step1 from "views/pages/trip/create-trip/step1/step1";
 import SightDetail from "views/pages/sightseeing/sight-detail/sightDetail";
+import Test from "views/pages/sightseeing/sight-detail/test";
 const AllRoutes = () => {
   return (
     <Routes>
@@ -43,8 +44,9 @@ const AllRoutes = () => {
       />
       <Route
         path="/create-trip"
-        element={<MainLayout component={<Step1 />} />}
+        element={<MainLayout component={<CreateTrip />} />}
       />
+      <Route path="/test" element={<MainLayout component={<Test />} />} />
       <Route
         path="/sight-seeing-detail"
         element={<MainLayout component={<SightDetail />} />}
