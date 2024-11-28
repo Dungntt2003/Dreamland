@@ -2,8 +2,45 @@ import "./sightDetail.scss";
 import checkOpen from "utils/checkOpenTime";
 import { Rating } from "react-simple-star-rating";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Button } from "antd";
+import { useState } from "react";
+import Heart from "react-heart";
+import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
 import { faClock, faPlaceOfWorship } from "@fortawesome/free-solid-svg-icons";
+import { CaretRightOutlined } from "@ant-design/icons";
+import { Collapse, theme } from "antd";
+const text = `
+  A dog is a type of domesticated animal.
+  Known for its loyalty and faithfulness,
+  it can be found as a welcome guest in many households across the world.
+`;
+const getItems = (panelStyle) => [
+  {
+    key: "1",
+    label: "This is panel header 1",
+    children: <p>{text}</p>,
+    style: panelStyle,
+  },
+  {
+    key: "2",
+    label: "This is panel header 2",
+    children: <p>{text}</p>,
+    style: panelStyle,
+  },
+  {
+    key: "3",
+    label: "This is panel header 3",
+    children: <p>{text}</p>,
+    style: panelStyle,
+  },
+];
 const SightDetail = () => {
+  const [active, setActive] = useState(false);
   const img_url =
     "https://realbiz.vn/wp-content/uploads/2023/06/nui-Langbiang-da-lat.jpg";
   const img_quantity = 5;
@@ -29,29 +66,106 @@ const SightDetail = () => {
     startTime: 0,
     endTime: 24,
   };
-  console.log(demoData);
-  console.log(checkOpen(demoData.startTime, demoData.endTime));
+  // console.log(demoData);
+  // console.log(checkOpen(demoData.startTime, demoData.endTime));
+  const [main, setMain] = useState(demoData.image[0]);
+  const handleClickImg = (index, item) => {
+    // console.log(item, index);
+    setMain(item);
+  };
+  const { token } = theme.useToken();
+  const panelStyle = {
+    marginBottom: 24,
+    background: token.colorFillAlter,
+    borderRadius: token.borderRadiusLG,
+    border: "none",
+  };
   return (
     <div>
-      <div className="sight-detail-banner">
-        <div className="sight-detail-name">{demoData.name}</div>
-        <div className="sight-detail-open">
-          <FontAwesomeIcon icon={faClock} />
-          {checkOpen(demoData.startTime, demoData.endTime) === true
-            ? "Đang mở cửa"
-            : "Đóng cửa"}
-        </div>
+      <div className="sight-detail-container">
+        <div className="sight-detail-banner">
+          <div className="sight-detail-name header1">{demoData.name}</div>
+          <div className="sight-detail-open">
+            <FontAwesomeIcon className="sight-detail-icon" icon={faClock} />
+            {checkOpen(demoData.startTime, demoData.endTime) === true
+              ? "Đang mở cửa"
+              : "Đóng cửa"}
+          </div>
 
-        <div className="sight-detail-address">
-          <FontAwesomeIcon icon={faPlaceOfWorship} />
-          {demoData.address}
+          <div className="sight-detail-address">
+            <FontAwesomeIcon
+              className="sight-detail-icon"
+              icon={faPlaceOfWorship}
+            />
+            {demoData.address}
+          </div>
+          <div className="sight-detail-ratings">
+            <Rating initialValue={Math.round(demoData.rating)} readonly />
+            <div>{demoData.rating}/5</div>
+          </div>
+          <div className="sight-detail-button-grp">
+            <Button className="button">THÊM VÀO LỘ TRÌNH</Button>
+            <div style={{ width: "2rem", marginLeft: "48px" }}>
+              <Heart
+                isActive={active}
+                onClick={() => setActive(!active)}
+                animationScale={1.2}
+                animationTrigger="both"
+                animationDuration={0.2}
+                className={`customHeart${active ? " active" : ""}`}
+              />
+            </div>
+          </div>
         </div>
-        <div className="sight-detail-ratings">
-          <Rating initialValue={Math.round(demoData.rating)} readonly />
-          <div>{demoData.rating}/5</div>
+        {/* <div className="sight-detail-box" style={{ width: "35%" }}></div> */}
+        <div className="sight-detail-menu">
+          <div className="sight-detail-img-grp">
+            <div className="sight-detail-img-main">
+              <img src={main} alt="imageScenery" style={{ width: "100%" }} />
+            </div>
+            <div className="sight-detail-img-slider">
+              <Swiper
+                modules={[Navigation, Pagination, Scrollbar, A11y]}
+                spaceBetween={50}
+                slidesPerView={4}
+                navigation
+                pagination={{ clickable: true }}
+                scrollbar={{ draggable: true }}
+                onSwiper={(swiper) => console.log(swiper)}
+                // onSlideChange={() => console.log("slide change")}
+                grabCursor={true}
+                style={{ padding: "24px 0 32px" }}
+              >
+                {demoData.image.map((item, index) => {
+                  return (
+                    <SwiperSlide key={index}>
+                      <img
+                        src={item}
+                        alt="imageScenery"
+                        style={{ width: "200px" }}
+                        onClick={() => handleClickImg(index, item)}
+                      />
+                    </SwiperSlide>
+                  );
+                })}
+              </Swiper>
+            </div>
+          </div>
+          <div className="sight-detail-description">
+            <Collapse
+              bordered={false}
+              defaultActiveKey={["1"]}
+              expandIcon={({ isActive }) => (
+                <CaretRightOutlined rotate={isActive ? 90 : 0} />
+              )}
+              style={{
+                background: token.colorBgContainer,
+              }}
+              items={getItems(panelStyle)}
+            />
+          </div>
         </div>
       </div>
-      <div className="sight-detail-menu"></div>
     </div>
   );
 };

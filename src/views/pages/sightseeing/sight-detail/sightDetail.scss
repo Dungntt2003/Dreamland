@@ -1,0 +1,62 @@
+.sight-detail-container {
+  display: flex;
+  justify-content: space-between;
+  background-color: #f2f7f3;
+}
+.sight-detail-banner {
+  position: sticky;
+  top: 134px;
+  left: 16px;
+  background-color: white;
+  padding: 16px;
+  width: 35%;
+  height: fit-content;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.sight-detail-open {
+  color: var(--secondary-color);
+  margin-left: 6px;
+  margin-bottom: 12px;
+}
+.sight-detail-icon {
+  font-size: 26px;
+  color: var(--primary-color);
+  margin-right: 16px;
+}
+.sight-detail-address,
+.sight-detail-open {
+  font-size: 18px;
+}
+.sight-detail-ratings {
+  display: flex;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.customHeart:hover {
+  fill: #c9c7c7 !important;
+  transition: fill 0.1s;
+}
+.customHeart:active {
+  fill: #a5a5a5 !important;
+  transition: fill 0.1s;
+}
+.active.customHeart:hover {
+  fill: rgb(205, 3, 3) !important;
+  transition: fill 0.1s;
+}
+.active.customHeart:active {
+  fill: rgb(155, 6, 6) !important;
+  transition: fill 0.1s;
+}
+
+.sight-detail-button-grp {
+  display: flex;
+  align-items: center;
+  margin: 24px 0;
+}
+.sight-detail-menu {
+  width: 62%;
+  background-color: var(--white-color);
+}
