@@ -2,7 +2,6 @@ import "./sightDetail.scss";
 import checkOpen from "utils/checkOpenTime";
 import { Rating } from "react-simple-star-rating";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button } from "antd";
 import { useState } from "react";
 import Heart from "react-heart";
 import { parseDes, parseList } from "utils/parseDescription";
@@ -14,10 +13,11 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { faClock, faPlaceOfWorship } from "@fortawesome/free-solid-svg-icons";
 import { CaretRightOutlined } from "@ant-design/icons";
-import { Collapse } from "antd";
+import { Collapse, Form, Input, Button } from "antd";
 import GoogleMapComponent from "components/google-maps/googleMaps";
-
+const { TextArea } = Input;
 const SightDetail = () => {
+  const [rating, setRating] = useState(0);
   window.initMap = () => {
     console.log("Google Maps API đã sẵn sàng.");
   };
@@ -81,6 +81,20 @@ const SightDetail = () => {
       style: panelStyle,
     }));
   };
+
+  const handleRating = (rate) => {
+    setRating(rate);
+  };
+  const onFinish = (values) => {
+    console.log({
+      rating: rating,
+      comment: values.comment,
+    });
+  };
+  const onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo);
+  };
+
   return (
     <div>
       <div className="sight-detail-container">
@@ -118,7 +132,6 @@ const SightDetail = () => {
             </div>
           </div>
         </div>
-        {/* <div className="sight-detail-box" style={{ width: "35%" }}></div> */}
         <div className="sight-detail-menu">
           <div className="sight-detail-img-grp">
             <div className="sight-detail-img-main">
@@ -152,7 +165,8 @@ const SightDetail = () => {
               </Swiper>
             </div>
           </div>
-          <div className="sight-detail-description">
+          <div className="sight-detail-description sight-detail-box-item">
+            <div className="header2 sight-dettail-header-mark">GIỚI THIỆU</div>
             <Collapse
               bordered={false}
               defaultActiveKey={["1"]}
@@ -165,8 +179,40 @@ const SightDetail = () => {
               items={getItems(panelStyle)}
             />
           </div>
-          <div className="sight-detail-map">
-            <GoogleMapComponent address={demoData.address} />
+          <div className="sight-detail-box-item">
+            <div className="header2 sight-dettail-header-mark">VỊ TRÍ</div>
+            <div className="sight-detail-map">
+              <GoogleMapComponent address={demoData.address} />
+            </div>
+          </div>
+          <div className="sight-detail-box-item">
+            <div className="header2 sight-dettail-header-mark">ĐÁNH GIÁ</div>
+            <Form
+              name="cmt-form"
+              initialValues={{
+                remember: true,
+              }}
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
+              autoComplete="off"
+            >
+              <Form.Item>
+                <Rating
+                  onClick={handleRating}
+                  transition="true"
+                  showTooltip="true"
+                  tooltipDefaultText="Đánh giá của bạn"
+                />
+              </Form.Item>
+              <Form.Item name="comment">
+                <TextArea rows={4} placeholder="Nhập đánh giá của bạn ở đây" />
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" className="button" htmlType="submit">
+                  Gửi đánh giá
+                </Button>
+              </Form.Item>
+            </Form>
           </div>
         </div>
       </div>

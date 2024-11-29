@@ -18,7 +18,7 @@ const Test = () => {
         onChange={(e) => setAddress(e.target.value)}
       />
       <button onClick={handleSearch}>Tìm kiếm</button>
-      <GoogleMapComponent address={address} />
+      <GoogleMapComponent />
     </div>
   );
 };
