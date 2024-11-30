@@ -48,7 +48,7 @@ const AllRoutes = () => {
       />
       <Route path="/test" element={<MainLayout component={<Test />} />} />
       <Route
-        path="/sight-seeing-detail"
+        path="/sight-seeing-detail/:id"
         element={<MainLayout component={<SightDetail />} />}
       />
       <Route element={<ProtectedRoute requiredRole="user" />}>

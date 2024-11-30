@@ -16,6 +16,7 @@ import {
   faPlaceOfWorship,
   faUtensils,
 } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
 import { display } from "@mui/system";
 
 const contentStyle = {
@@ -50,7 +51,15 @@ const Homepage = () => {
             <div className="home-icon">
               <FontAwesomeIcon icon={faMap} />
             </div>
-            <div className="home-item-content">Tạo lộ trình</div>
+            <div className="home-item-content">
+              <Link
+                to="/create-trip"
+                className="link"
+                style={{ color: "var(--text-color)" }}
+              >
+                Tạo lộ trình
+              </Link>
+            </div>
           </div>
           <div className="home-item">
             <div className="home-icon">
