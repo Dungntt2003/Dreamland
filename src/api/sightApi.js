@@ -6,7 +6,7 @@ const sightApi = {
     return axiosClient.get(url);
   },
   getSightDetail: (id) => {
-    const url = `/sight/${id}`;
+    const url = `/sights/${id}`;
     return axiosClient.get(url);
   },
 };

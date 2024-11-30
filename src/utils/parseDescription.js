@@ -2,7 +2,7 @@ const parseDes = (description) => {
   const parts = description.split(";").filter(Boolean);
   const result = {};
   parts.forEach((part) => {
-    const [key, value] = part.split(":").map((str) => str.trim()); // Tách bởi dấu : và loại bỏ khoảng trắng
+    const [key, value] = part.split(":").map((str) => str.trim());
     if (key && value) {
       result[key] = value;
     }
