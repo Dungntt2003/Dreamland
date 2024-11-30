@@ -1,8 +1,15 @@
 import "./sightView.scss";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
-import { Card, Button, Pagination as AntPagination, Rate, Input } from "antd";
+import {
+  Card,
+  Button,
+  Pagination as AntPagination,
+  Rate,
+  Input,
+  FloatButton,
+} from "antd";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -11,12 +18,18 @@ import "swiper/css/scrollbar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import sightApi from "api/sightApi";
+import repoApi from "api/repoApi";
+import demoRepoApi from "api/demoRepoApi";
+import { ToastContainer, toast } from "react-toastify";
 const { Meta } = Card;
 
 const SightView = () => {
+  const { id } = useParams();
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [search, setSearch] = useState(false);
+  const [count, setCount] = useState(0);
+  const [demoRepo, setDemoRepo] = useState([]);
   function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
@@ -33,24 +46,41 @@ const SightView = () => {
     };
     getListSights();
   }, []);
+  useEffect(() => {
+    const getDemoRepo = async () => {
+      try {
+        const response = await repoApi.getADemoRepo(id);
+        setCount(response.data.data.demorepodetail.length);
+        setDemoRepo(response.data.data.demorepodetail);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getDemoRepo();
+  }, [id]);
+
+  const checkSightExist = (sight_id) => {
+    const found = demoRepo.find((item) => item.service_id === sight_id);
+    return found !== undefined;
+  };
   const cardData = sightData.map((sight) => (
-    <Link
-      to={`/sight-seeing-detail/${sight.id}`}
-      className="link"
-      key={sight.id}
+    <Card
+      hoverable
+      style={{
+        width: 300,
+      }}
+      cover={
+        <img
+          alt="example"
+          src={`http://localhost:8000/uploads/${sight.images[0]}`}
+          style={{ height: "170px" }}
+        />
+      }
     >
-      <Card
-        hoverable
-        style={{
-          width: 300,
-        }}
-        cover={
-          <img
-            alt="example"
-            src={`http://localhost:8000/uploads/${sight.images[0]}`}
-            style={{ height: "170px" }}
-          />
-        }
+      <Link
+        to={`/sight-seeing-detail/${sight.id}`}
+        className="link"
+        key={sight.id}
       >
         <Meta
           title={sight.name}
@@ -78,11 +108,30 @@ const SightView = () => {
             </div>
           }
         />
-        <Button className="button" style={{ width: "100%", marginTop: "16px" }}>
+      </Link>
+      {checkSightExist(sight.id) === false ? (
+        <Button
+          className="button"
+          style={{ width: "100%", marginTop: "16px" }}
+          onClick={() => handleAddRepo(sight.id)}
+        >
           THÊM VÀO LỘ TRÌNH
         </Button>
-      </Card>
-    </Link>
+      ) : (
+        <Button
+          className="button"
+          style={{
+            width: "100%",
+            marginTop: "16px",
+            opacity: "0.5",
+            cursor: "none",
+          }}
+          disabled
+        >
+          ĐÃ THÊM VÀO LỘ TRÌNH
+        </Button>
+      )}
+    </Card>
   ));
 
   const fiftyPercentLength = Math.floor(cardData.length * 0.5);
@@ -113,6 +162,44 @@ const SightView = () => {
     );
     setFilteredData(filtered);
   };
+  const handleAddRepo = (service_id) => {
+    const params = {
+      service_id: service_id,
+      service_type: "sight",
+      repository_id: id,
+    };
+
+    const addToRepo = async () => {
+      try {
+        const response = await demoRepoApi.addAService(params);
+        toast.success("Đã thêm vào lộ trình", {
+          position: "top-right",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        setCount(count + 1);
+        demoRepo.push(params);
+      } catch (error) {
+        console.error(error);
+        toast.error("Đã xảy ra lỗi, vui lòng thử lại", {
+          position: "top-right",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+    };
+    addToRepo();
+  };
   return (
     <div>
       <div
@@ -138,8 +225,6 @@ const SightView = () => {
               navigation
               pagination={{ clickable: true }}
               scrollbar={{ draggable: true }}
-              onSwiper={(swiper) => console.log(swiper)}
-              onSlideChange={() => console.log("slide change")}
               grabCursor={true}
               style={{ padding: "24px 0 32px" }}
             >
@@ -157,8 +242,6 @@ const SightView = () => {
               navigation
               pagination={{ clickable: true }}
               scrollbar={{ draggable: true }}
-              onSwiper={(swiper) => console.log(swiper)}
-              onSlideChange={() => console.log("slide change")}
               grabCursor={true}
               style={{ padding: "24px 0 32px" }}
             >
@@ -199,24 +282,24 @@ const SightView = () => {
             }}
           >
             {filteredData.map((sight) => (
-              <Link
-                to={`/sight-seeing-detail/${sight.id}`}
-                className="link"
-                key={sight.id}
+              <Card
+                hoverable
+                style={{
+                  width: 300,
+                  marginRight: "36px",
+                }}
+                cover={
+                  <img
+                    alt="example"
+                    src={`http://localhost:8000/uploads/${sight.images[0]}`}
+                    style={{ height: "170px" }}
+                  />
+                }
               >
-                <Card
-                  hoverable
-                  style={{
-                    width: 300,
-                    marginRight: "36px",
-                  }}
-                  cover={
-                    <img
-                      alt="example"
-                      src={`http://localhost:8000/uploads/${sight.images[0]}`}
-                      style={{ height: "170px" }}
-                    />
-                  }
+                <Link
+                  to={`/sight-seeing-detail/${sight.id}`}
+                  className="link"
+                  key={sight.id}
                 >
                   <Meta
                     title={sight.name}
@@ -241,18 +324,45 @@ const SightView = () => {
                       </div>
                     }
                   />
+                </Link>
+                {checkSightExist(sight.id) === false ? (
                   <Button
                     className="button"
                     style={{ width: "100%", marginTop: "16px" }}
+                    onClick={() => handleAddRepo(sight.id)}
                   >
                     THÊM VÀO LỘ TRÌNH
                   </Button>
-                </Card>
-              </Link>
+                ) : (
+                  <Button
+                    className="button"
+                    style={{
+                      width: "100%",
+                      marginTop: "16px",
+                      opacity: "0.5",
+                      cursor: "none",
+                    }}
+                    disabled
+                  >
+                    ĐÃ THÊM VÀO LỘ TRÌNH
+                  </Button>
+                )}
+              </Card>
             ))}
           </div>
         </>
       )}
+      <FloatButton
+        href="https://ant.design/index-cn"
+        tooltip={<div>Lịch trình của bạn</div>}
+        type="primary"
+        className="demo-repo-icon"
+        badge={{
+          count: count,
+          color: "red",
+        }}
+      />
+      <ToastContainer />
     </div>
   );
 };

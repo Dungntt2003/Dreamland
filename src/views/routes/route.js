@@ -39,7 +39,7 @@ const AllRoutes = () => {
         element={<MainLayout component={<PersonalInfo />} />}
       />
       <Route
-        path="/create-trip-step1"
+        path="/create-trip-step1/:id"
         element={<MainLayout component={<Step1 />} />}
       />
       <Route

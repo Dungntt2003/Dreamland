@@ -2,7 +2,11 @@ import "./createTrip.scss";
 import { Button, Form, Input, DatePicker, InputNumber } from "antd";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
+import repoApi from "api/repoApi";
+import { useAuth } from "context/authContext";
+import { ToastContainer, toast } from "react-toastify";
 const CreateTrip = () => {
+  const { id } = useAuth();
   const { RangePicker } = DatePicker;
   const navigate = useNavigate();
   const { TextArea } = Input;
@@ -11,8 +15,51 @@ const CreateTrip = () => {
     console.log("Failed:", errorInfo);
   };
   const onFinish = (value) => {
-    console.log("Finished:", value);
-    navigate("/create-trip-step1");
+    const startDate = value.rangeDate[0]
+      ? value.rangeDate[0].format("YYYY-MM-DD")
+      : null;
+    const endDate = value.rangeDate[1]
+      ? value.rangeDate[1].format("YYYY-MM-DD")
+      : null;
+    const params = {
+      name: value.name,
+      description: value.description,
+      numberPeople: value.numberPeople,
+      startDate: startDate,
+      endDate: endDate,
+      user_id: id,
+    };
+    const addNewRepo = async () => {
+      try {
+        const response = await repoApi.createARepo(params);
+        console.log(response);
+        toast.success("Tạo lộ trình mới thành công", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        setTimeout(() => {
+          navigate(`/create-trip-step1/${response.data.data.id}`);
+        }, 2000);
+      } catch (error) {
+        toast.error("Đã xảy ra lỗi, vui lòng thử lại", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+    };
+    addNewRepo();
   };
   return (
     <div className="register-container" style={{ marginTop: "134px" }}>
@@ -116,6 +163,7 @@ const CreateTrip = () => {
           </Form.Item>
         </Form>
       </div>
+      <ToastContainer />
     </div>
   );
 };
