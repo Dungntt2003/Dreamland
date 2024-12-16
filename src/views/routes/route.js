@@ -12,6 +12,7 @@ import PersonalInfo from "views/pages/personal-info/personalInfo";
 import CreateTrip from "views/pages/trip/create-trip/createTrip";
 import Step1 from "views/pages/trip/create-trip/step1/step1";
 import SightDetail from "views/pages/sightseeing/sight-detail/sightDetail";
+import EnterDetail from "views/pages/entertainment/entertainment-detail/enterDetail";
 import Test from "views/pages/sightseeing/sight-detail/test";
 const AllRoutes = () => {
   return (
@@ -50,6 +51,10 @@ const AllRoutes = () => {
       <Route
         path="/sight-seeing-detail/:id"
         element={<MainLayout component={<SightDetail />} />}
+      />
+      <Route
+        path="/entertainment-detail/:id"
+        element={<MainLayout component={<EnterDetail />} />}
       />
       <Route element={<ProtectedRoute requiredRole="user" />}>
         <Route

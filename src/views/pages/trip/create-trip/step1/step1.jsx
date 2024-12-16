@@ -8,6 +8,7 @@ import {
   faUtensils,
 } from "@fortawesome/free-solid-svg-icons";
 import SightView from "views/pages/sightseeing/sight-view/sightView";
+import Entertainment from "views/pages/entertainment/entertainment-list/entertainment";
 const Step1 = () => {
   const Items = [
     {
@@ -19,7 +20,7 @@ const Step1 = () => {
     {
       key: 2,
       label: "Địa điểm vui chơi",
-      children: "Android",
+      children: <Entertainment />,
       icon: <FontAwesomeIcon icon={faWater} />,
     },
     {
