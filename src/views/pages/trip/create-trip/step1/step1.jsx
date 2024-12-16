@@ -9,6 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import SightView from "views/pages/sightseeing/sight-view/sightView";
 import Entertainment from "views/pages/entertainment/entertainment-list/entertainment";
+import Restaurant from "views/pages/restaurant/restaurant-view/restaurant";
 const Step1 = () => {
   const Items = [
     {
@@ -32,7 +33,7 @@ const Step1 = () => {
     {
       key: 4,
       label: "Địa điểm ẩm thực",
-      children: "Android",
+      children: <Restaurant />,
       icon: <FontAwesomeIcon icon={faUtensils} />,
     },
   ];
