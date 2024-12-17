@@ -17,18 +17,15 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
-// import repoApi from "api/repoApi";
 import hotelApi from "api/hotelApi";
-// import demoRepoApi from "api/demoRepoApi";
+import demoRepoApi from "api/demoRepoApi";
 import { ToastContainer, toast } from "react-toastify";
 const { Meta } = Card;
-const HotelView = () => {
-  //   const { id } = useParams();
+const HotelView = ({ data, count, handleUpdateCount }) => {
+  const { id } = useParams();
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [search, setSearch] = useState(false);
-  const [count, setCount] = useState(0);
-  //   const [demoRepo, setDemoRepo] = useState([]);
   function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
@@ -45,23 +42,11 @@ const HotelView = () => {
     };
     getHotels();
   }, []);
-  // useEffect(() => {
-  //   const getDemoRepo = async () => {
-  //     try {
-  //       const response = await repoApi.getADemoRepo(id);
-  //       setCount(response.data.data.demorepodetail.length);
-  //       setDemoRepo(response.data.data.demorepodetail);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   getDemoRepo();
-  // }, [id]);
 
-  // const checkSightExist = (sight_id) => {
-  //   const found = demoRepo.find((item) => item.service_id === sight_id);
-  //   return found !== undefined;
-  // };
+  const checkSightExist = (hotel_id) => {
+    const found = data.find((item) => item.service_id === hotel_id);
+    return found !== undefined;
+  };
   const cardData = hotelData.map((hotel) => (
     <Card
       hoverable
@@ -104,28 +89,28 @@ const HotelView = () => {
           }
         />
       </Link>
-      {/* {checkSightExist(sight.id) === false ? ( */}
-      <Button
-        className="button"
-        style={{ width: "100%", marginTop: "16px" }}
-        // onClick={() => handleAddRepo(sight.id)}
-      >
-        THÊM VÀO LỘ TRÌNH
-      </Button>
-      {/* ) : (
-          <Button
-            className="button"
-            style={{
-              width: "100%",
-              marginTop: "16px",
-              opacity: "0.5",
-              cursor: "none",
-            }}
-            disabled
-          >
-            ĐÃ THÊM VÀO LỘ TRÌNH
-          </Button>
-        )} */}
+      {checkSightExist(hotel.id) === false ? (
+        <Button
+          className="button"
+          style={{ width: "100%", marginTop: "16px" }}
+          onClick={() => handleAddRepo(hotel.id)}
+        >
+          THÊM VÀO LỘ TRÌNH
+        </Button>
+      ) : (
+        <Button
+          className="button"
+          style={{
+            width: "100%",
+            marginTop: "16px",
+            opacity: "0.5",
+            cursor: "none",
+          }}
+          disabled
+        >
+          ĐÃ THÊM VÀO LỘ TRÌNH
+        </Button>
+      )}
     </Card>
   ));
 
@@ -157,44 +142,44 @@ const HotelView = () => {
     );
     setFilteredData(filtered);
   };
-  // const handleAddRepo = (service_id) => {
-  //   const params = {
-  //     service_id: service_id,
-  //     service_type: "sight",
-  //     repository_id: id,
-  //   };
+  const handleAddRepo = (service_id) => {
+    const params = {
+      service_id: service_id,
+      service_type: "hotel",
+      repository_id: id,
+    };
 
-  //   const addToRepo = async () => {
-  //     try {
-  //       const response = await demoRepoApi.addAService(params);
-  //       toast.success("Đã thêm vào lộ trình", {
-  //         position: "top-right",
-  //         autoClose: 1000,
-  //         hideProgressBar: false,
-  //         closeOnClick: true,
-  //         pauseOnHover: true,
-  //         draggable: true,
-  //         progress: undefined,
-  //         theme: "light",
-  //       });
-  //       setCount(count + 1);
-  //       demoRepo.push(params);
-  //     } catch (error) {
-  //       console.error(error);
-  //       toast.error("Đã xảy ra lỗi, vui lòng thử lại", {
-  //         position: "top-right",
-  //         autoClose: 1000,
-  //         hideProgressBar: false,
-  //         closeOnClick: true,
-  //         pauseOnHover: true,
-  //         draggable: true,
-  //         progress: undefined,
-  //         theme: "light",
-  //       });
-  //     }
-  //   };
-  //   addToRepo();
-  // };
+    const addToRepo = async () => {
+      try {
+        const response = await demoRepoApi.addAService(params);
+        // toast.success("Đã thêm vào lộ trình", {
+        //   position: "top-right",
+        //   autoClose: 1000,
+        //   hideProgressBar: false,
+        //   closeOnClick: true,
+        //   pauseOnHover: true,
+        //   draggable: true,
+        //   progress: undefined,
+        //   theme: "light",
+        // });
+        handleUpdateCount(count + 1);
+        data.push(params);
+      } catch (error) {
+        console.error(error);
+        // toast.error("Đã xảy ra lỗi, vui lòng thử lại", {
+        //   position: "top-right",
+        //   autoClose: 1000,
+        //   hideProgressBar: false,
+        //   closeOnClick: true,
+        //   pauseOnHover: true,
+        //   draggable: true,
+        //   progress: undefined,
+        //   theme: "light",
+        // });
+      }
+    };
+    addToRepo();
+  };
   return (
     <div>
       <div
@@ -320,15 +305,15 @@ const HotelView = () => {
                     }
                   />
                 </Link>
-                {/* {checkSightExist(sight.id) === false ? ( */}
-                <Button
-                  className="button"
-                  style={{ width: "100%", marginTop: "16px" }}
-                  // onClick={() => handleAddRepo(sight.id)}
-                >
-                  THÊM VÀO LỘ TRÌNH
-                </Button>
-                {/* ) : (
+                {checkSightExist(hotel.id) === false ? (
+                  <Button
+                    className="button"
+                    style={{ width: "100%", marginTop: "16px" }}
+                    onClick={() => handleAddRepo(hotel.id)}
+                  >
+                    THÊM VÀO LỘ TRÌNH
+                  </Button>
+                ) : (
                   <Button
                     className="button"
                     style={{
@@ -341,7 +326,7 @@ const HotelView = () => {
                   >
                     ĐÃ THÊM VÀO LỘ TRÌNH
                   </Button>
-                )} */}
+                )}
               </Card>
             ))}
           </div>

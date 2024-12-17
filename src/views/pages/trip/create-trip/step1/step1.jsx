@@ -1,5 +1,7 @@
 import "./step1.scss";
+import { useState, useEffect } from "react";
 import { Tabs } from "antd";
+import { useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faMountain,
@@ -11,30 +13,75 @@ import SightView from "views/pages/sightseeing/sight-view/sightView";
 import Entertainment from "views/pages/entertainment/entertainment-list/entertainment";
 import Restaurant from "views/pages/restaurant/restaurant-view/restaurant";
 import HotelView from "views/pages/hotel/hotel-list/hotelView";
+import repoApi from "api/repoApi";
 const Step1 = () => {
+  const { id } = useParams();
+  const [count, setCount] = useState(0);
+  const [demoRepo, setDemoRepo] = useState([]);
+  useEffect(() => {
+    const getDemoRepo = async () => {
+      try {
+        const response = await repoApi.getADemoRepo(id);
+        setCount(response.data.data.demorepodetail.length);
+        setDemoRepo(response.data.data.demorepodetail);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getDemoRepo();
+  }, [id]);
+
+  const handleCount = (newValue) => {
+    setCount(newValue);
+  };
+
   const Items = [
     {
       key: 1,
       label: "Địa điểm thăm quan",
-      children: <SightView />,
+      children: (
+        <SightView
+          data={demoRepo}
+          count={count}
+          handleUpdateCount={handleCount}
+        />
+      ),
       icon: <FontAwesomeIcon icon={faMountain} />,
     },
     {
       key: 2,
       label: "Địa điểm vui chơi",
-      children: <Entertainment />,
+      children: (
+        <Entertainment
+          data={demoRepo}
+          count={count}
+          handleUpdateCount={handleCount}
+        />
+      ),
       icon: <FontAwesomeIcon icon={faWater} />,
     },
     {
       key: 3,
       label: "Địa điểm nghỉ dưỡng",
-      children: <HotelView />,
+      children: (
+        <HotelView
+          data={demoRepo}
+          count={count}
+          handleUpdateCount={handleCount}
+        />
+      ),
       icon: <FontAwesomeIcon icon={faHotel} />,
     },
     {
       key: 4,
       label: "Địa điểm ẩm thực",
-      children: <Restaurant />,
+      children: (
+        <Restaurant
+          data={demoRepo}
+          count={count}
+          handleUpdateCount={handleCount}
+        />
+      ),
       icon: <FontAwesomeIcon icon={faUtensils} />,
     },
   ];

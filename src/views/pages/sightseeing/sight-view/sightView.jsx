@@ -18,18 +18,15 @@ import "swiper/css/scrollbar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import sightApi from "api/sightApi";
-import repoApi from "api/repoApi";
 import demoRepoApi from "api/demoRepoApi";
 import { ToastContainer, toast } from "react-toastify";
 const { Meta } = Card;
 
-const SightView = () => {
+const SightView = ({ data, count, handleUpdateCount }) => {
   const { id } = useParams();
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [search, setSearch] = useState(false);
-  const [count, setCount] = useState(0);
-  const [demoRepo, setDemoRepo] = useState([]);
   function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
@@ -46,21 +43,9 @@ const SightView = () => {
     };
     getListSights();
   }, []);
-  useEffect(() => {
-    const getDemoRepo = async () => {
-      try {
-        const response = await repoApi.getADemoRepo(id);
-        setCount(response.data.data.demorepodetail.length);
-        setDemoRepo(response.data.data.demorepodetail);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getDemoRepo();
-  }, [id]);
 
   const checkSightExist = (sight_id) => {
-    const found = demoRepo.find((item) => item.service_id === sight_id);
+    const found = data.find((item) => item.service_id === sight_id);
     return found !== undefined;
   };
   const cardData = sightData.map((sight) => (
@@ -172,30 +157,30 @@ const SightView = () => {
     const addToRepo = async () => {
       try {
         const response = await demoRepoApi.addAService(params);
-        toast.success("Đã thêm vào lộ trình", {
-          position: "top-right",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        setCount(count + 1);
-        demoRepo.push(params);
+        // toast.success("Đã thêm vào lộ trình", {
+        //   position: "top-right",
+        //   autoClose: 1000,
+        //   hideProgressBar: false,
+        //   closeOnClick: true,
+        //   pauseOnHover: true,
+        //   draggable: true,
+        //   progress: undefined,
+        //   theme: "light",
+        // });
+        handleUpdateCount(count + 1);
+        data.push(params);
       } catch (error) {
         console.error(error);
-        toast.error("Đã xảy ra lỗi, vui lòng thử lại", {
-          position: "top-right",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        // toast.error("Đã xảy ra lỗi, vui lòng thử lại", {
+        //   position: "top-right",
+        //   autoClose: 1000,
+        //   hideProgressBar: false,
+        //   closeOnClick: true,
+        //   pauseOnHover: true,
+        //   draggable: true,
+        //   progress: undefined,
+        //   theme: "light",
+        // });
       }
     };
     addToRepo();

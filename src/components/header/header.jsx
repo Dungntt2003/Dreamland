@@ -13,9 +13,9 @@ import { useAuth } from "context/authContext";
 const Header = () => {
   const { isAuthenticated, logout, role, id } = useAuth();
   const { t, i18n } = useTranslation();
-  const handleChange = (value) => {
-    i18n.changeLanguage(value);
-  };
+  // const handleChange = (value) => {
+  //   i18n.changeLanguage(value);
+  // };
   const handleChoose = (value) => {
     console.log(value);
   };
@@ -49,7 +49,7 @@ const Header = () => {
             style={{
               minWidth: "120px",
             }}
-            onChange={handleChange}
+            // onChange={handleChange}
             options={[
               {
                 value: "vi",
