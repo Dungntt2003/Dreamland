@@ -15,30 +15,49 @@ import {
   faClock,
   faPlaceOfWorship,
   faPhone,
+  faMoneyBill,
 } from "@fortawesome/free-solid-svg-icons";
 import { CaretRightOutlined } from "@ant-design/icons";
-import { Collapse, Form, Input, Button } from "antd";
+import {
+  Collapse,
+  Form,
+  Input,
+  Button,
+  Pagination as AntPagination,
+  Card,
+  Modal,
+} from "antd";
 import GoogleMapComponent from "components/google-maps/googleMaps";
 import { useParams, Link } from "react-router-dom";
 import restaurantApi from "api/restaurantApi";
 import SplitParagraph from "utils/splitPara";
+import formatCurrency from "utils/formatCurrency";
 const { TextArea } = Input;
+const { Meta } = Card;
 
 const RestaurantDetail = () => {
   const { id } = useParams();
   const [rating, setRating] = useState(0);
-  const [restaurant, setEntertainment] = useState({});
+  const [restaurant, setRestaurant] = useState({});
   const [active, setActive] = useState(false);
   const [main, setMain] = useState();
+  const [menu, setMenu] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modelContent, setModelContent] = useState({});
+  const itemsPerPage = 4;
+
+  const handleChangePage = (page) => {
+    setCurrentPage(page);
+  };
 
   useEffect(() => {
     const getDetail = async () => {
       try {
         const response = await restaurantApi.getRestaurantDetail(id);
-        setEntertainment(response.data.data);
+        setRestaurant(response.data.data);
         setMain(response.data.data.images[0]);
-        console.log(parseDes(response.data.data.description));
-        console.log(response.data.data.images);
+        setMenu(response.data.data.menu);
       } catch (error) {
         console.log(error);
       }
@@ -71,6 +90,58 @@ const RestaurantDetail = () => {
   function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
+  const cardData = menu.map((dish) => (
+    <Card
+      hoverable
+      style={{
+        width: 300,
+      }}
+      cover={
+        <img
+          alt="example"
+          src={`http://localhost:8000/uploads/${dish.image}`}
+          style={{ height: "170px" }}
+        />
+      }
+    >
+      <Meta
+        title={dish.name}
+        description={
+          <div>
+            <div>
+              <FontAwesomeIcon
+                icon={faMoneyBill}
+                style={{ marginRight: "12px" }}
+              />
+              {formatCurrency(dish.price)}
+            </div>
+          </div>
+        }
+      />
+      <Button
+        className="button"
+        style={{ width: "100%", marginTop: "16px" }}
+        onClick={() => showModal(dish)}
+      >
+        XEM CHI TIẾT
+      </Button>
+    </Card>
+  ));
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = cardData.slice(indexOfFirstItem, indexOfLastItem);
+
+  const showModal = (dish) => {
+    setModelContent(dish);
+    setIsModalOpen(true);
+  };
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <div>
@@ -258,7 +329,60 @@ const RestaurantDetail = () => {
             </div>
           </div>
         </div>
+        <div
+          className="restaurant-menu"
+          style={{ backgroundColor: "#f2f7f3", padding: "16px" }}
+        >
+          <div
+            className="menu-list"
+            style={{ backgroundColor: "white", padding: "16px" }}
+          >
+            <div className="header2 sight-dettail-header-mark">THỰC ĐƠN</div>
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "16px",
+                marginTop: "16px",
+              }}
+            >
+              {currentItems.map((item, index) => item)}
+            </div>
+            <AntPagination
+              current={currentPage}
+              pageSize={itemsPerPage}
+              total={menu.length}
+              onChange={handleChangePage}
+              style={{ marginTop: "20px", textAlign: "center" }}
+            />
+          </div>
+        </div>
       </div>
+      <Modal
+        title="Chi tiết món ăn"
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        // width="60%"
+      >
+        <div style={{ display: "flex" }}>
+          <div className="dish-img">
+            <img
+              src={`http://localhost:8000/uploads/${modelContent.image}`}
+              alt="imageScenery"
+              style={{ width: "200px" }}
+            />
+          </div>
+          <div className="dish-content" style={{ marginLeft: "36px" }}>
+            <p className="dish-description">
+              Mô tả: {modelContent.description}
+            </p>
+            <p className="dish-price">
+              Giá: {formatCurrency(modelContent.price)}
+            </p>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
