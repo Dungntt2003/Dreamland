@@ -295,7 +295,7 @@ const RestaurantDetail = () => {
                 <GoogleMapComponent address={restaurant.address} />
               </div>
             </div>
-            <div className="sight-detail-box-item">
+            {/* <div className="sight-detail-box-item">
               <div className="header2 sight-dettail-header-mark">ĐÁNH GIÁ</div>
               <Form
                 name="cmt-form"
@@ -326,7 +326,7 @@ const RestaurantDetail = () => {
                   </Button>
                 </Form.Item>
               </Form>
-            </div>
+            </div> */}
           </div>
         </div>
         <div

@@ -35,6 +35,7 @@ import SplitParagraph from "utils/splitPara";
 import formatCurrency from "utils/formatCurrency";
 const { TextArea } = Input;
 const { Meta } = Card;
+const { Panel } = Collapse;
 const HotelDetail = () => {
   const { id } = useParams();
   const [rating, setRating] = useState(0);
@@ -321,12 +322,23 @@ const HotelDetail = () => {
               />
             </div>
             <div className="sight-detail-box-item">
+              <div className="header2 sight-dettail-header-mark">
+                GẦN ĐỊA ĐIỂM NỔI TIẾNG
+              </div>
+              <div style={{ display: "flex", flexWrap: "wrap" }}>
+                {hotel.near_location &&
+                  parseList(hotel.near_location).map((item) => {
+                    return <div style={{ width: "50%" }}>{item}</div>;
+                  })}
+              </div>
+            </div>
+            <div className="sight-detail-box-item">
               <div className="header2 sight-dettail-header-mark">VỊ TRÍ</div>
               <div className="sight-detail-map">
                 <GoogleMapComponent address={hotel.address} />
               </div>
             </div>
-            <div className="sight-detail-box-item">
+            {/* <div className="sight-detail-box-item">
               <div className="header2 sight-dettail-header-mark">ĐÁNH GIÁ</div>
               <Form
                 name="cmt-form"
@@ -357,7 +369,7 @@ const HotelDetail = () => {
                   </Button>
                 </Form.Item>
               </Form>
-            </div>
+            </div> */}
           </div>
         </div>
         <div
@@ -388,6 +400,95 @@ const HotelDetail = () => {
               onChange={handleChangePage}
               style={{ marginTop: "20px", textAlign: "center" }}
             />
+          </div>
+        </div>
+        <div
+          className="hotel-detail-info"
+          style={{ backgroundColor: "#f2f7f3", padding: "0px 16px 16px" }}
+        >
+          <div>
+            <Collapse defaultActiveKey={["1"]}>
+              <Panel
+                style={{
+                  backgroundColor: "var(--background-color)",
+                  border: "none",
+                  fontSize: "16px",
+                  color: "var(--primary-color)",
+                }}
+                header="Quy định 1"
+                key="1"
+              >
+                <div>
+                  <div className="header2 sight-dettail-header-mark">
+                    Quy định nhận & trả phòng
+                  </div>
+                  <div>
+                    <p>Thời gian nhận phòng: {hotel.checkin}:00</p>
+                    <p>Thời gian trả phòng: {hotel.checkout}:00</p>
+                    <p>
+                      Quy định nhận phòng: <br />
+                      Khi đến nhận phòng, quý khách vui lòng mang theo: <br />
+                      - CCCD hoặc passport. <br />
+                      - Phiếu xác nhận đặt phòng của Best Price <br />
+                    </p>
+                  </div>
+                </div>
+              </Panel>
+              <Panel
+                style={{
+                  backgroundColor: "var(--background-color)",
+                  border: "none",
+                  fontSize: "16px",
+                  color: "var(--primary-color)",
+                }}
+                header="Quy định 2"
+                key="2"
+              >
+                <div>
+                  <div className="header2 sight-dettail-header-mark">
+                    Quy định hủy/đổi đặt phòng
+                  </div>
+                  <div>
+                    Phí hủy đổi đặt phòng = phí hủy/đổi của khách sạn + phí xử
+                    lý giao dịch của Best Price. <br />
+                    Phí hủy/đổi của khách sạn được chính khách sạn quy định như
+                    sau: <br />
+                    Khách hàng đặt phòng sẽ không được quyền hoàn phòng, hủy đặt
+                    phòng nhưng được phép thay đổi đơn đặt phòng. <br />
+                    <br />
+                    Phí xử lý giao dịch của Best Price: <br />
+                    - Đặt dịch vụ dưới 3 triệu: 2% tổng giá trị đặt phòng (tối
+                    thiểu 30.000 đ) <br />- Đặt dịch vụ trên 3 triệu: 1,5% tổng
+                    giá trị đặt phòng <br />
+                  </div>
+                </div>
+              </Panel>
+              <Panel
+                style={{
+                  backgroundColor: "var(--background-color)",
+                  border: "none",
+                  fontSize: "16px",
+                  color: "var(--primary-color)",
+                }}
+                header="Quy định 3"
+                key="3"
+              >
+                <div>
+                  <div className="header2 sight-dettail-header-mark">
+                    Trẻ em và giường phụ
+                  </div>
+                  <div>
+                    Em bé (dưới 5 tuổi):Miễn phí tối đa 02 trẻ em dưới 5 tuổi
+                    ngủ chung với bố mẹ <br />
+                    Trẻ em (5 đến 11 tuổi):Phụ thu trẻ em từ 6 - 11 tuổi theo
+                    quy định của khách sạn <br />
+                    Khách trên 11 tuổi được coi là người lớn <br />
+                    Thông tin giường phụ thì tùy thuộc vào mỗi phòng. Vui lòng
+                    kiểm tra thông tin phòng để biết chi tiết. <br />
+                  </div>
+                </div>
+              </Panel>
+            </Collapse>
           </div>
         </div>
       </div>
