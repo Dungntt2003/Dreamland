@@ -10,6 +10,7 @@ import {
 import SightView from "views/pages/sightseeing/sight-view/sightView";
 import Entertainment from "views/pages/entertainment/entertainment-list/entertainment";
 import Restaurant from "views/pages/restaurant/restaurant-view/restaurant";
+import HotelView from "views/pages/hotel/hotel-list/hotelView";
 const Step1 = () => {
   const Items = [
     {
@@ -27,7 +28,7 @@ const Step1 = () => {
     {
       key: 3,
       label: "Địa điểm nghỉ dưỡng",
-      children: "restaurant",
+      children: <HotelView />,
       icon: <FontAwesomeIcon icon={faHotel} />,
     },
     {

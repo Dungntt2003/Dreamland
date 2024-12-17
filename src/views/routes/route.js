@@ -14,6 +14,7 @@ import Step1 from "views/pages/trip/create-trip/step1/step1";
 import SightDetail from "views/pages/sightseeing/sight-detail/sightDetail";
 import EnterDetail from "views/pages/entertainment/entertainment-detail/enterDetail";
 import RestaurantDetail from "views/pages/restaurant/restaurant-detail/restaurant-detail";
+import HotelDetail from "views/pages/hotel/hotel-detail/hotelDetail";
 import Test from "views/pages/sightseeing/sight-detail/test";
 const AllRoutes = () => {
   return (
@@ -60,6 +61,10 @@ const AllRoutes = () => {
       <Route
         path="/restaurant-detail/:id"
         element={<MainLayout component={<RestaurantDetail />} />}
+      />
+      <Route
+        path="/hotel-detail/:id"
+        element={<MainLayout component={<HotelDetail />} />}
       />
       <Route element={<ProtectedRoute requiredRole="user" />}>
         <Route
