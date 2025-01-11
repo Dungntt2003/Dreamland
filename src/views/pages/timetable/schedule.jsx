@@ -8,7 +8,6 @@ const DraggableCalendar = () => {
   const calendarRef = useRef(null);
   const externalEventsRef = useRef(null);
   const [events, setEvents] = useState([
-    // Các sự kiện được thêm sẵn vào lịch
     {
       id: "1",
       title: "Meeting with John",
@@ -43,7 +42,7 @@ const DraggableCalendar = () => {
       eventData: function (eventEl) {
         return {
           title: eventEl.innerText.trim(),
-          id: String(new Date().getTime()), // Generate a unique id for the event
+          id: String(new Date().getTime()),
         };
       },
     });
@@ -51,10 +50,13 @@ const DraggableCalendar = () => {
 
   const handleEventReceive = (info) => {
     const newEvent = {
-      id: String(new Date().getTime()), // Unique ID
+      id: String(new Date().getTime()),
       title: info.event.title,
       start: info.event.start,
       end: info.event.end || info.event.start,
+      backgroundColor: "var(--secondary-color)",
+      borderColor: "var(--secondary-color)",
+      textColor: "white",
     };
 
     // Add event to state
@@ -72,7 +74,7 @@ const DraggableCalendar = () => {
 
   const renderEventContent = (eventInfo) => {
     return (
-      <div>
+      <div style={{ backgroundColor: "var(--secondary-color)" }}>
         <span>{eventInfo.event.title}</span>
         <button
           onClick={(e) => {
@@ -112,17 +114,21 @@ const DraggableCalendar = () => {
   };
 
   return (
-    <div className="container">
+    <div style={{ display: "flex", padding: "16px", height: "100vh" }}>
       {/* Draggable Events Section */}
-      <div>
-        <h4 className="mb-3">Draggable Events</h4>
+      <div style={{ width: "30%" }}>
         <div
           id="external-events-list"
           ref={externalEventsRef}
           className="d-flex flex-wrap"
+          style={{ flexDirection: "column" }}
         >
           {externalEvents.map((event) => (
-            <div key={event.id} className="fc-event badge me-3 my-1">
+            <div
+              key={event.id}
+              className="fc-event badge me-3 my-1"
+              style={{ backgroundColor: "#1b84ff", padding: "4px 6px" }}
+            >
               <div className="fc-event-main">{event.title}</div>
             </div>
           ))}
@@ -137,18 +143,18 @@ const DraggableCalendar = () => {
               id="drop-remove"
             />
             <label className="form-check-label" htmlFor="drop-remove">
-              Remove event after drop
+              Xóa địa điểm khi kéo thả
             </label>
           </div>
         </div>
       </div>
 
-      <div>
+      {/* <div>
         <button onClick={getAllEvents}>Get All Events</button>
-      </div>
+      </div> */}
 
       {/* FullCalendar */}
-      <div id="kt_docs_fullcalendar_drag">
+      <div id="kt_docs_fullcalendar_drag" style={{ width: "70%" }}>
         <FullCalendar
           ref={calendarRef}
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -158,13 +164,22 @@ const DraggableCalendar = () => {
             right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
           }}
           editable={true}
-          droppable={true} // Allows dropping external events onto the calendar
-          initialView="dayGridMonth"
+          droppable={true}
+          initialView="timeGridDay"
+          initialDate="2025-01-20"
+          validRange={{
+            start: "2025-01-20",
+            end: "2025-01-22",
+          }}
           events={events}
-          eventReceive={handleEventReceive} // Triggered when an external event is dropped
-          eventContent={renderEventContent} // Render the event content with delete button
+          slotMinTime="07:00:00"
+          slotMaxTime="22:00:00"
+          eventReceive={handleEventReceive}
+          eventContent={renderEventContent}
           locale="vi"
           timeZone="local"
+          height="100%"
+          // slotDuration="01:00:00"
         />
       </div>
     </div>

@@ -332,16 +332,17 @@ const HotelView = ({ data, count, handleUpdateCount }) => {
           </div>
         </>
       )}
-      <FloatButton
-        href="https://ant.design/index-cn"
-        tooltip={<div>Lịch trình của bạn</div>}
-        type="primary"
-        className="demo-repo-icon"
-        badge={{
-          count: count,
-          color: "red",
-        }}
-      />
+      <Link to={`/schedule/${id}`}>
+        <FloatButton
+          tooltip={<div>Nhấn để sắp xếp lộ trình</div>}
+          type="primary"
+          className="demo-repo-icon"
+          badge={{
+            count: count,
+            color: "red",
+          }}
+        />
+      </Link>
       <ToastContainer />
     </div>
   );
