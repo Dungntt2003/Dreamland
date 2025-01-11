@@ -1,19 +1,35 @@
 import "./createTrip.scss";
-import { Button, Form, Input, DatePicker, InputNumber } from "antd";
+import { useState, useEffect } from "react";
+import { Button, Form, Input, DatePicker, InputNumber, Select } from "antd";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import repoApi from "api/repoApi";
 import { useAuth } from "context/authContext";
 import { ToastContainer, toast } from "react-toastify";
+import publicApi from "api/publicApi";
 const CreateTrip = () => {
   const { id } = useAuth();
   const { RangePicker } = DatePicker;
+  const [provinces, setProvinces] = useState([]);
   const navigate = useNavigate();
   const { TextArea } = Input;
   const dateFormat = "YYYY/MM/DD";
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
+
+  useEffect(() => {
+    const getProvinces = async () => {
+      try {
+        const response = await publicApi.getListProvinces();
+        setProvinces(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getProvinces();
+  }, []);
+
   const onFinish = (value) => {
     const startDate = value.rangeDate[0]
       ? value.rangeDate[0].format("YYYY-MM-DD")
@@ -33,7 +49,7 @@ const CreateTrip = () => {
       try {
         const response = await repoApi.createARepo(params);
         console.log(response);
-        toast.success("Tạo lộ trình mới thành công", {
+        toast.success("Chuẩn bị dữ liệu cho tạo lộ trình", {
           position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
@@ -61,6 +77,10 @@ const CreateTrip = () => {
     };
     addNewRepo();
   };
+
+  const options = provinces.map((item) => {
+    return { value: item.name, label: item.name };
+  });
   return (
     <div className="register-container" style={{ marginTop: "134px" }}>
       <div className="header2 register-header">TẠO LỘ TRÌNH DU LỊCH</div>
@@ -114,6 +134,25 @@ const CreateTrip = () => {
               <TextArea rows={3} placeholder="Nhập mô tả ở đây" />
             </Form.Item>
           </div>
+
+          <Form.Item
+            className="register-item"
+            label="Điểm đến"
+            name="destination"
+            rules={[
+              {
+                required: true,
+                message: "Hãy chọn điểm đến!",
+              },
+            ]}
+          >
+            <Select
+              showSearch
+              placeholder="Chọn tỉnh/thành phố"
+              optionFilterProp="label"
+              options={options}
+            />
+          </Form.Item>
 
           <div className="register-wrap-item">
             <Form.Item
