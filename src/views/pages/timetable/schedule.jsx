@@ -8,38 +8,14 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin, { Draggable } from "@fullcalendar/interaction";
 import demoRepoApi from "api/demoRepoApi";
 import repoApi from "api/repoApi";
+import ExportToPDF from "utils/exportToPDF";
 const DraggableCalendar = () => {
   const { id } = useParams();
   const calendarRef = useRef(null);
   const externalEventsRef = useRef(null);
   const [date, setDate] = useState(null);
-  const [events, setEvents] = useState([
-    {
-      id: "1",
-      title: "Meeting with John",
-      start: "2025-01-15T10:00:00",
-      end: "2025-01-15T11:00:00",
-    },
-    {
-      id: "2",
-      title: "Conference Call",
-      start: "2025-01-16T14:00:00",
-      end: "2025-01-16T15:00:00",
-    },
-    {
-      id: "3",
-      title: "Project Deadline",
-      start: "2025-01-20T09:00:00",
-      end: "2025-01-20T09:30:00",
-    },
-  ]);
-  const [externalEvents, setExternalEvents] = useState([
-    { id: "1", title: "Event 1" },
-    { id: "2", title: "Event 2" },
-    { id: "3", title: "Event 3" },
-    { id: "4", title: "Event 4" },
-    { id: "5", title: "Event 5" },
-  ]);
+  const [events, setEvents] = useState([]);
+  const [externalEvents, setExternalEvents] = useState([]);
 
   const getKeyForService = (item) => {
     switch (item) {
@@ -117,6 +93,13 @@ const DraggableCalendar = () => {
   }, [id]);
 
   useEffect(() => {
+    const storedData = localStorage.getItem("schedule");
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      if (id === parsedData.id) {
+        setEvents(parsedData.data);
+      }
+    }
     // Initialize external draggable events
     new Draggable(externalEventsRef.current, {
       itemSelector: ".fc-event",
@@ -127,7 +110,7 @@ const DraggableCalendar = () => {
         };
       },
     });
-  }, []);
+  }, [id]);
 
   const handleEventReceive = (info) => {
     const newEvent = {
@@ -151,6 +134,70 @@ const DraggableCalendar = () => {
     setEvents((prevEvents) =>
       prevEvents.filter((event) => event.id !== eventId)
     );
+  };
+
+  const handleSave = () => {
+    const allEvents = calendarRef.current.getApi().getEvents();
+
+    const eventData = allEvents.map((event) => ({
+      title: event.title,
+      id: event.id,
+      start: event.start,
+      end: event.end ? event.end : event.start,
+    }));
+
+    const jsonData = {
+      id: id,
+      data: eventData,
+    };
+    localStorage.setItem("schedule", JSON.stringify(jsonData));
+  };
+
+  const handleFinish = () => {
+    const allEvents = calendarRef.current.getApi().getEvents();
+
+    const eventData = allEvents.map((event) => ({
+      title: event.title,
+      id: event.id,
+      start: event.start,
+      end: event.end ? event.end : event.start,
+    }));
+    const formatDate = (dateString) => {
+      const options = {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      };
+      return new Date(dateString).toLocaleString("en-GB", options);
+    };
+
+    const sortedEvents = eventData.sort(
+      (a, b) => new Date(a.start) - new Date(b.start)
+    );
+
+    const result = sortedEvents
+      .map((event) => {
+        const formattedStart = formatDate(event.start);
+        const formattedEnd = formatDate(event.end);
+
+        return event.start === event.end
+          ? `${formattedStart} : ${event.title}`
+          : `${formattedStart} - ${formattedEnd} : ${event.title}`;
+      })
+      .join("\n");
+
+    if (typeof result === "string" && result.trim()) {
+      ExportToPDF(result);
+    } else {
+      console.error("Dữ liệu không hợp lệ");
+    }
+    // const jsonData = {
+    //   id: id,
+    //   data: eventData,
+    // };
+    // localStorage.setItem("finalSchedule", JSON.stringify(jsonData));
   };
 
   const renderEventContent = (eventInfo) => {
@@ -178,22 +225,6 @@ const DraggableCalendar = () => {
     );
   };
 
-  const getAllEvents = () => {
-    const allEvents = calendarRef.current.getApi().getEvents();
-
-    const eventData = allEvents.map((event) => ({
-      title: event.title,
-      id: event.id,
-      start: event.start.toLocaleString(), // Chuyển đổi thành thời gian theo múi giờ địa phương
-      end: event.end
-        ? event.end.toLocaleString()
-        : event.start.toLocaleString(),
-    }));
-
-    console.log(eventData);
-    return eventData;
-  };
-
   return (
     <div style={{ padding: "16px" }}>
       <div
@@ -204,10 +235,16 @@ const DraggableCalendar = () => {
         }}
       >
         <div>
-          <Button className="button" style={{ marginRight: "20px" }}>
+          <Button
+            className="button"
+            style={{ marginRight: "20px" }}
+            onClick={handleSave}
+          >
             Lưu
           </Button>
-          <Button className="button">Hoàn thành</Button>
+          <Button className="button" onClick={handleFinish}>
+            Hoàn thành
+          </Button>
         </div>
       </div>
       <div style={{ display: "flex", height: "100vh" }}>
