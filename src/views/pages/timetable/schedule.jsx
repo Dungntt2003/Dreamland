@@ -1,19 +1,21 @@
 import "./schedule.scss";
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Tour } from "antd";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin, { Draggable } from "@fullcalendar/interaction";
 import demoRepoApi from "api/demoRepoApi";
 import repoApi from "api/repoApi";
-import ExportToPDF from "utils/exportToPDF";
+import { ToastContainer, toast } from "react-toastify";
+// import ExportToDOCX from "utils/exportToDOCX";
 const DraggableCalendar = () => {
   const ref1 = useRef(null);
   const ref2 = useRef(null);
   const ref3 = useRef(null);
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
   const steps = [
     {
       title: "Sắp xếp lộ trình",
@@ -196,26 +198,60 @@ const DraggableCalendar = () => {
       return new Date(dateString).toLocaleString("en-GB", options);
     };
 
+    const formatTime = (dateString) => {
+      const options = {
+        hour: "2-digit",
+        minute: "2-digit",
+      };
+      return new Date(dateString).toLocaleString("en-GB", options);
+    };
+
     const sortedEvents = eventData.sort(
       (a, b) => new Date(a.start) - new Date(b.start)
     );
 
-    const result = sortedEvents
-      .map((event) => {
-        const formattedStart = formatDate(event.start);
-        const formattedEnd = formatDate(event.end);
+    const resultArray = sortedEvents.map((event) => {
+      const formattedStart = formatDate(event.start);
+      const formattedEnd = formatTime(event.end);
 
-        return event.start === event.end
-          ? `${formattedStart} : ${event.title}`
-          : `${formattedStart} - ${formattedEnd} : ${event.title}`;
+      return {
+        label:
+          event.start === event.end
+            ? `${formattedStart}`
+            : `${formattedStart} - ${formattedEnd}`,
+        children: event.title,
+      };
+    });
+
+    localStorage.setItem(
+      "finalSchedule",
+      JSON.stringify({
+        id: id,
+        events: resultArray,
       })
-      .join("\n");
+    );
 
-    if (typeof result === "string" && result.trim()) {
-      ExportToPDF(result);
-    } else {
-      console.error("Dữ liệu không hợp lệ");
-    }
+    console.log("Result array saved to localStorage:", resultArray);
+
+    toast.success("Tạo lộ trình thành công", {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+    setTimeout(() => {
+      navigate(`/schedule-detail/${id}`);
+    }, 2000);
+
+    // if (typeof result === "string" && result.trim()) {
+    //   ExportToDOCX(result);
+    // } else {
+    //   console.error("Dữ liệu không hợp lệ");
+    // }
     // const jsonData = {
     //   id: id,
     //   data: eventData,
@@ -355,6 +391,7 @@ const DraggableCalendar = () => {
           />
         </div>
       </div>
+      <ToastContainer />
       <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
     </div>
   );

@@ -16,6 +16,7 @@ import EnterDetail from "views/pages/entertainment/entertainment-detail/enterDet
 import RestaurantDetail from "views/pages/restaurant/restaurant-detail/restaurant-detail";
 import HotelDetail from "views/pages/hotel/hotel-detail/hotelDetail";
 import DraggableCalendar from "views/pages/timetable/schedule";
+import ScheduleDetail from "views/pages/schedule-detail/scheduleDetail";
 const AllRoutes = () => {
   return (
     <Routes>
@@ -52,6 +53,10 @@ const AllRoutes = () => {
       <Route
         path="/schedule/:id"
         element={<MainLayout component={<DraggableCalendar />} />}
+      />
+      <Route
+        path="/schedule-detail/:id"
+        element={<MainLayout component={<ScheduleDetail />} />}
       />
       <Route
         path="/sight-seeing-detail/:id"
