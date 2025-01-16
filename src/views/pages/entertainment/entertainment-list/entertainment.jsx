@@ -16,7 +16,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
+import { faLocationDot, faMoneyBill } from "@fortawesome/free-solid-svg-icons";
 import entertainmentApi from "api/entertainmentApi";
 import demoRepoApi from "api/demoRepoApi";
 import { ToastContainer, toast } from "react-toastify";
@@ -71,6 +71,13 @@ const Entertainment = ({ data, count, handleUpdateCount }) => {
           title={enter.name}
           description={
             <div>
+              <div>
+                <FontAwesomeIcon
+                  icon={faMoneyBill}
+                  style={{ marginRight: "12px" }}
+                />
+                {enter.price ? enter.price : "100.000"}
+              </div>
               <div className="truncate-2-lines">
                 <FontAwesomeIcon
                   icon={faLocationDot}
@@ -290,6 +297,13 @@ const Entertainment = ({ data, count, handleUpdateCount }) => {
                     title={enter.name}
                     description={
                       <div>
+                        <div>
+                          <FontAwesomeIcon
+                            icon={faMoneyBill}
+                            style={{ marginRight: "12px" }}
+                          />
+                          {enter.price ? enter.price : "100.000"}
+                        </div>
                         <div className="truncate-2-lines">
                           <FontAwesomeIcon
                             icon={faLocationDot}

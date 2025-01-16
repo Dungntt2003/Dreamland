@@ -1,5 +1,5 @@
 import "./sightView.scss";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import {
@@ -9,6 +9,7 @@ import {
   Rate,
   Input,
   FloatButton,
+  Tour,
 } from "antd";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -23,6 +24,29 @@ import { ToastContainer, toast } from "react-toastify";
 const { Meta } = Card;
 
 const SightView = ({ data, count, handleUpdateCount }) => {
+  const ref1 = useRef(null);
+  const ref2 = useRef(null);
+  const ref3 = useRef(null);
+  const [open, setOpen] = useState(false);
+  const steps = [
+    {
+      title: "Chọn dịch vụ",
+      description:
+        "Bạn xem xét các dịch vụ tại các tab 'Thăm quan', 'Vui chơi', 'Khách sạn', 'Nhà hàng', ấn nút 'Thêm vào lộ trình' đối với những dịch vụ mà bạn hứng thú",
+      target: () => ref1.current,
+    },
+    {
+      title: "Tìm kiếm",
+      description: "Ấn tên dịch vụ mà bạn muốn tìm kiếm tại đây",
+      target: () => ref2.current,
+    },
+    {
+      title: "Lộ trình",
+      description:
+        "Những dịch vụ mà bạn thêm sẽ được lưu ở đây, hãy ấn vào nút này để sắp xếp lộ trình của bạn",
+      target: () => ref3.current,
+    },
+  ];
   const { id } = useParams();
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState([]);
@@ -157,38 +181,26 @@ const SightView = ({ data, count, handleUpdateCount }) => {
     const addToRepo = async () => {
       try {
         const response = await demoRepoApi.addAService(params);
-        // toast.success("Đã thêm vào lộ trình", {
-        //   position: "top-right",
-        //   autoClose: 1000,
-        //   hideProgressBar: false,
-        //   closeOnClick: true,
-        //   pauseOnHover: true,
-        //   draggable: true,
-        //   progress: undefined,
-        //   theme: "light",
-        // });
         handleUpdateCount(count + 1);
         data.push(params);
       } catch (error) {
         console.error(error);
-        // toast.error("Đã xảy ra lỗi, vui lòng thử lại", {
-        //   position: "top-right",
-        //   autoClose: 1000,
-        //   hideProgressBar: false,
-        //   closeOnClick: true,
-        //   pauseOnHover: true,
-        //   draggable: true,
-        //   progress: undefined,
-        //   theme: "light",
-        // });
       }
     };
     addToRepo();
   };
   return (
     <div>
+      <Button
+        className="button"
+        style={{ float: "right" }}
+        onClick={() => setOpen(true)}
+      >
+        HƯỚNG DẪN
+      </Button>
       <div
         style={{ display: "flex", justifyContent: "center", margin: "16px 0" }}
+        ref={ref2}
       >
         <Input
           placeholder="Nhập tên địa điểm bạn muốn tìm"
@@ -339,6 +351,7 @@ const SightView = ({ data, count, handleUpdateCount }) => {
       )}
       <Link to={`/schedule/${id}`}>
         <FloatButton
+          ref={ref3}
           tooltip={<div>Nhấn để sắp xếp lộ trình</div>}
           type="primary"
           className="demo-repo-icon"
@@ -349,6 +362,7 @@ const SightView = ({ data, count, handleUpdateCount }) => {
         />
       </Link>
       <ToastContainer />
+      <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
     </div>
   );
 };

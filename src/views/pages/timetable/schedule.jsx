@@ -1,6 +1,6 @@
 import "./schedule.scss";
 import React, { useEffect, useRef, useState } from "react";
-import { Button } from "antd";
+import { Button, Tour } from "antd";
 import { useParams } from "react-router-dom";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -10,6 +10,29 @@ import demoRepoApi from "api/demoRepoApi";
 import repoApi from "api/repoApi";
 import ExportToPDF from "utils/exportToPDF";
 const DraggableCalendar = () => {
+  const ref1 = useRef(null);
+  const ref2 = useRef(null);
+  const ref3 = useRef(null);
+  const [open, setOpen] = useState(false);
+  const steps = [
+    {
+      title: "Sắp xếp lộ trình",
+      description:
+        "Từ các dịch vụ bên trái, thực hiện sắp xếp các dịch vụ vào lịch ở bên phải. Khi muốn loại một dịch vụ ra khỏi lịch, ấn nút X bên cạnh dịch vụ đó",
+      target: () => ref1.current,
+    },
+    {
+      title: "Lưu tạm thời",
+      description:
+        "Ấn nút lưu để lưu lộ trình hiện tại trong lịch, bạn có thể trở lại để chọn các dịch vụ khác và tiếp tục sắp xếp vào lộ trình. Nếu không lưu dữ liệu của bạn sẽ mất",
+      target: () => ref2.current,
+    },
+    {
+      title: "Hoàn thành",
+      description: "Ấn để hoàn thành lộ trình",
+      target: () => ref3.current,
+    },
+  ];
   const { id } = useParams();
   const calendarRef = useRef(null);
   const externalEventsRef = useRef(null);
@@ -227,34 +250,45 @@ const DraggableCalendar = () => {
 
   return (
     <div style={{ padding: "16px" }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          margin: "0 0 16px 0",
-        }}
-      >
-        <div>
-          <Button
-            className="button"
-            style={{ marginRight: "20px" }}
-            onClick={handleSave}
-          >
-            Lưu
-          </Button>
-          <Button className="button" onClick={handleFinish}>
-            Hoàn thành
-          </Button>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <Button className="button" onClick={() => setOpen(true)}>
+          HƯỚNG DẪN
+        </Button>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            margin: "0 0 16px 0",
+          }}
+        >
+          <div>
+            <Button
+              className="button"
+              style={{ marginRight: "20px" }}
+              onClick={handleSave}
+              ref={ref2}
+            >
+              Lưu
+            </Button>
+            <Button className="button" onClick={handleFinish} ref={ref3}>
+              Hoàn thành
+            </Button>
+          </div>
         </div>
       </div>
       <div style={{ display: "flex", height: "100vh" }}>
         {/* Draggable Events Section */}
-        <div style={{ width: "30%" }}>
+        <div style={{ width: "30%", marginLeft: "24px" }}>
+          <div style={{ fontSize: "30px", margin: "54px 0 24px" }}>DỊCH VỤ</div>
           <div
             id="external-events-list"
             ref={externalEventsRef}
-            className="d-flex flex-wrap"
-            style={{ flexDirection: "column", marginTop: "75px" }}
+            // className="d-flex flex-wrap"
+            style={{
+              // flexDirection: "column",
+              maxHeight: "80vh",
+              overflowY: "auto",
+            }}
           >
             {externalEvents.map((event) => (
               <div
@@ -273,7 +307,7 @@ const DraggableCalendar = () => {
           </div>
 
           {/* Checkbox for removing events */}
-          <div className="mt-2 my-5">
+          {/* <div className="mt-2 my-5">
             <div className="form-check form-check-custom form-check-solid">
               <input
                 className="form-check-input"
@@ -284,7 +318,7 @@ const DraggableCalendar = () => {
                 Xóa địa điểm khi kéo thả
               </label>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* <div>
@@ -321,6 +355,7 @@ const DraggableCalendar = () => {
           />
         </div>
       </div>
+      <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
     </div>
   );
 };

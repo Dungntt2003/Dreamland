@@ -83,7 +83,9 @@ const CreateTrip = () => {
   });
   return (
     <div className="register-container" style={{ marginTop: "134px" }}>
-      <div className="header2 register-header">TẠO LỘ TRÌNH DU LỊCH</div>
+      <div className="header2 register-header">
+        THÔNG TIN CƠ BẢN CỦA LỘ TRÌNH
+      </div>
       <div className="register-form-container">
         <Form
           name="basic"
@@ -197,7 +199,7 @@ const CreateTrip = () => {
             }}
           >
             <Button type="primary" htmlType="submit" className="button">
-              Tạo lộ trình
+              Tiếp tục
             </Button>
           </Form.Item>
         </Form>

@@ -11,7 +11,11 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
-import { faClock, faPlaceOfWorship } from "@fortawesome/free-solid-svg-icons";
+import {
+  faClock,
+  faPlaceOfWorship,
+  faMoneyBill,
+} from "@fortawesome/free-solid-svg-icons";
 import { CaretRightOutlined } from "@ant-design/icons";
 import { Collapse, Form, Input, Button } from "antd";
 import GoogleMapComponent from "components/google-maps/googleMaps";
@@ -41,6 +45,16 @@ const EnterDetail = () => {
   }, [id]);
   const handleClickImg = (index, item) => {
     setMain(item);
+  };
+
+  const parsePrice = (price) => {
+    const [adultPrice, childPrice] = price
+      .replace("Giá vé: ", "")
+      .split(",")
+      .map((price) => price.trim());
+
+    const result = `Người lớn: ${adultPrice} - Trẻ em: ${childPrice}`;
+    return result;
   };
   const panelStyle = {
     marginBottom: 16,
@@ -77,6 +91,14 @@ const EnterDetail = () => {
               {checkOpen(enter.startTime, enter.endTime) === true
                 ? "Đang mở cửa"
                 : "Đóng cửa"}
+            </div>
+
+            <div className="sight-detail-address">
+              <FontAwesomeIcon
+                className="sight-detail-icon"
+                icon={faMoneyBill}
+              />
+              {enter.price ? parsePrice(enter.price) : "100.000"}
             </div>
 
             <div className="sight-detail-address">
