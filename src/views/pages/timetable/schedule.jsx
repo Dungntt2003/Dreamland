@@ -322,7 +322,7 @@ const DraggableCalendar = () => {
             // className="d-flex flex-wrap"
             style={{
               // flexDirection: "column",
-              maxHeight: "80vh",
+              maxHeight: "60vh",
               overflowY: "auto",
             }}
           >
@@ -386,7 +386,7 @@ const DraggableCalendar = () => {
             eventContent={renderEventContent}
             locale="vi"
             timeZone="local"
-            height="100%"
+            height="80%"
             // slotDuration="01:00:00"
           />
         </div>
