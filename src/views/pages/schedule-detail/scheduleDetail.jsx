@@ -12,16 +12,18 @@ const ScheduleDetail = () => {
     const getFullRepo = async () => {
       try {
         const response = await repoApi.getADemoRepo(id);
+        // console.log(response);
         setRepo(response.data.data);
+        setItem(response.data.data.plan);
       } catch (error) {
         console.error(error);
       }
     };
     getFullRepo();
-    const finalSchedule = JSON.parse(localStorage.getItem("finalSchedule"));
-    if (finalSchedule && finalSchedule.id === id) {
-      setItem(finalSchedule.events);
-    }
+    // const finalSchedule = JSON.parse(localStorage.getItem("finalSchedule"));
+    // if (finalSchedule && finalSchedule.id === id) {
+    //   setItem(finalSchedule.events);
+    // }
   }, [id]);
 
   const handleExport = () => {

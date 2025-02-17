@@ -9,6 +9,10 @@ const repoApi = {
     const url = `/repositories/${id}`;
     return axiosClient.get(url);
   },
+  updatePlan: (id, params) => {
+    const url = `/repositories/updateDescription/${id}`;
+    return axiosClient.put(url, params);
+  },
 };
 
 export default repoApi;

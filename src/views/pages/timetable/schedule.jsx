@@ -9,12 +9,17 @@ import interactionPlugin, { Draggable } from "@fullcalendar/interaction";
 import demoRepoApi from "api/demoRepoApi";
 import repoApi from "api/repoApi";
 import { ToastContainer, toast } from "react-toastify";
+import entertainmentApi from "api/entertainmentApi";
+import sightApi from "api/sightApi";
+import restaurantApi from "api/restaurantApi";
 // import ExportToDOCX from "utils/exportToDOCX";
 const DraggableCalendar = () => {
   const ref1 = useRef(null);
   const ref2 = useRef(null);
   const ref3 = useRef(null);
   const [open, setOpen] = useState(false);
+  const [isHover, setIsHover] = useState(false);
+  const [time, setTime] = useState("");
   const navigate = useNavigate();
   const steps = [
     {
@@ -100,6 +105,7 @@ const DraggableCalendar = () => {
           response.data.data.map((item) => {
             return {
               id: item.id,
+              type: item.service_type,
               title:
                 getKeyForService(item.service_type) +
                 " " +
@@ -147,7 +153,6 @@ const DraggableCalendar = () => {
       borderColor: "var(--secondary-color)",
       textColor: "white",
     };
-
     // Add event to state
     setEvents((prevEvents) => [...prevEvents, newEvent]);
 
@@ -223,29 +228,53 @@ const DraggableCalendar = () => {
       };
     });
 
-    localStorage.setItem(
-      "finalSchedule",
-      JSON.stringify({
-        id: id,
-        events: resultArray,
-      })
-    );
+    // localStorage.setItem(
+    //   "finalSchedule",
+    //   JSON.stringify({
+    //     id: id,
+    //     events: resultArray,
+    //   })
+    // );
 
-    console.log("Result array saved to localStorage:", resultArray);
+    // console.log("Result array saved to localStorage:", resultArray);
+    const updateRepoWithPlan = async () => {
+      try {
+        const response = await repoApi.updatePlan(id, {
+          plan: resultArray,
+        });
 
-    toast.success("Tạo lộ trình thành công", {
-      position: "top-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
-    setTimeout(() => {
-      navigate(`/schedule-detail/${id}`);
-    }, 2000);
+        console.log(response);
+        toast.success("Tạo lộ trình thành công", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        setTimeout(() => {
+          navigate(`/schedule-detail/${id}`);
+        }, 2000);
+      } catch (error) {
+        console.log(error);
+        toast.error(error.response.data.message, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        setTimeout(() => {
+          navigate(`/schedule-detail/${id}`);
+        }, 2000);
+      }
+    };
+    updateRepoWithPlan();
 
     // if (typeof result === "string" && result.trim()) {
     //   ExportToDOCX(result);
@@ -259,9 +288,45 @@ const DraggableCalendar = () => {
     // localStorage.setItem("finalSchedule", JSON.stringify(jsonData));
   };
 
+  // const handleHover = (id, type) => {
+  //   console.log(id + " " + type);
+  //   setIsHover(true);
+  //   if (type === "sight") {
+  //     const getTimeOfSight = async () => {
+  //       try {
+  //         const response = await sightApi.getSightDetail(id);
+  //         console.log(response);
+  //       } catch (error) {
+  //         console.log(error);
+  //       }
+  //     };
+  //     getTimeOfSight();
+  //   } else if (type === "entertainment") {
+  //     const getTimeOfEntertainment = async () => {
+  //       try {
+  //         const response = await entertainmentApi.getEntertainmentDetail(id);
+  //         console.log(response);
+  //       } catch (error) {
+  //         console.log(error);
+  //       }
+  //     };
+  //     getTimeOfEntertainment();
+  //   } else if (type === "restaurant") {
+  //     const getTimeOfRestaurant = async () => {
+  //       try {
+  //         const response = await restaurantApi.getRestaurantDetail(id);
+  //         console.log(response);
+  //       } catch (error) {
+  //         console.log(error);
+  //       }
+  //     };
+  //     getTimeOfRestaurant();
+  //   }
+  // };
+
   const renderEventContent = (eventInfo) => {
     return (
-      <div style={{ backgroundColor: "var(--secondary-color)" }}>
+      <div style={{ fontSize: "16px" }}>
         <span>{eventInfo.event.title}</span>
         <button
           onClick={(e) => {
@@ -274,7 +339,7 @@ const DraggableCalendar = () => {
             color: "white",
             border: "none",
             borderRadius: "50%",
-            padding: "0 5px",
+            padding: "0px 8px",
             cursor: "pointer",
           }}
         >
@@ -330,11 +395,17 @@ const DraggableCalendar = () => {
               <div
                 key={event.id}
                 className="fc-event badge me-3 my-1"
-                style={{ backgroundColor: "#1b84ff", padding: "6px 6px" }}
+                style={{
+                  backgroundColor: "#74c476",
+                  padding: "6px 6px",
+                  color: "black",
+                }}
+                // onMouseEnter={() => handleHover(event.id, event.type)}
+                // onMouseLeave={() => setIsHover(false)}
               >
                 <div
                   className="fc-event-main"
-                  style={{ fontSize: "16px", fontWeight: "400" }}
+                  style={{ fontSize: "14px", fontWeight: "200" }}
                 >
                   {event.title}
                 </div>
