@@ -118,7 +118,9 @@ const Header = () => {
               </Link>
             </div>
             <div className="subHeader-item">
-              <Link className="link">Địa điểm vui chơi</Link>
+              <Link className="link" to={"/entertainment"}>
+                Địa điểm vui chơi
+              </Link>
             </div>
             <div className="subHeader-item">
               <Link className="link">Địa điểm ẩm thực</Link>

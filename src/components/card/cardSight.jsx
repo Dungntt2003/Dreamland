@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 const { Meta } = Card;
-const CardSight = ({ sight }) => {
+const CardSight = ({ item, link }) => {
   function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
@@ -18,18 +18,14 @@ const CardSight = ({ sight }) => {
         cover={
           <img
             alt="example"
-            src={`http://localhost:8000/uploads/${sight.images[0]}`}
+            src={`http://localhost:8000/uploads/${item.images[0]}`}
             style={{ height: "170px" }}
           />
         }
       >
-        <Link
-          to={`/sight-seeing-detail/${sight.id}`}
-          className="link"
-          key={sight.id}
-        >
+        <Link to={`/${link}/${item.id}`} className="link" key={item.id}>
           <Meta
-            title={sight.name}
+            title={item.name}
             description={
               <div>
                 <div className="truncate-2-lines">
@@ -37,7 +33,7 @@ const CardSight = ({ sight }) => {
                     icon={faLocationDot}
                     style={{ marginRight: "12px" }}
                   />
-                  {sight.address}
+                  {item.address}
                 </div>
                 <div
                   style={{

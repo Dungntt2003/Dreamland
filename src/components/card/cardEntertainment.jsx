@@ -1,8 +1,12 @@
 import { Card, Rate } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot, faMoneyBill } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
 const { Meta } = Card;
-const CardEntertainment = ({ enter }) => {
+const CardEntertainment = ({ item, link }) => {
+  function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
   return (
     <div>
       <Card
@@ -13,18 +17,14 @@ const CardEntertainment = ({ enter }) => {
         cover={
           <img
             alt="example"
-            src={`http://localhost:8000/uploads/${enter.images[0]}`}
+            src={`http://localhost:8000/uploads/${item.images[0]}`}
             style={{ height: "170px" }}
           />
         }
       >
-        <Link
-          to={`/entertainment-detail/${enter.id}`}
-          className="link"
-          key={enter.id}
-        >
+        <Link to={`/${link}/${item.id}`} className="link" key={item.id}>
           <Meta
-            title={enter.name}
+            title={item.name}
             description={
               <div>
                 <div>
@@ -32,14 +32,14 @@ const CardEntertainment = ({ enter }) => {
                     icon={faMoneyBill}
                     style={{ marginRight: "12px" }}
                   />
-                  {enter.price ? enter.price : "100.000"}
+                  {item.price ? item.price : "100.000"}
                 </div>
                 <div className="truncate-2-lines">
                   <FontAwesomeIcon
                     icon={faLocationDot}
                     style={{ marginRight: "12px" }}
                   />
-                  {enter.address}
+                  {item.address}
                 </div>
                 <div
                   style={{
