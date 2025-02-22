@@ -18,8 +18,9 @@ const DraggableCalendar = () => {
   const ref2 = useRef(null);
   const ref3 = useRef(null);
   const [open, setOpen] = useState(false);
-  const [isHover, setIsHover] = useState(false);
-  const [time, setTime] = useState("");
+  // const [isHover, setIsHover] = useState(false);
+  // const [time, setTime] = useState("");
+  const [listServices, setListServices] = useState([]);
   const navigate = useNavigate();
   const steps = [
     {
@@ -141,6 +142,27 @@ const DraggableCalendar = () => {
         };
       },
     });
+  }, [id]);
+
+  // get all service from api
+  useEffect(() => {
+    const getAllServices = async () => {
+      try {
+        const sightResponse = await sightApi.getAllSights();
+        const entertainmentResponse =
+          await entertainmentApi.getListEntertaiments();
+        const restaurantResponse = await restaurantApi.getRestaurants();
+        let combinedData = [
+          ...sightResponse.data.data,
+          ...entertainmentResponse.data.data,
+          ...restaurantResponse.data.data,
+        ];
+        setListServices(combinedData);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getAllServices();
   }, [id]);
 
   const handleEventReceive = (info) => {
@@ -288,41 +310,19 @@ const DraggableCalendar = () => {
     // localStorage.setItem("finalSchedule", JSON.stringify(jsonData));
   };
 
-  // const handleHover = (id, type) => {
-  //   console.log(id + " " + type);
-  //   setIsHover(true);
-  //   if (type === "sight") {
-  //     const getTimeOfSight = async () => {
-  //       try {
-  //         const response = await sightApi.getSightDetail(id);
-  //         console.log(response);
-  //       } catch (error) {
-  //         console.log(error);
-  //       }
-  //     };
-  //     getTimeOfSight();
-  //   } else if (type === "entertainment") {
-  //     const getTimeOfEntertainment = async () => {
-  //       try {
-  //         const response = await entertainmentApi.getEntertainmentDetail(id);
-  //         console.log(response);
-  //       } catch (error) {
-  //         console.log(error);
-  //       }
-  //     };
-  //     getTimeOfEntertainment();
-  //   } else if (type === "restaurant") {
-  //     const getTimeOfRestaurant = async () => {
-  //       try {
-  //         const response = await restaurantApi.getRestaurantDetail(id);
-  //         console.log(response);
-  //       } catch (error) {
-  //         console.log(error);
-  //       }
-  //     };
-  //     getTimeOfRestaurant();
-  //   }
-  // };
+  const handleHover = (title) => {
+    // console.log(title);
+    listServices.forEach((item) => {
+      if (title.includes(item.name)) {
+        if (item.startTime && item.endTime) {
+          console.log(item.startTime + "h - " + item.endTime + "h");
+        } else if (item.close && item.open) {
+          console.log(item.open + "h - " + item.close + "h");
+        }
+      }
+    });
+    // setIsHover(true);
+  };
 
   const renderEventContent = (eventInfo) => {
     return (
@@ -400,7 +400,7 @@ const DraggableCalendar = () => {
                   padding: "6px 6px",
                   color: "black",
                 }}
-                // onMouseEnter={() => handleHover(event.id, event.type)}
+                onMouseEnter={() => handleHover(event.title)}
                 // onMouseLeave={() => setIsHover(false)}
               >
                 <div
@@ -408,6 +408,7 @@ const DraggableCalendar = () => {
                   style={{ fontSize: "14px", fontWeight: "200" }}
                 >
                   {event.title}
+                  {/* {isHover && "test message"} */}
                 </div>
               </div>
             ))}

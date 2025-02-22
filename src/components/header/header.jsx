@@ -39,10 +39,10 @@ const Header = () => {
         </Link>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
-          <Navbar.Text className="set-margin white-color">
+          {/* <Navbar.Text className="set-margin white-color">
             <FontAwesomeIcon icon={faPhone} style={{ marginRight: "4px" }} />
             {t("hotline")}: 09352192002
-          </Navbar.Text>
+          </Navbar.Text> */}
           <Select
             defaultValue="vi"
             className="button-register set-margin"
@@ -110,18 +110,15 @@ const Header = () => {
         <>
           <div className="subHeader-container">
             <div className="subHeader-item">
-              <Select
-                className="subHeader-select"
-                placeholder="Địa điểm"
-                onChange={handleChoose}
-                options={[
-                  { value: "place", label: "Địa điểm du lịch" },
-                  { value: "service", label: "Địa điểm tiện ích" },
-                ]}
-              />
+              <Link className="link">Lộ trình</Link>
             </div>
             <div className="subHeader-item">
-              <Link className="link">Tin tức & sự kiện</Link>
+              <Link className="link" to={"/sight"}>
+                Địa điểm tham quan
+              </Link>
+            </div>
+            <div className="subHeader-item">
+              <Link className="link">Địa điểm vui chơi</Link>
             </div>
             <div className="subHeader-item">
               <Link className="link">Địa điểm ẩm thực</Link>
@@ -129,12 +126,12 @@ const Header = () => {
             <div className="subHeader-item">
               <Link className="link"> Địa điểm nghĩ dưỡng</Link>
             </div>
-            <div className="subHeader-item">
+            {/* <div className="subHeader-item">
               <Link className="link">Đặc sản</Link>
             </div>
             <div className="subHeader-item">
               <Link className="link">Giới thiệu</Link>
-            </div>
+            </div> */}
           </div>
         </>
       ) : (

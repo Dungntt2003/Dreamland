@@ -17,6 +17,8 @@ import RestaurantDetail from "views/pages/restaurant/restaurant-detail/restauran
 import HotelDetail from "views/pages/hotel/hotel-detail/hotelDetail";
 import DraggableCalendar from "views/pages/timetable/schedule";
 import ScheduleDetail from "views/pages/schedule-detail/scheduleDetail";
+import SightList from "views/pages/sightseeing/sight-list/sightList";
+import EntertainmentList from "views/pages/entertainment/entertainment-list/entertainment-list";
 const AllRoutes = () => {
   return (
     <Routes>
@@ -73,6 +75,11 @@ const AllRoutes = () => {
       <Route
         path="/hotel-detail/:id"
         element={<MainLayout component={<HotelDetail />} />}
+      />
+      <Route path="/sight" element={<MainLayout component={<SightList />} />} />
+      <Route
+        path="/entertainment"
+        element={<MainLayout component={<EntertainmentList />} />}
       />
       <Route element={<ProtectedRoute requiredRole="user" />}>
         <Route
