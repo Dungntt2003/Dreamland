@@ -110,7 +110,9 @@ const Header = () => {
         <>
           <div className="subHeader-container">
             <div className="subHeader-item">
-              <Link className="link">Lộ trình</Link>
+              <Link className="link" to={"/repository"}>
+                Lộ trình
+              </Link>
             </div>
             <div className="subHeader-item">
               <Link className="link" to={"/sight"}>
@@ -123,10 +125,14 @@ const Header = () => {
               </Link>
             </div>
             <div className="subHeader-item">
-              <Link className="link">Địa điểm ẩm thực</Link>
+              <Link className="link" to={"/restaurant"}>
+                Địa điểm ẩm thực
+              </Link>
             </div>
             <div className="subHeader-item">
-              <Link className="link"> Địa điểm nghĩ dưỡng</Link>
+              <Link className="link" to="/hotel">
+                Địa điểm nghĩ dưỡng
+              </Link>
             </div>
             {/* <div className="subHeader-item">
               <Link className="link">Đặc sản</Link>

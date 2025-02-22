@@ -65,19 +65,43 @@ const Homepage = () => {
             <div className="home-icon">
               <FontAwesomeIcon icon={faPlaceOfWorship} />
             </div>
-            <div className="home-item-content">Địa điểm du lịch</div>
+            <div className="home-item-content">
+              <Link
+                to="/sight"
+                className="link"
+                style={{ color: "var(--text-color)" }}
+              >
+                Địa điểm du lịch
+              </Link>
+            </div>
           </div>
           <div className="home-item">
             <div className="home-icon">
               <FontAwesomeIcon icon={faUtensils} />
             </div>
-            <div className="home-item-content">Địa điểm ẩm thực</div>
+            <div className="home-item-content">
+              <Link
+                to="/restaurant"
+                className="link"
+                style={{ color: "var(--text-color)" }}
+              >
+                Địa điểm ẩm thực
+              </Link>
+            </div>
           </div>
           <div className="home-item">
             <div className="home-icon">
               <FontAwesomeIcon icon={faHotel} />
             </div>
-            <div className="home-item-content">Địa điểm nghỉ dưỡng</div>
+            <div className="home-item-content">
+              <Link
+                to="/hotel"
+                className="link"
+                style={{ color: "var(--text-color)" }}
+              >
+                Địa điểm nghỉ dưỡng
+              </Link>
+            </div>
           </div>
           <div className="home-item">
             <div className="home-icon">

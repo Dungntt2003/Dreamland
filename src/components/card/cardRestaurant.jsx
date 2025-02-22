@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot, faMoneyBill } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 const { Meta } = Card;
-const CardEntertainment = ({ item, link }) => {
+const CardRestaurant = ({ item, link }) => {
   function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
@@ -28,13 +28,6 @@ const CardEntertainment = ({ item, link }) => {
             title={item.name}
             description={
               <div>
-                <div>
-                  <FontAwesomeIcon
-                    icon={faMoneyBill}
-                    style={{ marginRight: "12px" }}
-                  />
-                  {item.price ? item.price : "100.000"}
-                </div>
                 <div className="truncate-2-lines">
                   <FontAwesomeIcon
                     icon={faLocationDot}
@@ -50,6 +43,9 @@ const CardEntertainment = ({ item, link }) => {
                   }}
                 >
                   <Rate disabled value={getRandomInt(3, 5)} />
+                  {/* <div
+                    style={{ color: "var(--text-color)", marginLeft: "12px" }}
+                  >{`${getRandomInt(3, 5)}/5`}</div> */}
                 </div>
               </div>
             }
@@ -60,4 +56,4 @@ const CardEntertainment = ({ item, link }) => {
   );
 };
 
-export default CardEntertainment;
+export default CardRestaurant;
