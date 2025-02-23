@@ -23,7 +23,7 @@ const RepoList = () => {
         style={{
           display: "flex",
           flexWrap: "wrap",
-          justifyContent: "space-evenly",
+          // justifyContent: "space-evenly",
         }}
       >
         {repo.map((item, index) => (

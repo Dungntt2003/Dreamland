@@ -3,6 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import repoApi from "api/repoApi";
 import { Timeline, Button } from "antd";
 import ExportToDOCX from "utils/exportToDOCX";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPen, faPrint, faShare } from "@fortawesome/free-solid-svg-icons";
+import { toast, ToastContainer } from "react-toastify";
 const ScheduleDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -20,10 +23,6 @@ const ScheduleDetail = () => {
       }
     };
     getFullRepo();
-    // const finalSchedule = JSON.parse(localStorage.getItem("finalSchedule"));
-    // if (finalSchedule && finalSchedule.id === id) {
-    //   setItem(finalSchedule.events);
-    // }
   }, [id]);
 
   const handleExport = () => {
@@ -38,6 +37,35 @@ const ScheduleDetail = () => {
     navigate("/homepage");
   };
 
+  const handleShare = async () => {
+    const link = window.location.href;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "Check this out!",
+          text: "Here's a cool link for you:",
+          url: link,
+        });
+      } catch (error) {
+        console.error("Error sharing", error);
+      }
+    } else {
+      navigator.clipboard.writeText(link).then(() => {
+        toast.info("Link đã được copy vào clipboard", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      });
+    }
+  };
+
   return (
     <div style={{ padding: "16px" }}>
       <div
@@ -47,7 +75,16 @@ const ScheduleDetail = () => {
         }}
       >
         <div>
+          <Button className="button">
+            <FontAwesomeIcon icon={faPen} />
+            Chỉnh sửa
+          </Button>
+          <Button className="button" onClick={handleShare}>
+            <FontAwesomeIcon icon={faShare} />
+            Chia sẻ
+          </Button>
           <Button className="button" onClick={handleExport}>
+            <FontAwesomeIcon icon={faPrint} />
             In
           </Button>
           <Button className="button" onClick={handleReturnHomepage}>
@@ -56,7 +93,7 @@ const ScheduleDetail = () => {
         </div>
       </div>
       <div
-        className="header1"
+        className="header2"
         style={{ textAlign: "center", textTransform: "uppercase" }}
       >
         CHI TIẾT LỘ TRÌNH DU LỊCH {repo && repo.name}
@@ -66,6 +103,7 @@ const ScheduleDetail = () => {
           <Timeline mode="left" items={item} />
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

@@ -10,7 +10,7 @@ const repoApi = {
     return axiosClient.post(url, params);
   },
   getADemoRepo: (id) => {
-    const url = `/repositories/${id}`;
+    const url = `/repositories/detail/${id}`;
     return axiosClient.get(url);
   },
   updatePlan: (id, params) => {

@@ -131,7 +131,7 @@ const ListDisplay = ({ listServices, CardComponent, link }) => {
             style={{
               display: "flex",
               flexWrap: "wrap",
-              justifyContent: "space-between",
+              // justifyContent: "space-between",
             }}
           >
             {currentItems.map((item) => (
@@ -152,7 +152,7 @@ const ListDisplay = ({ listServices, CardComponent, link }) => {
             style={{
               display: "flex",
               flexWrap: "wrap",
-              justifyContent: "space-between",
+              // justifyContent: "space-between",
             }}
           >
             {filteredData.map((item) => {

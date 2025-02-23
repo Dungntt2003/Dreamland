@@ -1,6 +1,6 @@
 import { Card, Rate } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLocationDot, faMoneyBill } from "@fortawesome/free-solid-svg-icons";
+import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 const { Meta } = Card;
 const CardRestaurant = ({ item, link }) => {
@@ -8,11 +8,11 @@ const CardRestaurant = ({ item, link }) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
   return (
-    <div>
+    <div style={{ width: "25%", padding: "8px" }}>
       <Card
         hoverable
         style={{
-          width: 300,
+          // width: 300,
           margin: "0px 0 16px",
         }}
         cover={
