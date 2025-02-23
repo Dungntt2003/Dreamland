@@ -22,6 +22,7 @@ import EntertainmentList from "views/pages/entertainment/entertainment-list/ente
 import RestaurantList from "views/pages/restaurant/restaurant-view/restaurant-list";
 import HotelList from "views/pages/hotel/hotel-list/hoteList";
 import RepoList from "views/pages/repository/repo-list/repo-list";
+import RepoMap from "views/pages/map/repo-map";
 const AllRoutes = () => {
   return (
     <Routes>
@@ -92,6 +93,10 @@ const AllRoutes = () => {
       <Route
         path="/repository"
         element={<MainLayout component={<RepoList />} />}
+      />
+      <Route
+        path="/repo-map"
+        element={<MainLayout component={<RepoMap />} />}
       />
       <Route element={<ProtectedRoute requiredRole="user" />}>
         <Route

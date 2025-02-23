@@ -12,14 +12,11 @@ import { ToastContainer, toast } from "react-toastify";
 import entertainmentApi from "api/entertainmentApi";
 import sightApi from "api/sightApi";
 import restaurantApi from "api/restaurantApi";
-// import ExportToDOCX from "utils/exportToDOCX";
 const DraggableCalendar = () => {
   const ref1 = useRef(null);
   const ref2 = useRef(null);
   const ref3 = useRef(null);
   const [open, setOpen] = useState(false);
-  // const [isHover, setIsHover] = useState(false);
-  // const [time, setTime] = useState("");
   const [listServices, setListServices] = useState([]);
   const navigate = useNavigate();
   const steps = [
@@ -297,17 +294,6 @@ const DraggableCalendar = () => {
       }
     };
     updateRepoWithPlan();
-
-    // if (typeof result === "string" && result.trim()) {
-    //   ExportToDOCX(result);
-    // } else {
-    //   console.error("Dữ liệu không hợp lệ");
-    // }
-    // const jsonData = {
-    //   id: id,
-    //   data: eventData,
-    // };
-    // localStorage.setItem("finalSchedule", JSON.stringify(jsonData));
   };
 
   const handleHover = (title) => {
@@ -446,7 +432,7 @@ const DraggableCalendar = () => {
             editable={true}
             droppable={true}
             initialView="timeGridDay"
-            initialDate="2025-01-20"
+            // initialDate="2025-01-20"
             validRange={{
               start: date ? date.start : null,
               end: date ? date.end : null,
