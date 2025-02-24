@@ -8,11 +8,13 @@ const RepoMapComponent = ({ locations }) => {
 
     const map = new window.google.maps.Map(mapRef.current, {
       center: { lat: locations[0].lat, lng: locations[0].lng },
-      zoom: 12,
+      zoom: 15,
     });
 
     const directionsService = new window.google.maps.DirectionsService();
-    const directionsRenderer = new window.google.maps.DirectionsRenderer();
+    const directionsRenderer = new window.google.maps.DirectionsRenderer({
+      suppressMarkers: true,
+    });
     directionsRenderer.setMap(map);
 
     const waypoints = locations.slice(1, -1).map((loc) => ({
@@ -33,6 +35,17 @@ const RepoMapComponent = ({ locations }) => {
     directionsService.route(request, (result, status) => {
       if (status === "OK") {
         directionsRenderer.setDirections(result);
+
+        const legs = result.routes[0].legs;
+
+        legs.forEach((leg, index) => {
+          const infoWindow = new window.google.maps.InfoWindow({
+            content: `🚗 Thời gian di chuyển: ${leg.duration.text}`,
+            position: leg.start_location,
+          });
+
+          infoWindow.open(map);
+        });
       } else {
         console.error("Không thể hiển thị tuyến đường:", status);
       }

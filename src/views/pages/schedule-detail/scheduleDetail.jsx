@@ -120,10 +120,10 @@ const ScheduleDetail = () => {
         CHI TIẾT LỘ TRÌNH DU LỊCH {repo && repo.name}
       </div>
       <div style={{ display: "flex", width: "100%" }}>
-        <div>
+        <div style={{ width: "50%", marginTop: "24px", height: "80vh" }}>
           <Timeline mode="left" items={item} />
         </div>
-        <div id="kt_docs_fullcalendar_drag">
+        <div id="kt_docs_fullcalendar_drag" style={{ width: "50%" }}>
           <FullCalendar
             ref={calendarRef}
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -148,7 +148,7 @@ const ScheduleDetail = () => {
             timeZone="Asia/Ho_Chi_Minh"
             locale="vi"
             height="80vh"
-            // slotDuration="01:00:00"
+            slotDuration="01:00:00"
           />
         </div>
       </div>
