@@ -23,6 +23,7 @@ import RestaurantList from "views/pages/restaurant/restaurant-view/restaurant-li
 import HotelList from "views/pages/hotel/hotel-list/hoteList";
 import RepoList from "views/pages/repository/repo-list/repo-list";
 import RepoMap from "views/pages/map/repo-map";
+import VNPayPayment from "views/pages/payment/payment";
 const AllRoutes = () => {
   return (
     <Routes>
@@ -97,6 +98,10 @@ const AllRoutes = () => {
       <Route
         path="/repo-map"
         element={<MainLayout component={<RepoMap />} />}
+      />
+      <Route
+        path="/vnpay"
+        element={<MainLayout component={<VNPayPayment />} />}
       />
       <Route element={<ProtectedRoute requiredRole="user" />}>
         <Route

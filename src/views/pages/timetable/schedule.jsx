@@ -296,6 +296,10 @@ const DraggableCalendar = () => {
     updateRepoWithPlan();
   };
 
+  const handleReturn = () => {
+    navigate(`/create-trip-step1/${id}`);
+  };
+
   const handleHover = (title) => {
     // console.log(title);
     listServices.forEach((item) => {
@@ -349,6 +353,13 @@ const DraggableCalendar = () => {
           }}
         >
           <div>
+            <Button
+              className="button"
+              onClick={handleReturn}
+              style={{ marginRight: "20px" }}
+            >
+              Thêm dịch vụ khác
+            </Button>
             <Button
               className="button"
               style={{ marginRight: "20px" }}

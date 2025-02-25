@@ -58,6 +58,10 @@ const ScheduleDetail = () => {
     navigate("/homepage");
   };
 
+  const handleEdit = () => {
+    navigate(`/schedule/${id}`);
+  };
+
   const handleShare = async () => {
     const link = window.location.href;
 
@@ -96,7 +100,7 @@ const ScheduleDetail = () => {
         }}
       >
         <div>
-          <Button className="button">
+          <Button className="button" onClick={handleEdit}>
             <FontAwesomeIcon icon={faPen} />
             Chỉnh sửa
           </Button>
