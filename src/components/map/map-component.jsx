@@ -39,9 +39,14 @@ const RepoMapComponent = ({ locations }) => {
         const legs = result.routes[0].legs;
 
         legs.forEach((leg, index) => {
+          const midpoint = {
+            lat: (leg.start_location.lat() + leg.end_location.lat()) / 2,
+            lng: (leg.start_location.lng() + leg.end_location.lng()) / 2,
+          };
+
           const infoWindow = new window.google.maps.InfoWindow({
-            content: `🚗 Thời gian di chuyển: ${leg.duration.text}`,
-            position: leg.start_location,
+            content: `🚗 ${leg.duration.text}`,
+            position: midpoint,
           });
 
           infoWindow.open(map);
