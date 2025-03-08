@@ -45,7 +45,7 @@ const RepoMapComponent = ({ locations }) => {
           };
 
           const infoWindow = new window.google.maps.InfoWindow({
-            content: `🚗 ${leg.duration.text}`,
+            content: `🚗 ${leg.duration.text} (${leg.distance.text})`,
             position: midpoint,
           });
 
