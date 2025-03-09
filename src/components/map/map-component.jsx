@@ -1,13 +1,48 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const RepoMapComponent = ({ locations }) => {
   const mapRef = useRef(null);
 
+  const [coordinates, setCoordinates] = useState([]);
+
   useEffect(() => {
     if (!window.google) return;
 
+    const geocoder = new window.google.maps.Geocoder();
+
+    const geocodeLocations = async () => {
+      const results = await Promise.all(
+        locations.map(
+          (loc) =>
+            new Promise((resolve) => {
+              geocoder.geocode({ address: loc.address }, (res, status) => {
+                if (status === "OK" && res[0]) {
+                  resolve({
+                    lat: res[0].geometry.location.lat(),
+                    lng: res[0].geometry.location.lng(),
+                    name: loc.address,
+                    time: loc.time,
+                  });
+                } else {
+                  console.error("Không thể chuyển đổi địa chỉ:", loc.address);
+                  resolve(null);
+                }
+              });
+            })
+        )
+      );
+
+      setCoordinates(results.filter(Boolean));
+    };
+
+    geocodeLocations();
+  }, [locations]);
+
+  useEffect(() => {
+    if (!window.google || coordinates.length === 0) return;
+
     const map = new window.google.maps.Map(mapRef.current, {
-      center: { lat: locations[0].lat, lng: locations[0].lng },
+      center: coordinates[0],
       zoom: 15,
     });
 
@@ -17,18 +52,15 @@ const RepoMapComponent = ({ locations }) => {
     });
     directionsRenderer.setMap(map);
 
-    const waypoints = locations.slice(1, -1).map((loc) => ({
+    const waypoints = coordinates.slice(1, -1).map((loc) => ({
       location: { lat: loc.lat, lng: loc.lng },
       stopover: true,
     }));
 
     const request = {
-      origin: { lat: locations[0].lat, lng: locations[0].lng },
-      destination: {
-        lat: locations[locations.length - 1].lat,
-        lng: locations[locations.length - 1].lng,
-      },
-      waypoints: waypoints,
+      origin: coordinates[0],
+      destination: coordinates[coordinates.length - 1],
+      waypoints,
       travelMode: "DRIVING",
     };
 
@@ -37,7 +69,6 @@ const RepoMapComponent = ({ locations }) => {
         directionsRenderer.setDirections(result);
 
         const legs = result.routes[0].legs;
-
         legs.forEach((leg, index) => {
           const midpoint = {
             lat: (leg.start_location.lat() + leg.end_location.lat()) / 2,
@@ -56,7 +87,7 @@ const RepoMapComponent = ({ locations }) => {
       }
     });
 
-    locations.forEach((loc, index) => {
+    coordinates.forEach((loc, index) => {
       new window.google.maps.Marker({
         position: { lat: loc.lat, lng: loc.lng },
         map,
@@ -64,7 +95,7 @@ const RepoMapComponent = ({ locations }) => {
         title: `${loc.name} - Ở đây lúc ${loc.time}`,
       });
     });
-  }, [locations]);
+  }, [coordinates]);
 
   return <div ref={mapRef} style={{ width: "100%", height: "500px" }} />;
 };

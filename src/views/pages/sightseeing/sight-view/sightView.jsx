@@ -79,11 +79,7 @@ const SightView = ({ data, count, handleUpdateCount }) => {
         width: 300,
       }}
       cover={
-        <img
-          alt="example"
-          src={`http://localhost:8000/uploads/${sight.images[0]}`}
-          style={{ height: "170px" }}
-        />
+        <img alt="example" src={sight.images[0]} style={{ height: "170px" }} />
       }
     >
       <Link
@@ -288,7 +284,7 @@ const SightView = ({ data, count, handleUpdateCount }) => {
                 cover={
                   <img
                     alt="example"
-                    src={`http://localhost:8000/uploads/${sight.images[0]}`}
+                    src={sight.images[0]}
                     style={{ height: "170px" }}
                   />
                 }

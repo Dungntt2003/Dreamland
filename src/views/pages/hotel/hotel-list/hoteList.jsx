@@ -20,7 +20,7 @@ const HotelList = () => {
     <ListDisplay
       listServices={hotels}
       CardComponent={CardHotel}
-      link="/hotel-detail"
+      link="hotel-detail"
     />
   );
 };

@@ -1,6 +1,6 @@
 import "./sightDetail.scss";
 import checkOpen from "utils/checkOpenTime";
-import { Rating } from "react-simple-star-rating";
+// import { Rating } from "react-simple-star-rating";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect } from "react";
 import Heart from "react-heart";
@@ -13,7 +13,7 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { faClock, faPlaceOfWorship } from "@fortawesome/free-solid-svg-icons";
 import { CaretRightOutlined } from "@ant-design/icons";
-import { Collapse, Form, Input, Button } from "antd";
+import { Collapse, Form, Input, Button, Rate } from "antd";
 import GoogleMapComponent from "components/google-maps/googleMaps";
 import { useParams } from "react-router-dom";
 import sightApi from "api/sightApi";
@@ -24,7 +24,7 @@ const SightDetail = () => {
   const [sight, setSight] = useState({});
   const [active, setActive] = useState(false);
   const [main, setMain] = useState();
-
+  const desc = ["Rất tệ", "Tệ", "Bình thường", "Tốt", "Rất tốt"];
   useEffect(() => {
     const getDetail = async () => {
       try {
@@ -86,7 +86,7 @@ const SightDetail = () => {
             {sight.address}
           </div>
           <div className="sight-detail-ratings">
-            <Rating initialValue={getRandomInt(3, 5)} readonly />
+            <Rate disabled defaultValue={getRandomInt(3, 5)} />
           </div>
           <div className="sight-detail-button-grp">
             <Button className="button">THÊM VÀO LỘ TRÌNH</Button>
@@ -106,7 +106,7 @@ const SightDetail = () => {
           <div className="sight-detail-img-grp">
             <div className="sight-detail-img-main">
               <img
-                src={`http://localhost:8000/uploads/${main}`}
+                src={main}
                 alt="imageScenery"
                 style={{ width: "100%", height: "400px" }}
               />
@@ -128,7 +128,7 @@ const SightDetail = () => {
                     return (
                       <SwiperSlide key={index}>
                         <img
-                          src={`http://localhost:8000/uploads/${item}`}
+                          src={item}
                           alt="imageScenery"
                           style={{ width: "200px", height: "120px" }}
                           onClick={() => handleClickImg(index, item)}
@@ -199,12 +199,7 @@ const SightDetail = () => {
               autoComplete="off"
             >
               <Form.Item>
-                <Rating
-                  onClick={handleRating}
-                  transition="true"
-                  showTooltip="true"
-                  tooltipDefaultText="Đánh giá của bạn"
-                />
+                <Rate tooltips={desc} onChange={handleRating} />
               </Form.Item>
               <Form.Item name="comment">
                 <TextArea rows={4} placeholder="Nhập đánh giá của bạn ở đây" />
