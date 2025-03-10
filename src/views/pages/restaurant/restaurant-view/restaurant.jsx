@@ -1,5 +1,6 @@
 import "../../sightseeing/sight-view/sightView";
 import { useState, useEffect } from "react";
+import DefaultRestaurant from "assets/image/restaurant-default.png";
 import { Link, useParams } from "react-router-dom";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import {
@@ -57,7 +58,7 @@ const Restaurant = ({ data, count, handleUpdateCount }) => {
       cover={
         <img
           alt="example"
-          src={`http://localhost:8000/uploads/${restaurant.images[0]}`}
+          src={restaurant.images[0] || DefaultRestaurant}
           style={{ height: "170px" }}
         />
       }
@@ -276,7 +277,7 @@ const Restaurant = ({ data, count, handleUpdateCount }) => {
                 cover={
                   <img
                     alt="example"
-                    src={`http://localhost:8000/uploads/${restaurant.images[0]}`}
+                    src={restaurant.images[0] || DefaultRestaurant}
                     style={{ height: "170px" }}
                   />
                 }

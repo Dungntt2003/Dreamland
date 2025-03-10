@@ -27,6 +27,7 @@ import {
   Pagination as AntPagination,
   Card,
   Modal,
+  Rate,
 } from "antd";
 import GoogleMapComponent from "components/google-maps/googleMaps";
 import { useParams, Link } from "react-router-dom";
@@ -97,13 +98,7 @@ const HotelDetail = () => {
       style={{
         width: 300,
       }}
-      cover={
-        <img
-          alt="example"
-          src={`http://localhost:8000/uploads/${rm.image}`}
-          style={{ height: "170px" }}
-        />
-      }
+      cover={<img alt="example" src={rm.image} style={{ height: "170px" }} />}
     >
       <Meta
         title={rm.name}
@@ -191,7 +186,7 @@ const HotelDetail = () => {
               {hotel.address}
             </div>
             <div className="sight-detail-ratings">
-              <Rating initialValue={getRandomInt(3, 5)} readonly />
+              <Rate defaultValue={getRandomInt(3, 5)} disabled />
             </div>
             <div className="sight-detail-button-grp">
               <Button className="button">THÊM VÀO LỘ TRÌNH</Button>
@@ -211,7 +206,7 @@ const HotelDetail = () => {
             <div className="sight-detail-img-grp">
               <div className="sight-detail-img-main">
                 <img
-                  src={`http://localhost:8000/uploads/${main}`}
+                  src={main}
                   alt="imageScenery"
                   style={{ width: "100%", height: "400px" }}
                 />
@@ -233,7 +228,7 @@ const HotelDetail = () => {
                       return (
                         <SwiperSlide key={index}>
                           <img
-                            src={`http://localhost:8000/uploads/${item}`}
+                            src={item}
                             alt="imageScenery"
                             style={{ width: "200px", height: "120px" }}
                             onClick={() => handleClickImg(index, item)}
@@ -258,66 +253,92 @@ const HotelDetail = () => {
                   background: "var(--white-color)",
                 }}
                 items={
-                  hotel.description &&
-                  Object.keys(parseDes(hotel.description)).map(
-                    (key, index) => ({
-                      key: (index + 1).toString(),
+                  [
+                    {
+                      key: "1",
                       label: (
                         <div
                           style={{
-                            fontSize: "18px",
-                            color: "var(--primary-color)",
+                            background: "var(--background-color)",
+                            fontSize: "16px",
+                            padding: "8px 16px",
+                            borderRadius: "16px",
                           }}
                         >
-                          {key}
+                          Lịch sử hình thành và dịch vụ
                         </div>
                       ),
-                      children:
-                        key === "Điểm nổi bật" ? (
-                          <div>
-                            {parseList(parseDes(hotel.description)[key]).map(
-                              (item) => {
-                                return (
-                                  <div style={{ margin: "4px 0" }}>
-                                    <FontAwesomeIcon
-                                      icon={faCheck}
-                                      style={{
-                                        fontSize: "20px",
-                                        marginRight: "16px",
-                                        color: "var(--primary-color)",
-                                      }}
-                                    />
-                                    {item}
-                                  </div>
-                                );
-                              }
-                            )}
-                          </div>
-                        ) : (
-                          <div style={{ display: "flex", flexWrap: "wrap" }}>
-                            {parseList(parseDes(hotel.description)[key]).map(
-                              (item) => {
-                                return (
-                                  <div
-                                    style={{
-                                      backgroundColor: "var(--primary-color)",
-                                      padding: "4px 8px",
-                                      width: "fit-content",
-                                      color: "white",
-                                      borderRadius: "4px",
-                                      margin: "4px",
-                                    }}
-                                  >
-                                    {item}
-                                  </div>
-                                );
-                              }
-                            )}
-                          </div>
-                        ),
-                      style: panelStyle,
-                    })
-                  )
+                      children: (
+                        <div
+                          style={{
+                            padding: "4px 8px",
+                          }}
+                        >
+                          {hotel.description}
+                        </div>
+                      ),
+                    },
+                  ]
+                  // &&
+                  // Object.keys(parseDes(hotel.description)).map(
+                  //   (key, index) => ({
+                  //     key: (index + 1).toString(),
+                  //     label: (
+                  //       <div
+                  //         style={{
+                  //           fontSize: "18px",
+                  //           color: "var(--primary-color)",
+                  //         }}
+                  //       >
+                  //         {key}
+                  //       </div>
+                  //     ),
+                  //     children:
+                  //       key === "Điểm nổi bật" ? (
+                  //         <div>
+                  //           {parseList(parseDes(hotel.description)[key]).map(
+                  //             (item) => {
+                  //               return (
+                  //                 <div style={{ margin: "4px 0" }}>
+                  //                   <FontAwesomeIcon
+                  //                     icon={faCheck}
+                  //                     style={{
+                  //                       fontSize: "20px",
+                  //                       marginRight: "16px",
+                  //                       color: "var(--primary-color)",
+                  //                     }}
+                  //                   />
+                  //                   {item}
+                  //                 </div>
+                  //               );
+                  //             }
+                  //           )}
+                  //         </div>
+                  //       ) : (
+                  //         <div style={{ display: "flex", flexWrap: "wrap" }}>
+                  //           {parseList(parseDes(hotel.description)[key]).map(
+                  //             (item) => {
+                  //               return (
+                  //                 <div
+                  //                   style={{
+                  //                     backgroundColor: "var(--primary-color)",
+                  //                     padding: "4px 8px",
+                  //                     width: "fit-content",
+                  //                     color: "white",
+                  //                     borderRadius: "4px",
+                  //                     margin: "4px",
+                  //                   }}
+                  //                 >
+                  //                   {item}
+                  //                 </div>
+                  //               );
+                  //             }
+                  //           )}
+                  //         </div>
+                  //       ),
+                  //     style: panelStyle,
+                  //   })
+                  // )
                 }
               />
             </div>
@@ -502,7 +523,7 @@ const HotelDetail = () => {
         <div style={{ display: "flex" }}>
           <div className="dish-img">
             <img
-              src={`http://localhost:8000/uploads/${modelContent.image}`}
+              src={modelContent.image}
               alt="imageScenery"
               style={{ width: "400px" }}
             />

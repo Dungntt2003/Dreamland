@@ -2,6 +2,7 @@ import { Card, Rate } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import DefaultHotel from "assets/image/hotel-default.jpg";
 const { Meta } = Card;
 const CardHotel = ({ item, link }) => {
   function getRandomInt(min, max) {
@@ -18,7 +19,7 @@ const CardHotel = ({ item, link }) => {
         cover={
           <img
             alt="example"
-            src={`http://localhost:8000/uploads/${item.images[0]}`}
+            src={item.images[0] || DefaultHotel}
             style={{ height: "170px" }}
           />
         }

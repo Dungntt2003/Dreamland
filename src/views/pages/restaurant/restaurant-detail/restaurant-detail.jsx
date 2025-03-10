@@ -7,6 +7,8 @@ import Heart from "react-heart";
 import { parseDes, parseList } from "utils/parseDescription";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import DefaultRestaurant from "assets/image/restaurant-default.png";
+import ReactPlayer from "react-player";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -26,6 +28,7 @@ import {
   Pagination as AntPagination,
   Card,
   Modal,
+  Rate,
 } from "antd";
 import GoogleMapComponent from "components/google-maps/googleMaps";
 import { useParams, Link } from "react-router-dom";
@@ -99,7 +102,7 @@ const RestaurantDetail = () => {
       cover={
         <img
           alt="example"
-          src={`http://localhost:8000/uploads/${dish.image}`}
+          src={dish.image || DefaultRestaurant}
           style={{ height: "170px" }}
         />
       }
@@ -190,7 +193,7 @@ const RestaurantDetail = () => {
               {restaurant.address}
             </div>
             <div className="sight-detail-ratings">
-              <Rating initialValue={getRandomInt(3, 5)} readonly />
+              <Rate defaultValue={getRandomInt(3, 5)} disabled />
             </div>
             <div className="sight-detail-button-grp">
               <Button className="button">THÊM VÀO LỘ TRÌNH</Button>
@@ -207,10 +210,18 @@ const RestaurantDetail = () => {
             </div>
           </div>
           <div className="sight-detail-menu">
+            <div className="sight-detail-video">
+              <ReactPlayer
+                url={restaurant.video}
+                controls
+                width="100%"
+                height="500px"
+              />
+            </div>
             <div className="sight-detail-img-grp">
               <div className="sight-detail-img-main">
                 <img
-                  src={`http://localhost:8000/uploads/${main}`}
+                  src={main}
                   alt="imageScenery"
                   style={{ width: "100%", height: "400px" }}
                 />
@@ -232,7 +243,7 @@ const RestaurantDetail = () => {
                       return (
                         <SwiperSlide key={index}>
                           <img
-                            src={`http://localhost:8000/uploads/${item}`}
+                            src={item}
                             alt="imageScenery"
                             style={{ width: "200px", height: "120px" }}
                             onClick={() => handleClickImg(index, item)}
@@ -257,35 +268,53 @@ const RestaurantDetail = () => {
                   background: "var(--white-color)",
                 }}
                 items={
-                  restaurant.description &&
-                  Object.keys(parseDes(restaurant.description)).map(
-                    (key, index) => ({
-                      key: (index + 1).toString(),
+                  [
+                    {
+                      key: "1",
                       label: (
                         <div
                           style={{
-                            fontSize: "18px",
-                            color: "var(--primary-color)",
+                            background: "var(--background-color)",
+                            fontSize: "16px",
+                            padding: "8px 16px",
+                            borderRadius: "16px",
                           }}
                         >
-                          {key}
+                          Giới thiệu chi tiết
                         </div>
                       ),
-                      children:
-                        key === "Điểm nổi bật" ? (
-                          <div>
-                            {
-                              <SplitParagraph
-                                text={parseDes(restaurant.description)[key]}
-                              />
-                            }
-                          </div>
-                        ) : (
-                          <div>{parseDes(restaurant.description)[key]}</div>
-                        ),
-                      style: panelStyle,
-                    })
-                  )
+                      children: <div>{restaurant.description}</div>,
+                    },
+                  ]
+                  // restaurant.description &&
+                  // Object.keys(parseDes(restaurant.description)).map(
+                  //   (key, index) => ({
+                  //     key: (index + 1).toString(),
+                  //     label: (
+                  //       <div
+                  //         style={{
+                  //           fontSize: "18px",
+                  //           color: "var(--primary-color)",
+                  //         }}
+                  //       >
+                  //         {key}
+                  //       </div>
+                  //     ),
+                  //     children:
+                  //       key === "Điểm nổi bật" ? (
+                  //         <div>
+                  //           {
+                  //             <SplitParagraph
+                  //               text={parseDes(restaurant.description)[key]}
+                  //             />
+                  //           }
+                  //         </div>
+                  //       ) : (
+                  //         <div>{parseDes(restaurant.description)[key]}</div>
+                  //       ),
+                  //     style: panelStyle,
+                  //   })
+                  // )
                 }
               />
             </div>
@@ -368,7 +397,7 @@ const RestaurantDetail = () => {
         <div style={{ display: "flex" }}>
           <div className="dish-img">
             <img
-              src={`http://localhost:8000/uploads/${modelContent.image}`}
+              src={modelContent.image}
               alt="imageScenery"
               style={{ width: "200px" }}
             />

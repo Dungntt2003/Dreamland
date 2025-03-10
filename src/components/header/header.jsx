@@ -131,7 +131,7 @@ const Header = () => {
             </div>
             <div className="subHeader-item">
               <Link className="link" to="/hotel">
-                Địa điểm nghĩ dưỡng
+                Địa điểm nghỉ dưỡng
               </Link>
             </div>
             {/* <div className="subHeader-item">

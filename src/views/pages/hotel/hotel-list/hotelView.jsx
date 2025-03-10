@@ -20,6 +20,7 @@ import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import hotelApi from "api/hotelApi";
 import demoRepoApi from "api/demoRepoApi";
 import { ToastContainer, toast } from "react-toastify";
+import DefaultHotel from "assets/image/hotel-default.jpg";
 const { Meta } = Card;
 const HotelView = ({ data, count, handleUpdateCount }) => {
   const { id } = useParams();
@@ -56,7 +57,7 @@ const HotelView = ({ data, count, handleUpdateCount }) => {
       cover={
         <img
           alt="example"
-          src={`http://localhost:8000/uploads/${hotel.images[0]}`}
+          src={hotel.images[0] || DefaultHotel}
           style={{ height: "170px" }}
         />
       }
@@ -271,7 +272,7 @@ const HotelView = ({ data, count, handleUpdateCount }) => {
                 cover={
                   <img
                     alt="example"
-                    src={`http://localhost:8000/uploads/${hotel.images[0]}`}
+                    src={hotel.images[0] || DefaultHotel}
                     style={{ height: "170px" }}
                   />
                 }
