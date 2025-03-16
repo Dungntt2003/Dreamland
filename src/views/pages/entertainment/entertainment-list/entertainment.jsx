@@ -55,11 +55,7 @@ const Entertainment = ({ data, count, handleUpdateCount }) => {
         width: 300,
       }}
       cover={
-        <img
-          alt="example"
-          src={`http://localhost:8000/uploads/${enter.images[0]}`}
-          style={{ height: "170px" }}
-        />
+        <img alt="example" src={enter.images[0]} style={{ height: "170px" }} />
       }
     >
       <Link
@@ -283,7 +279,7 @@ const Entertainment = ({ data, count, handleUpdateCount }) => {
                 cover={
                   <img
                     alt="example"
-                    src={`http://localhost:8000/uploads/${enter.images[0]}`}
+                    src={enter.images[0]}
                     style={{ height: "170px" }}
                   />
                 }

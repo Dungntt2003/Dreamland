@@ -16,11 +16,7 @@ const CardEntertainment = ({ item, link }) => {
           margin: "0px 0 16px",
         }}
         cover={
-          <img
-            alt="example"
-            src={`http://localhost:8000/uploads/${item.images[0]}`}
-            style={{ height: "170px" }}
-          />
+          <img alt="example" src={item.images[0]} style={{ height: "170px" }} />
         }
       >
         <Link to={`/${link}/${item.id}`} className="link" key={item.id}>

@@ -1,6 +1,5 @@
 import "../../sightseeing/sight-detail/sightDetail";
 import checkOpen from "utils/checkOpenTime";
-import { Rating } from "react-simple-star-rating";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect } from "react";
 import Heart from "react-heart";
@@ -17,7 +16,7 @@ import {
   faMoneyBill,
 } from "@fortawesome/free-solid-svg-icons";
 import { CaretRightOutlined } from "@ant-design/icons";
-import { Collapse, Form, Input, Button } from "antd";
+import { Collapse, Form, Input, Button, Rate } from "antd";
 import GoogleMapComponent from "components/google-maps/googleMaps";
 import { useParams } from "react-router-dom";
 import entertainmentApi from "api/entertainmentApi";
@@ -53,7 +52,9 @@ const EnterDetail = () => {
       .split(",")
       .map((price) => price.trim());
 
-    const result = `Người lớn: ${adultPrice} - Trẻ em: ${childPrice}`;
+    const result = `Người lớn: ${adultPrice} - Trẻ em: ${
+      childPrice ? childPrice : adultPrice
+    }`;
     return result;
   };
   const panelStyle = {
@@ -109,7 +110,7 @@ const EnterDetail = () => {
               {enter.address}
             </div>
             <div className="sight-detail-ratings">
-              <Rating initialValue={getRandomInt(3, 5)} readonly />
+              <Rate defaultValue={getRandomInt(3, 5)} disabled />
             </div>
             <div className="sight-detail-button-grp">
               <Button className="button">THÊM VÀO LỘ TRÌNH</Button>
@@ -129,7 +130,7 @@ const EnterDetail = () => {
             <div className="sight-detail-img-grp">
               <div className="sight-detail-img-main">
                 <img
-                  src={`http://localhost:8000/uploads/${main}`}
+                  src={main}
                   alt="imageScenery"
                   style={{ width: "100%", height: "400px" }}
                 />
@@ -151,7 +152,7 @@ const EnterDetail = () => {
                       return (
                         <SwiperSlide key={index}>
                           <img
-                            src={`http://localhost:8000/uploads/${item}`}
+                            src={item}
                             alt="imageScenery"
                             style={{ width: "200px", height: "120px" }}
                             onClick={() => handleClickImg(index, item)}
@@ -175,37 +176,62 @@ const EnterDetail = () => {
                 style={{
                   background: "var(--white-color)",
                 }}
-                items={
-                  enter.description &&
-                  Object.keys(parseDes(enter.description)).map(
-                    (key, index) => ({
-                      key: (index + 1).toString(),
-                      label: (
-                        <div
-                          style={{
-                            fontSize: "18px",
-                            color: "var(--primary-color)",
-                          }}
-                        >
-                          {key}
-                        </div>
-                      ),
-                      children:
-                        key === "Cảnh đẹp" ? (
-                          <div>
-                            {parseList(parseDes(enter.description)[key]).map(
-                              (item, index) => (
-                                <div style={{ margin: "6px 0" }}>{item}</div>
-                              )
-                            )}
-                          </div>
-                        ) : (
-                          <div>{parseDes(enter.description)[key]}</div>
-                        ),
-                      style: panelStyle,
-                    })
-                  )
-                }
+                items={[
+                  {
+                    key: "1",
+                    label: (
+                      <div
+                        style={{
+                          background: "var(--background-color)",
+                          fontSize: "16px",
+                          padding: "8px 16px",
+                          borderRadius: "16px",
+                        }}
+                      >
+                        Dịch vụ
+                      </div>
+                    ),
+                    children: (
+                      <div
+                        style={{
+                          padding: "4px 8px",
+                        }}
+                      >
+                        {enter.description}
+                      </div>
+                    ),
+                  },
+                ]}
+
+                // &&
+                // Object.keys(parseDes(enter.description)).map(
+                //   (key, index) => ({
+                //     key: (index + 1).toString(),
+                //     label: (
+                //       <div
+                //         style={{
+                //           fontSize: "18px",
+                //           color: "var(--primary-color)",
+                //         }}
+                //       >
+                //         {key}
+                //       </div>
+                //     ),
+                //     children:
+                //       key === "Cảnh đẹp" ? (
+                //         <div>
+                //           {parseList(parseDes(enter.description)[key]).map(
+                //             (item, index) => (
+                //               <div style={{ margin: "6px 0" }}>{item}</div>
+                //             )
+                //           )}
+                //         </div>
+                //       ) : (
+                //         <div>{parseDes(enter.description)[key]}</div>
+                //       ),
+                //     style: panelStyle,
+                //   })
+                // )
               />
             </div>
             <div className="sight-detail-box-item">
@@ -214,9 +240,9 @@ const EnterDetail = () => {
                 <GoogleMapComponent address={enter.address} />
               </div>
             </div>
-            <div className="sight-detail-box-item">
-              <div className="header2 sight-dettail-header-mark">ĐÁNH GIÁ</div>
-              <Form
+            {/* <div className="sight-detail-box-item">
+              <div className="header2 sight-dettail-header-mark">ĐÁNH GIÁ</div> */}
+            {/* <Form
                 name="cmt-form"
                 initialValues={{
                   remember: true,
@@ -226,7 +252,7 @@ const EnterDetail = () => {
                 autoComplete="off"
               >
                 <Form.Item>
-                  <Rating
+                  <Rate
                     onClick={handleRating}
                     transition="true"
                     showTooltip="true"
@@ -244,8 +270,8 @@ const EnterDetail = () => {
                     Gửi đánh giá
                   </Button>
                 </Form.Item>
-              </Form>
-            </div>
+              </Form> */}
+            {/* </div> */}
           </div>
         </div>
       </div>
