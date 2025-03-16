@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import repoApi from "api/repoApi";
-import { Timeline, Button } from "antd";
+import { Timeline, Button, Select } from "antd";
 import ExportToDOCX from "utils/exportToDOCX";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faPrint, faShare } from "@fortawesome/free-solid-svg-icons";
@@ -62,6 +62,18 @@ const ScheduleDetail = () => {
     navigate(`/schedule/${id}`);
   };
 
+  const handleShareLink = (value) => {
+    if (value === "link") {
+      handleShare();
+    } else if (value === "facebook") {
+      const url = "https://63stravel.com/vn/travel";
+      const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+        url
+      )}`;
+      window.open(facebookUrl, "_blank");
+    }
+  };
+
   const handleShare = async () => {
     const link = window.location.href;
 
@@ -97,16 +109,34 @@ const ScheduleDetail = () => {
         style={{
           display: "flex",
           justifyContent: "flex-end",
+          alignItems: "center",
         }}
       >
         <div>
+          {/* <Button className="button" onClick={handleShare}>
+            <FontAwesomeIcon icon={faShare} />
+            Chia sẻ
+          </Button> */}
+          <Select
+            style={{
+              width: "200px",
+            }}
+            placeholder="Chia sẻ"
+            onChange={handleShareLink}
+            options={[
+              {
+                value: "link",
+                label: "Sao chép liên kết",
+              },
+              {
+                value: "facebook",
+                label: "Chia sẻ lên Facebook",
+              },
+            ]}
+          />
           <Button className="button" onClick={handleEdit}>
             <FontAwesomeIcon icon={faPen} />
             Chỉnh sửa
-          </Button>
-          <Button className="button" onClick={handleShare}>
-            <FontAwesomeIcon icon={faShare} />
-            Chia sẻ
           </Button>
           <Button className="button" onClick={handleExport}>
             <FontAwesomeIcon icon={faPrint} />
