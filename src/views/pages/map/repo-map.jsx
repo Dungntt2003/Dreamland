@@ -1,13 +1,80 @@
 import RepoMapComponent from "components/map/map-component";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import entertainmentApi from "api/entertainmentApi";
+import sightApi from "api/sightApi";
+import restaurantApi from "api/restaurantApi";
+import hotelApi from "api/hotelApi";
+import repoApi from "api/repoApi";
+
 const RepoMap = () => {
-  const locations = [
-    { address: "Hồ Gươm, Hà Nội, Việt Nam", time: "08:00" },
-    { address: "Lăng Bác, Hà Nội, Việt Nam", time: "08:30" },
-    { address: "Hồ Tây, Hà Nội, Việt Nam", time: "09:00" },
-  ];
+  const { id } = useParams();
+  const [listServices, setListServices] = useState([]);
+  const [repo, setRepo] = useState(null);
+  const [locations, setLocations] = useState([]);
+
+  useEffect(() => {
+    const getAllServices = async () => {
+      try {
+        const sightResponse = await sightApi.getAllSights();
+        const entertainmentResponse =
+          await entertainmentApi.getListEntertaiments();
+        const restaurantResponse = await restaurantApi.getRestaurants();
+        const hotelResponse = await hotelApi.getListHotels();
+
+        let combinedData = [
+          ...sightResponse.data.data,
+          ...entertainmentResponse.data.data,
+          ...restaurantResponse.data.data,
+          ...hotelResponse.data.data,
+        ];
+
+        setListServices(combinedData);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const getRepo = async () => {
+      try {
+        const response = await repoApi.getADemoRepo(id);
+        setRepo(response.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getAllServices();
+    getRepo();
+  }, [id]);
+
+  useEffect(() => {
+    if (repo && repo.plan && listServices.length > 0) {
+      const mappedLocations = repo.plan
+        .map((p) => {
+          const matchedServices = listServices.filter(
+            (s) => p.children && p.children.includes(s.name)
+          );
+
+          return matchedServices.map((service) => ({
+            address: service.address,
+            time: p.label,
+            title: service.name,
+          }));
+        })
+        .flat()
+        .filter((location) => location && location.address);
+      setLocations(mappedLocations);
+    }
+  }, [repo, listServices]);
+  console.log(locations);
   return (
     <div>
-      <RepoMapComponent locations={locations} />
+      {locations.length > 0 ? (
+        <RepoMapComponent locations={locations} />
+      ) : (
+        <div>Đang tải dữ liệu...</div>
+      )}
     </div>
   );
 };

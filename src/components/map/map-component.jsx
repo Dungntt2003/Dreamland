@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useMemo, useCallback } from "react";
-
+import { Button } from "antd";
 const MapComponent = ({ locations }) => {
   const mapRef = useRef(null);
   const [coordinates, setCoordinates] = useState([]);
@@ -56,7 +56,7 @@ const MapComponent = ({ locations }) => {
                       resolve({
                         lat: res[0].geometry.location.lat(),
                         lng: res[0].geometry.location.lng(),
-                        name: loc.address,
+                        name: loc.title,
                         time: loc.time,
                       });
                     } else {
@@ -227,7 +227,7 @@ const MapComponent = ({ locations }) => {
           <h3 style="margin: 0 0 5px 0; font-size: 16px;">${index + 1}. ${
             loc.name
           }</h3>
-          <p style="margin: 0; font-size: 14px;">⏱️ Thời gian: ${loc.time}</p>
+          <p style="margin: 0; font-size: 14px;">⏱️${loc.time}</p>
         </div>`,
         });
         infoWindowsRef.current.push(infoWindow);
@@ -278,19 +278,20 @@ const MapComponent = ({ locations }) => {
       )}
       <div style={{ display: "flex" }}>
         <div ref={mapRef} style={mapStyle}></div>
-        <div>
+        <div style={{ minWidth: "30%", padding: "16px" }}>
+          <div>
+            <strong className="header2">Tóm tắt hành trình:</strong>
+            <p>📏 Tổng quãng đường: {summary.distance}</p>
+            <p>⏱️ Tổng thời gian di chuyển: {summary.duration}</p>
+          </div>
           <div style={{ marginBottom: "10px" }}>
-            <button
+            <Button
               onClick={handleResetView}
+              className="button"
               style={{ padding: "8px", cursor: "pointer" }}
             >
               Xem tổng quát
-            </button>
-          </div>
-          <div>
-            <strong>Tóm tắt hành trình:</strong>
-            <p>📏 Tổng quãng đường: {summary.distance}</p>
-            <p>⏱️ Tổng thời gian di chuyển: {summary.duration}</p>
+            </Button>
           </div>
           <ul>
             {coordinates.map((loc, index) => (
