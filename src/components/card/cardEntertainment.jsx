@@ -4,9 +4,6 @@ import { faLocationDot, faMoneyBill } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 const { Meta } = Card;
 const CardEntertainment = ({ item, link }) => {
-  function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
   return (
     <div style={{ width: "25%", padding: "8px" }}>
       <Card
@@ -45,7 +42,7 @@ const CardEntertainment = ({ item, link }) => {
                     margin: "8px 0",
                   }}
                 >
-                  <Rate disabled value={getRandomInt(3, 5)} />
+                  <Rate disabled defaultValue={item.rate} />
                 </div>
               </div>
             }

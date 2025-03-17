@@ -90,9 +90,6 @@ const RestaurantDetail = () => {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-  function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
   const cardData = menu.map((dish) => (
     <Card
       hoverable
@@ -193,10 +190,10 @@ const RestaurantDetail = () => {
               {restaurant.address}
             </div>
             <div className="sight-detail-ratings">
-              <Rate defaultValue={getRandomInt(3, 5)} disabled />
+              <Rate defaultValue={restaurant.rate} disabled />
             </div>
             <div className="sight-detail-button-grp">
-              <Button className="button">THÊM VÀO LỘ TRÌNH</Button>
+              {/* <Button className="button">THÊM VÀO LỘ TRÌNH</Button> */}
               <div style={{ width: "2rem", marginLeft: "48px" }}>
                 <Heart
                   isActive={active}

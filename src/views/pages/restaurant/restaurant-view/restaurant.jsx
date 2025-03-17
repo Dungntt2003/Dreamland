@@ -28,9 +28,6 @@ const Restaurant = ({ data, count, handleUpdateCount }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [search, setSearch] = useState(false);
-  function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
   const [resData, setResData] = useState([]);
   useEffect(() => {
     const getListRestaurants = async () => {
@@ -86,7 +83,7 @@ const Restaurant = ({ data, count, handleUpdateCount }) => {
                   margin: "8px 0",
                 }}
               >
-                <Rate disabled value={getRandomInt(3, 5)} />
+                <Rate disabled defaultValue={restaurant.rate} />
                 {/* <div
                     style={{ color: "var(--text-color)", marginLeft: "12px" }}
                   >{`${getRandomInt(3, 5)}/5`}</div> */}
@@ -305,7 +302,7 @@ const Restaurant = ({ data, count, handleUpdateCount }) => {
                             margin: "8px 0",
                           }}
                         >
-                          <Rate disabled value={getRandomInt(3, 5)} />
+                          <Rate disabled defaultValue={restaurant.rate} />
                         </div>
                       </div>
                     }

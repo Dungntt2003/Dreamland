@@ -4,9 +4,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 const { Meta } = Card;
 const CardSight = ({ item, link }) => {
-  function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
   return (
     <div style={{ width: "25%", padding: "8px" }}>
       <Card
@@ -38,7 +35,7 @@ const CardSight = ({ item, link }) => {
                     margin: "8px 0",
                   }}
                 >
-                  <Rate disabled value={getRandomInt(3, 5)} />
+                  <Rate disabled defaultValue={item.rate} />
                 </div>
               </div>
             }
