@@ -96,7 +96,7 @@ const AllRoutes = () => {
         element={<MainLayout component={<RepoList />} />}
       />
       <Route
-        path="/repo-map"
+        path="/repo-map/:id"
         element={<MainLayout component={<RepoMap />} />}
       />
       <Route

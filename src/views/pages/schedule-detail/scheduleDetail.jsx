@@ -1,10 +1,15 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import repoApi from "api/repoApi";
-import { Timeline, Button, Select } from "antd";
+import { Timeline, Button, Select, FloatButton } from "antd";
 import ExportToDOCX from "utils/exportToDOCX";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faPrint, faShare } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPen,
+  faPrint,
+  faShare,
+  faMap,
+} from "@fortawesome/free-solid-svg-icons";
 import { toast, ToastContainer } from "react-toastify";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -52,6 +57,9 @@ const ScheduleDetail = () => {
       .join("\n");
     // console.log(resultString);
     ExportToDOCX(resultString);
+  };
+  const handleMap = () => {
+    navigate(`/repo-map/${id}`);
   };
 
   const handleReturnHomepage = () => {
@@ -186,6 +194,16 @@ const ScheduleDetail = () => {
           />
         </div>
       </div>
+      <FloatButton
+        shape="circle"
+        type="primary"
+        onClick={handleMap}
+        tooltip="Xem bản đồ"
+        style={{
+          insetInlineEnd: 94,
+        }}
+        icon={<FontAwesomeIcon icon={faMap} />}
+      />
       <ToastContainer />
     </div>
   );

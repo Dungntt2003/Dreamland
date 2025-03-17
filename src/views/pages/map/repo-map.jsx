@@ -7,7 +7,6 @@ const RepoMap = () => {
   ];
   return (
     <div>
-      <h1>Lộ trình du lịch</h1>
       <RepoMapComponent locations={locations} />
     </div>
   );

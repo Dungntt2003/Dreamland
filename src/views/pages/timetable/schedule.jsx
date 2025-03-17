@@ -1,6 +1,6 @@
 import "./schedule.scss";
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Tour } from "antd";
+import { Button, Tour, FloatButton } from "antd";
 import { useParams, useNavigate } from "react-router-dom";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -12,6 +12,7 @@ import { ToastContainer, toast } from "react-toastify";
 import entertainmentApi from "api/entertainmentApi";
 import sightApi from "api/sightApi";
 import restaurantApi from "api/restaurantApi";
+import { v4 as uuidv4 } from "uuid";
 const DraggableCalendar = () => {
   const ref1 = useRef(null);
   const ref2 = useRef(null);
@@ -180,8 +181,9 @@ const DraggableCalendar = () => {
     //   });
     //   return;
     // }
+    const eventId = uuidv4();
     const newEvent = {
-      id: info.event.id,
+      id: eventId,
       title: info.event.title,
       start: info.event.start,
       end: info.event.end || info.event.start,
@@ -190,7 +192,12 @@ const DraggableCalendar = () => {
       textColor: "white",
     };
     // Add event to state
-    setEvents((prevEvents) => [...prevEvents, newEvent]);
+    setEvents((prevEvents) => {
+      if (!prevEvents.some((event) => event.id === eventId)) {
+        return [...prevEvents, newEvent];
+      }
+      return prevEvents;
+    });
 
     // Remove the event from FullCalendar (this prevents the default duplicate behavior)
     info.event.remove();
