@@ -163,6 +163,23 @@ const DraggableCalendar = () => {
   }, [id]);
 
   const handleEventReceive = (info) => {
+    // const startHour = info.event.start.getHours();
+    // const title = info.event._def.title;
+
+    // if (title.includes("Ăn tại") && startHour <= 10) {
+    //   info.revert();
+    //   toast.warn("Nhà hàng chưa mở cửa", {
+    //     position: "top-right",
+    //     autoClose: 2000,
+    //     hideProgressBar: false,
+    //     closeOnClick: true,
+    //     pauseOnHover: true,
+    //     draggable: true,
+    //     progress: undefined,
+    //     theme: "light",
+    //   });
+    //   return;
+    // }
     const newEvent = {
       id: info.event.id,
       title: info.event.title,
@@ -247,15 +264,6 @@ const DraggableCalendar = () => {
       };
     });
 
-    // localStorage.setItem(
-    //   "finalSchedule",
-    //   JSON.stringify({
-    //     id: id,
-    //     events: resultArray,
-    //   })
-    // );
-
-    // console.log("Result array saved to localStorage:", resultArray);
     const updateRepoWithPlan = async () => {
       try {
         const response = await repoApi.updatePlan(id, {
@@ -298,20 +306,6 @@ const DraggableCalendar = () => {
 
   const handleReturn = () => {
     navigate(`/create-trip-step1/${id}`);
-  };
-
-  const handleHover = (title) => {
-    // console.log(title);
-    listServices.forEach((item) => {
-      if (title.includes(item.name)) {
-        if (item.startTime && item.endTime) {
-          console.log(item.startTime + "h - " + item.endTime + "h");
-        } else if (item.close && item.open) {
-          console.log(item.open + "h - " + item.close + "h");
-        }
-      }
-    });
-    // setIsHover(true);
   };
 
   const renderEventContent = (eventInfo) => {
@@ -397,8 +391,6 @@ const DraggableCalendar = () => {
                   padding: "6px 6px",
                   color: "black",
                 }}
-                onMouseEnter={() => handleHover(event.title)}
-                // onMouseLeave={() => setIsHover(false)}
               >
                 <div
                   className="fc-event-main"
@@ -410,27 +402,8 @@ const DraggableCalendar = () => {
               </div>
             ))}
           </div>
-
-          {/* Checkbox for removing events */}
-          {/* <div className="mt-2 my-5">
-            <div className="form-check form-check-custom form-check-solid">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                id="drop-remove"
-              />
-              <label className="form-check-label" htmlFor="drop-remove">
-                Xóa địa điểm khi kéo thả
-              </label>
-            </div>
-          </div> */}
         </div>
 
-        {/* <div>
-        <button onClick={getAllEvents}>Get All Events</button>
-      </div> */}
-
-        {/* FullCalendar */}
         <div id="kt_docs_fullcalendar_drag" style={{ width: "70%" }}>
           <FullCalendar
             ref={calendarRef}
@@ -447,6 +420,14 @@ const DraggableCalendar = () => {
             validRange={{
               start: date ? date.start : null,
               end: date ? date.end : null,
+            }}
+            eventAllow={(dropInfo, draggedEvent) => {
+              const startHour = dropInfo.start.getHours();
+              const eventType = draggedEvent._def.title;
+              if (eventType.includes("Ăn tại") && startHour <= 10) {
+                return false;
+              }
+              return true;
             }}
             events={events}
             slotMinTime="07:00:00"
