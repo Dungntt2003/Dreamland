@@ -1,10 +1,25 @@
 import { Card, Rate } from "antd";
+import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import DefaultRestaurant from "assets/image/restaurant-default.png";
+import Heart from "react-heart";
+import { handleLike } from "components/fun-api/like";
+import { useAuth } from "context/authContext";
 const { Meta } = Card;
-const CardRestaurant = ({ item, link }) => {
+const CardRestaurant = ({ item, link, active }) => {
+  const { id } = useAuth();
+  const [like, setLike] = useState(active);
+  const handleChange = (service_id) => {
+    const params = {
+      user_id: id,
+      service_id,
+      service_type: "restaurant",
+    };
+    handleLike(like, params);
+    setLike(!like);
+  };
   return (
     <div style={{ width: "25%", padding: "8px" }}>
       <Card
@@ -14,11 +29,29 @@ const CardRestaurant = ({ item, link }) => {
           margin: "0px 0 16px",
         }}
         cover={
-          <img
-            alt="example"
-            src={item.images[0] || DefaultRestaurant}
-            style={{ height: "170px" }}
-          />
+          <div style={{ position: "relative" }}>
+            <img
+              alt="example"
+              src={item.images[0] || DefaultRestaurant}
+              style={{ height: "170px", width: "100%" }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                top: "8px",
+                right: "8px",
+                width: "24px",
+                zIndex: 1,
+              }}
+            >
+              <Heart
+                isActive={like}
+                onClick={() => handleChange(item.id)}
+                animationScale={1.25}
+                style={{ marginBottom: "1rem" }}
+              />
+            </div>
+          </div>
         }
       >
         <Link to={`/${link}/${item.id}`} className="link" key={item.id}>

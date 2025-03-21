@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { Pagination, Input, Select } from "antd";
 import publicApi from "api/publicApi";
+import likeApi from "api/likeApi";
+import { useAuth } from "context/authContext";
 const ListDisplay = ({ listServices, CardComponent, link }) => {
+  const { id } = useAuth();
+  const [likedServices, setLikedServices] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [filteredData, setFilteredData] = useState([]);
@@ -19,6 +23,15 @@ const ListDisplay = ({ listServices, CardComponent, link }) => {
       }
     };
     getProvinces();
+    const getLikeServices = async () => {
+      try {
+        const response = await likeApi.getLikeList(id);
+        setLikedServices(response.data.likes);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getLikeServices();
   }, []);
   const options = provinces.map((item) => {
     return { value: item.name, label: item.name };
@@ -29,6 +42,22 @@ const ListDisplay = ({ listServices, CardComponent, link }) => {
   const currentItems = listServices.slice(indexOfFirstItem, indexOfLastItem);
   const handleChangePage = (page) => {
     setCurrentPage(page);
+  };
+
+  const checkMatch = (link, type) => {
+    if (link === "sight-seeing-detail" && type === "sight") return true;
+    if (link === "entertainment-detail" && type === "entertainment")
+      return true;
+    if (link === "restaurant-detail" && type === "restaurant") return true;
+    if (link === "hotel-detail" && type === "hotel") return true;
+    return false;
+  };
+
+  const checkLiked = (id, link) => {
+    return likedServices.some(
+      (service) =>
+        service.service_id === id && checkMatch(link, service.service_type)
+    );
   };
 
   //   const handleFilter = (e, value) => {
@@ -135,7 +164,12 @@ const ListDisplay = ({ listServices, CardComponent, link }) => {
             }}
           >
             {currentItems.map((item) => (
-              <CardComponent item={item} key={item.id} link={link} />
+              <CardComponent
+                item={item}
+                key={item.id}
+                link={link}
+                active={checkLiked(item.id, link)}
+              />
             ))}
           </div>
           <Pagination
@@ -156,7 +190,14 @@ const ListDisplay = ({ listServices, CardComponent, link }) => {
             }}
           >
             {filteredData.map((item) => {
-              return <CardComponent item={item} key={item.id} link={link} />;
+              return (
+                <CardComponent
+                  item={item}
+                  key={item.id}
+                  link={link}
+                  active={checkLiked(item.id, link)}
+                />
+              );
             })}
           </div>
         </>

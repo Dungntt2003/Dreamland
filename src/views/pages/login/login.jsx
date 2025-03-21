@@ -1,4 +1,3 @@
-import "./login.scss";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input, Flex } from "antd";
 import { Link } from "react-router-dom";
@@ -7,6 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { useAuth } from "context/authContext";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import CoverImage from "assets/image/cover-img.jpeg";
 
 const Login = () => {
   const { t } = useTranslation();
@@ -54,75 +54,90 @@ const Login = () => {
 
   return (
     <div className="register-wrap-container">
-      <div className="register-container">
+      <div style={{ display: "flex", width: "100%" }}>
+        <img
+          src={CoverImage}
+          alt="cover image"
+          style={{ width: "80%", height: "70vh" }}
+        />
         <div
-          className="header2 register-header"
-          style={{ textTransform: "uppercase" }}
+          className="register-container"
+          style={{ width: "100%", marginTop: "0" }}
         >
-          {t("login")}
-        </div>
-        <div className="register-form-container">
-          <Form
-            name="login"
-            style={{ width: "65%", margin: "auto" }}
-            initialValues={{
-              remember: true,
-            }}
-            onFinish={onFinish}
+          <div
+            className="header2 register-header"
+            style={{ textTransform: "uppercase" }}
           >
-            <Form.Item
-              name="email"
-              rules={[
-                {
-                  type: "email",
-                  message: "Email không hợp lệ!",
-                },
-                {
-                  required: true,
-                  message: "Hãy nhập email!",
-                },
-              ]}
+            {t("login")}
+          </div>
+          <div className="register-form-container" style={{ width: "100%" }}>
+            <Form
+              name="login"
+              style={{ width: "65%", margin: "auto" }}
+              initialValues={{
+                remember: true,
+              }}
+              onFinish={onFinish}
             >
-              <Input prefix={<UserOutlined />} placeholder="Email" />
-            </Form.Item>
-            <Form.Item
-              name="password"
-              rules={[
-                {
-                  required: true,
-                  message: "Hãy nhập mật khẩu",
-                },
-              ]}
-            >
-              <Input
-                prefix={<LockOutlined />}
-                type="password"
-                placeholder={t("password")}
-              />
-            </Form.Item>
-            <Form.Item>
-              <Flex justify="space-between" align="center">
-                <Form.Item name="remember" valuePropName="checked" noStyle>
-                  <Checkbox>{t("remember_me")}</Checkbox>
-                </Form.Item>
-                <Link to="/register" className="link">
-                  {t("forgot_password")}
-                </Link>
-              </Flex>
-            </Form.Item>
+              <Form.Item
+                name="email"
+                rules={[
+                  {
+                    type: "email",
+                    message: "Email không hợp lệ!",
+                  },
+                  {
+                    required: true,
+                    message: "Hãy nhập email!",
+                  },
+                ]}
+              >
+                <Input prefix={<UserOutlined />} placeholder="Email" />
+              </Form.Item>
+              <Form.Item
+                name="password"
+                rules={[
+                  {
+                    required: true,
+                    message: "Hãy nhập mật khẩu",
+                  },
+                ]}
+              >
+                <Input
+                  prefix={<LockOutlined />}
+                  type="password"
+                  placeholder={t("password")}
+                />
+              </Form.Item>
+              <Form.Item>
+                <Flex justify="space-between" align="center">
+                  <Form.Item name="remember" valuePropName="checked" noStyle>
+                    <Checkbox>{t("remember_me")}</Checkbox>
+                  </Form.Item>
+                  <Link to="/register" className="link">
+                    {t("forgot_password")}
+                  </Link>
+                </Flex>
+              </Form.Item>
 
-            <Form.Item>
-              <Button block type="primary" htmlType="submit" className="button">
-                {t("login")}
-              </Button>
-              {t("or")}{" "}
-              <Link to="/register" className="link">
-                {t("register_now")}!
-              </Link>
-            </Form.Item>
-          </Form>
+              <Form.Item>
+                <Button
+                  block
+                  type="primary"
+                  htmlType="submit"
+                  className="button"
+                >
+                  {t("login")}
+                </Button>
+                {t("or")}{" "}
+                <Link to="/register" className="link">
+                  {t("register_now")}!
+                </Link>
+              </Form.Item>
+            </Form>
+          </div>
+          <ToastContainer />
         </div>
-        <ToastContainer />
       </div>
     </div>
   );

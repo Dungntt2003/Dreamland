@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Empty, Button } from "antd";
 import repoApi from "api/repoApi";
 import CardRepo from "components/card/cardRepo";
 import { useAuth } from "context/authContext";
 const RepoList = () => {
   const [repo, setRepo] = useState([]);
   const { id } = useAuth();
+  const navigate = useNavigate();
   useEffect(() => {
     const getList = async () => {
       try {
@@ -16,9 +19,21 @@ const RepoList = () => {
     };
     getList();
   }, []);
+
+  const handleCreateRepo = () => {
+    navigate("/create-trip");
+  };
   return (
     <div style={{ padding: "16px" }}>
       <div className="header2">DANH SÁCH LỘ TRÌNH CỦA BẠN</div>
+      {repo.length === 0 && (
+        <>
+          <Button className="button" onClick={handleCreateRepo}>
+            Tạo lộ trình ngay
+          </Button>
+          <Empty />
+        </>
+      )}
       <div
         style={{
           display: "flex",
