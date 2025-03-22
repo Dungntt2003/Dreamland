@@ -23,4 +23,11 @@ const handleLike = async (status, params) => {
   const response = await action(params);
   // console.log(response);
 };
-export { clickLike, unLike, handleLike };
+
+const checkMatchService = (likedService, id, type) => {
+  return likedService.some(
+    (service) => service.service_id === id && service.service_type === type
+  );
+};
+
+export { clickLike, unLike, handleLike, checkMatchService };
