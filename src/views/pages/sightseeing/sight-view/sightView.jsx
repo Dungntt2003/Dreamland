@@ -21,6 +21,7 @@ import SightItem from "components/repo-item/sightItem";
 import { checkMatchService } from "components/fun-api/like";
 import likeApi from "api/likeApi";
 import { useAuth } from "context/authContext";
+import nearByApi from "api/nearbyApi";
 
 const SightView = ({ data, count, handleUpdateCount }) => {
   const { id: user_id } = useAuth();
@@ -48,6 +49,8 @@ const SightView = ({ data, count, handleUpdateCount }) => {
     },
   ];
   const { id } = useParams();
+  const [serviceId, setServiceId] = useState();
+  const [nearServices, setNearServices] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [likedServices, setLikedServices] = useState([]);
@@ -77,6 +80,22 @@ const SightView = ({ data, count, handleUpdateCount }) => {
     getLiked();
   }, []);
 
+  useEffect(() => {
+    const getNearServices = async () => {
+      try {
+        const response = await nearByApi.getNearServices(
+          serviceId,
+          "sight",
+          100
+        );
+        setNearServices(response.data.nearby);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getNearServices();
+  }, [serviceId]);
+
   const checkSightExist = (sight_id) => {
     const found = data.find((item) => item.service_id === sight_id);
     return found !== undefined;
@@ -98,6 +117,7 @@ const SightView = ({ data, count, handleUpdateCount }) => {
       }
     };
     addToRepo();
+    setServiceId(service_id);
   };
 
   const likedData = sightData.filter((sight) =>
@@ -124,6 +144,17 @@ const SightView = ({ data, count, handleUpdateCount }) => {
       active={checkMatchService(likedServices, sight.id, "sight")}
     />
   ));
+
+  const nearCard = nearServices.map((sight) => (
+    <SightItem
+      key={sight.id}
+      item={sight}
+      checkSightExist={checkSightExist}
+      handleAddRepo={handleAddRepo}
+      active={checkMatchService(likedServices, sight.id, "sight")}
+    />
+  ));
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = otherCard.slice(indexOfFirstItem, indexOfLastItem);
@@ -213,6 +244,25 @@ const SightView = ({ data, count, handleUpdateCount }) => {
               onChange={handleChangePage}
               style={{ marginTop: "20px", textAlign: "center" }}
             />
+          </div>
+          <div>
+            <div style={{ fontSize: "20px", marginTop: "24px" }}>
+              CÁC ĐỊA ĐIỂM Ở GẦN
+            </div>
+            <Swiper
+              modules={[Navigation, Pagination, Scrollbar, A11y]}
+              spaceBetween={50}
+              slidesPerView={4}
+              navigation
+              pagination={{ clickable: true }}
+              scrollbar={{ draggable: true }}
+              grabCursor={true}
+              style={{ padding: "24px 0 32px" }}
+            >
+              {nearCard.map((item, index) => {
+                return <SwiperSlide key={index}>{item}</SwiperSlide>;
+              })}
+            </Swiper>
           </div>
         </>
       ) : (
