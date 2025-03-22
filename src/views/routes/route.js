@@ -24,6 +24,7 @@ import HotelList from "views/pages/hotel/hotel-list/hoteList";
 import RepoList from "views/pages/repository/repo-list/repo-list";
 import RepoMap from "views/pages/map/repo-map";
 import VNPayPayment from "views/pages/payment/payment";
+import LikedService from "views/pages/liked-service/liked-service";
 const AllRoutes = () => {
   return (
     <Routes>
@@ -91,6 +92,10 @@ const AllRoutes = () => {
         element={<MainLayout component={<RestaurantList />} />}
       />
       <Route path="/hotel" element={<MainLayout component={<HotelList />} />} />
+      <Route
+        path="/favorite"
+        element={<MainLayout component={<LikedService />} />}
+      />
       <Route
         path="/repository"
         element={<MainLayout component={<RepoList />} />}

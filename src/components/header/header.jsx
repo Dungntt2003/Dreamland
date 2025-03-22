@@ -1,7 +1,8 @@
 import "./header.scss";
 import Navbar from "react-bootstrap/Navbar";
 import Logo from "assets/image/logo.png";
-import { Button, Select } from "antd";
+import { Button, Select, Dropdown, Space } from "antd";
+import { DownOutlined, SmileOutlined } from "@ant-design/icons";
 import VN from "assets/image/vietnamese.png";
 import EN from "assets/image/english.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,14 +14,45 @@ import { useAuth } from "context/authContext";
 const Header = () => {
   const { isAuthenticated, logout, role, id } = useAuth();
   const { t, i18n } = useTranslation();
+  const handleLogout = () => {
+    logout();
+  };
+  const items = [
+    {
+      key: "1",
+      label: (
+        <Link to={`/personal-info/${id}`} className="link">
+          Thông tin tài khoản
+        </Link>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <Link to={`/favorite`} className="link">
+          Danh sách yêu thích
+        </Link>
+      ),
+    },
+    {
+      key: "3",
+      label: (
+        <Link
+          to={`/personal-info/${id}`}
+          className="link"
+          style={{ color: "red" }}
+          onClick={handleLogout}
+        >
+          Đăng xuất
+        </Link>
+      ),
+    },
+  ];
   // const handleChange = (value) => {
   //   i18n.changeLanguage(value);
   // };
   const handleChoose = (value) => {
     console.log(value);
-  };
-  const handleLogout = () => {
-    logout();
   };
   return (
     <div className="header-wrap">
@@ -73,22 +105,22 @@ const Header = () => {
           />
           {isAuthenticated === true ? (
             <>
-              <Navbar.Text className="set-margin white-color">
-                <Link className="link white-color" to={`/personal-info/${id}`}>
-                  Xin chào
-                  <FontAwesomeIcon
-                    icon={faUser}
-                    style={{ margin: "0px 8px 0 4px" }}
-                  />
-                </Link>
-              </Navbar.Text>
-              <Button
-                variant="outlined"
-                className="button-register set-margin"
-                onClick={handleLogout}
+              <Dropdown
+                menu={{
+                  items,
+                }}
               >
-                Đăng xuất
-              </Button>
+                <a
+                  onClick={(e) => e.preventDefault()}
+                  className="link"
+                  style={{ margin: "0 16px", color: "var(--white-color)" }}
+                >
+                  <Space>
+                    Xin chào <FontAwesomeIcon icon={faUser} />
+                    <DownOutlined />
+                  </Space>
+                </a>
+              </Dropdown>
             </>
           ) : (
             <>

@@ -96,6 +96,7 @@ const Login = () => {
               </Form.Item>
               <Form.Item
                 name="password"
+                type="password"
                 rules={[
                   {
                     required: true,
