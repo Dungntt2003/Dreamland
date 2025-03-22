@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { Pagination, Input, Select } from "antd";
+import { Pagination, Input, Select, Radio } from "antd";
 import publicApi from "api/publicApi";
 import likeApi from "api/likeApi";
 import { useAuth } from "context/authContext";
+import formatLocation from "utils/formatLocation";
 const ListDisplay = ({ listServices, CardComponent, link }) => {
   const { id } = useAuth();
   const [likedServices, setLikedServices] = useState([]);
@@ -12,6 +13,44 @@ const ListDisplay = ({ listServices, CardComponent, link }) => {
   const [provinces, setProvinces] = useState([]);
   const [search, setSearch] = useState(false);
   const [star, setStar] = useState(0);
+  const [checked, setChecked] = useState(false);
+  const [filter, setFilter] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState("All");
+  const [sortRating, setSortRating] = useState(0);
+
+  const toggle = () => {
+    setChecked((prev) => !prev);
+  };
+  const handleChangeLocation = (value) => {
+    setSelectedLocation(value);
+  };
+
+  const handleChangeRating = (value) => {
+    setSortRating(value);
+  };
+
+  useEffect(() => {
+    let result = [...listServices];
+
+    if (selectedLocation !== "All") {
+      result = result.filter((item) => item.address.includes(selectedLocation));
+    }
+
+    if (checked) {
+      result = result.filter((item) => checkLiked(item.id, link));
+    }
+
+    if (sortRating === 1) {
+      result.sort((a, b) => b.rate - a.rate);
+    } else if (sortRating === 2) {
+      result.sort((a, b) => a.rate - b.rate);
+    }
+    setFilter(true);
+    setFilteredData(result);
+    if (sortRating === 0 && selectedLocation === "All" && checked === false)
+      setFilter(false);
+  }, [sortRating, selectedLocation, checked]);
+
   const itemsPerPage = 8;
   useEffect(() => {
     const getProvinces = async () => {
@@ -34,7 +73,7 @@ const ListDisplay = ({ listServices, CardComponent, link }) => {
     getLikeServices();
   }, []);
   const options = provinces.map((item) => {
-    return { value: item.name, label: item.name };
+    return { value: formatLocation(item.name), label: item.name };
   });
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -60,37 +99,6 @@ const ListDisplay = ({ listServices, CardComponent, link }) => {
     );
   };
 
-  //   const handleFilter = (e, value) => {
-  //     if (e.target.value === "" && value === 0) {
-  //       setSearch(false);
-  //       setFilteredData(sights);
-  //       setSearchTerm("");
-  //       return;
-  //     }
-  //     setSearch(true);
-  //     const keyword = e.target.value.toLowerCase();
-  //     setSearchTerm(keyword);
-  //     if (value === 0) {
-  //       const filtered = sights.filter((item) =>
-  //         item.name.toLowerCase().includes(keyword)
-  //       );
-  //       setFilteredData(filtered);
-  //       return;
-  //     } else if (e.target.value === "") {
-  //       const filtered = sights.filter((item) => item.rating === value);
-  //       setFilteredData(filtered);
-  //       return;
-  //     } else {
-  //       const filtered = sights.filter(
-  //         (item) =>
-  //           item.rating === value &&
-  //           item.name.toLowerCase().includes(searchTerm.toLowerCase())
-  //       );
-  //       setFilteredData(filtered);
-  //       return;
-  //     }
-  //   };
-
   const handleSearch = (e) => {
     if (e.target.value === "") {
       setSearch(false);
@@ -108,53 +116,71 @@ const ListDisplay = ({ listServices, CardComponent, link }) => {
     setFilteredData(filtered);
   };
 
-  const listStar = Array.from({ length: 5 }, (_, i) => {
-    return {
-      value: i + 1,
-      label: `${i + 1} sao`,
-    };
-  });
-
-  const handleChange = (value) => {
-    console.log(value);
-    setStar(value);
-  };
   return (
     <div style={{ padding: "16px" }}>
-      <div style={{ display: "flex", margin: "16px 0" }}>
-        <Input
-          placeholder="Nhập tên địa điểm"
-          value={searchTerm}
-          onChange={handleSearch}
-          style={{
-            width: "50%",
-          }}
-        />
-        <Select
-          showSearch
-          placeholder="Chọn tỉnh/thành phố"
-          optionFilterProp="label"
-          // onChange={onChange}
-          // onSearch={onSearch}
-          options={options}
-        />
+      <div
+        style={{
+          display: "flex",
+          margin: "16px 0",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <div style={{ width: "40%" }}>
+          <Input
+            placeholder="Nhập tên địa điểm"
+            value={searchTerm}
+            onChange={handleSearch}
+            style={{
+              width: "100%",
+            }}
+          />
+        </div>
+        <div>
+          <Select
+            style={{ width: "180px" }}
+            showSearch
+            placeholder="Chọn tỉnh/thành phố"
+            optionFilterProp="label"
+            value={selectedLocation}
+            onChange={handleChangeLocation}
+            options={[
+              {
+                value: "All",
+                label: "Tất cả",
+              },
+              ...options,
+            ]}
+          />
 
-        <Select
-          showSearch
-          placeholder="Chọn đánh giá"
-          optionFilterProp="label"
-          onChange={handleChange}
-          //   onSearch={handleSearchStar}
-          options={[
-            {
-              value: 0,
-              label: "Tất cả",
-            },
-            ...listStar,
-          ]}
-        />
+          <Select
+            style={{ margin: "0 24px", width: "150px" }}
+            showSearch
+            placeholder="Chọn đánh giá"
+            optionFilterProp="label"
+            value={sortRating}
+            onChange={handleChangeRating}
+            options={[
+              {
+                value: 0,
+                label: "Tất cả",
+              },
+              {
+                value: 1,
+                label: "Giảm dần",
+              },
+              {
+                value: 2,
+                label: "Tăng dần",
+              },
+            ]}
+          />
+          <Radio checked={checked} onClick={toggle}>
+            Yêu thích
+          </Radio>
+        </div>
       </div>
-      {search === false ? (
+      {search === false && filter === false ? (
         <>
           <div
             style={{
