@@ -99,9 +99,9 @@ const DraggableCalendar = () => {
     const getDemoRepo = async () => {
       try {
         const response = await demoRepoApi.getServices(id);
-        // console.log(response);
         setExternalEvents(
           response.data.data.map((item) => {
+            console.log(item);
             return {
               id: item.id,
               type: item.service_type,
@@ -164,23 +164,6 @@ const DraggableCalendar = () => {
   }, [id]);
 
   const handleEventReceive = (info) => {
-    // const startHour = info.event.start.getHours();
-    // const title = info.event._def.title;
-
-    // if (title.includes("Ăn tại") && startHour <= 10) {
-    //   info.revert();
-    //   toast.warn("Nhà hàng chưa mở cửa", {
-    //     position: "top-right",
-    //     autoClose: 2000,
-    //     hideProgressBar: false,
-    //     closeOnClick: true,
-    //     pauseOnHover: true,
-    //     draggable: true,
-    //     progress: undefined,
-    //     theme: "light",
-    //   });
-    //   return;
-    // }
     const eventId = uuidv4();
     const newEvent = {
       id: eventId,

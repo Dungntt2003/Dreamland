@@ -23,7 +23,7 @@ const VNPayPayment = () => {
       <button onClick={handlePayment}>Thanh toán</button>
       {payUrl && (
         <p>
-          <a href={payUrl} target="_blank" rel="noopener noreferrer">
+          <a href={payUrl} rel="noopener noreferrer">
             Nhấn vào đây để thanh toán
           </a>
         </p>

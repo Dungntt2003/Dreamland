@@ -25,6 +25,7 @@ import RepoList from "views/pages/repository/repo-list/repo-list";
 import RepoMap from "views/pages/map/repo-map";
 import VNPayPayment from "views/pages/payment/payment";
 import LikedService from "views/pages/liked-service/liked-service";
+import PaymentResult from "views/pages/payment/payment-result";
 const AllRoutes = () => {
   return (
     <Routes>
@@ -95,6 +96,10 @@ const AllRoutes = () => {
       <Route
         path="/favorite"
         element={<MainLayout component={<LikedService />} />}
+      />
+      <Route
+        path="/api/v1/payment/vnpay-return"
+        element={<MainLayout component={<PaymentResult />} />}
       />
       <Route
         path="/repository"
