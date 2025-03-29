@@ -18,6 +18,9 @@ import sightApi from "api/sightApi";
 import demoRepoApi from "api/demoRepoApi";
 import { ToastContainer, toast } from "react-toastify";
 import SightItem from "components/repo-item/sightItem";
+import EntertainmentItem from "components/repo-item/entertainmentItem";
+import HotelItem from "components/repo-item/hotelItem";
+import RestaurantItem from "components/repo-item/restaurantItem";
 import { checkMatchService } from "components/fun-api/like";
 import likeApi from "api/likeApi";
 import { useAuth } from "context/authContext";
@@ -145,15 +148,52 @@ const SightView = ({ data, count, handleUpdateCount }) => {
     />
   ));
 
-  const nearCard = nearServices.map((sight) => (
-    <SightItem
-      key={sight.id}
-      item={sight}
-      checkSightExist={checkSightExist}
-      handleAddRepo={handleAddRepo}
-      active={checkMatchService(likedServices, sight.id, "sight")}
-    />
-  ));
+  const nearCard = nearServices.map((item) => {
+    switch (item.type) {
+      case "sight":
+        return (
+          <SightItem
+            key={item.id}
+            item={item}
+            checkSightExist={checkSightExist}
+            handleAddRepo={handleAddRepo}
+            active={checkMatchService(likedServices, item.id, "sight")}
+          />
+        );
+      case "entertainment":
+        return (
+          <EntertainmentItem
+            key={item.id}
+            item={item}
+            checkSightExist={checkSightExist}
+            handleAddRepo={handleAddRepo}
+            active={checkMatchService(likedServices, item.id, "entertainment")}
+          />
+        );
+      case "hotel":
+        return (
+          <HotelItem
+            key={item.id}
+            item={item}
+            checkSightExist={checkSightExist}
+            handleAddRepo={handleAddRepo}
+            active={checkMatchService(likedServices, item.id, "hotel")}
+          />
+        );
+      case "restaurant":
+        return (
+          <RestaurantItem
+            key={item.id}
+            item={item}
+            checkSightExist={checkSightExist}
+            handleAddRepo={handleAddRepo}
+            active={checkMatchService(likedServices, item.id, "restaurant")}
+          />
+        );
+      default:
+        return null;
+    }
+  });
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
