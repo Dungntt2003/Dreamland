@@ -155,6 +155,11 @@ const MapComponent = ({ locations }) => {
           const legs = result.routes[0].legs;
           legs.forEach((leg, index) => {
             // Hiển thị thông tin khoảng cách và thời gian giữa các điểm
+            const startLat = leg.start_location.lat();
+            const startLng = leg.start_location.lng();
+            const endLat = leg.end_location.lat();
+            const endLng = leg.end_location.lng();
+            const googleMapsLink = `https://www.google.com/maps/dir/?api=1&origin=${startLat},${startLng}&destination=${endLat},${endLng}`;
             const midpoint = {
               lat: (leg.start_location.lat() + leg.end_location.lat()) / 2,
               lng: (leg.start_location.lng() + leg.end_location.lng()) / 2,
@@ -164,6 +169,9 @@ const MapComponent = ({ locations }) => {
               content: `<div style="padding: 5px;">
                 <strong>🚗 ${leg.duration.text}</strong><br>
                 (${leg.distance.text})
+                  <a href="${googleMapsLink}" target="_blank" rel="noopener noreferrer">
+                    🧭 Hướng dẫn đường đi
+                  </a>
               </div>`,
               pixelOffset: new window.google.maps.Size(0, -10),
             });

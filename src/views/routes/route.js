@@ -26,6 +26,7 @@ import RepoMap from "views/pages/map/repo-map";
 import VNPayPayment from "views/pages/payment/payment";
 import LikedService from "views/pages/liked-service/liked-service";
 import PaymentResult from "views/pages/payment/payment-result";
+import AIGen from "views/pages/ai-gen/testAiGen";
 const AllRoutes = () => {
   return (
     <Routes>
@@ -113,6 +114,7 @@ const AllRoutes = () => {
         path="/vnpay"
         element={<MainLayout component={<VNPayPayment />} />}
       />
+      <Route path="/chat-ai" element={<MainLayout component={<AIGen />} />} />
       <Route element={<ProtectedRoute requiredRole="user" />}>
         <Route
           path="/homepage"
