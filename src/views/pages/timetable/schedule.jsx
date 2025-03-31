@@ -13,6 +13,7 @@ import entertainmentApi from "api/entertainmentApi";
 import sightApi from "api/sightApi";
 import restaurantApi from "api/restaurantApi";
 import { v4 as uuidv4 } from "uuid";
+import convertToEvent from "utils/convertEvent";
 const DraggableCalendar = () => {
   const ref1 = useRef(null);
   const ref2 = useRef(null);
@@ -92,6 +93,23 @@ const DraggableCalendar = () => {
             .toISOString()
             .split("T")[0],
         });
+        const storedData = localStorage.getItem("schedule");
+        if (storedData) {
+          const parsedData = JSON.parse(storedData);
+          if (id === parsedData.id) {
+            setEvents(parsedData.data);
+          } else
+            setEvents(
+              response.data?.data?.plan
+                ? response.data.data.plan.map(convertToEvent)
+                : []
+            );
+        } else
+          setEvents(
+            response.data?.data?.plan
+              ? response.data.data.plan.map(convertToEvent)
+              : []
+          );
       } catch (error) {
         console.log(error);
       }
@@ -101,7 +119,7 @@ const DraggableCalendar = () => {
         const response = await demoRepoApi.getServices(id);
         setExternalEvents(
           response.data.data.map((item) => {
-            console.log(item);
+            // console.log(item);
             return {
               id: item.id,
               type: item.service_type,
@@ -120,16 +138,6 @@ const DraggableCalendar = () => {
     getRepoReal();
     // console.log(date);
     getDemoRepo();
-  }, [id]);
-
-  useEffect(() => {
-    const storedData = localStorage.getItem("schedule");
-    if (storedData) {
-      const parsedData = JSON.parse(storedData);
-      if (id === parsedData.id) {
-        setEvents(parsedData.data);
-      }
-    }
     // Initialize external draggable events
     new Draggable(externalEventsRef.current, {
       itemSelector: ".fc-event",
@@ -286,9 +294,6 @@ const DraggableCalendar = () => {
           progress: undefined,
           theme: "light",
         });
-        setTimeout(() => {
-          navigate(`/schedule-detail/${id}`);
-        }, 2000);
       }
     };
     updateRepoWithPlan();

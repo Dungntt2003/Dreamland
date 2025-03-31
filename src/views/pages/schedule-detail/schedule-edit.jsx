@@ -5,11 +5,18 @@ import { Button, Form, Input, DatePicker, InputNumber, Select } from "antd";
 import dayjs from "dayjs";
 import { useForm } from "antd/es/form/Form";
 import repoApi from "api/repoApi";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+import { ToastContainer, toast } from "react-toastify";
+
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
 const ScheduleEdit = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [form] = useForm();
   const [repo, setRepo] = useState([]);
+  const [plan, setPlan] = useState([]);
   const { RangePicker } = DatePicker;
   const dateFormat = "YYYY/MM/DD";
   const { TextArea } = Input;
@@ -19,6 +26,7 @@ const ScheduleEdit = () => {
       try {
         const response = await repoApi.getADemoRepo(id);
         setRepo(response.data.data);
+        setPlan(response.data.data.plan);
       } catch (error) {
         console.log(error);
       }
@@ -40,7 +48,65 @@ const ScheduleEdit = () => {
   }, [repo, form]);
 
   const onFinish = (values) => {
-    console.log("Received values of form: ", values);
+    const filteredPlans = plan.filter((item) => {
+      const [dateStr, timeRange] = item.label.split(", ");
+      const [startTimeStr, endTimeStr] = timeRange.split(" - ");
+      const start = dayjs(`${dateStr} ${startTimeStr}`, "DD/MM/YYYY HH:mm");
+      const end = dayjs(`${dateStr} ${endTimeStr}`, "DD/MM/YYYY HH:mm");
+
+      const [rangeStart, rangeEnd] = values.rangeDate;
+      const extendedRangeEnd = rangeEnd.add(1, "day");
+      return (
+        start.isSameOrAfter(rangeStart) && end.isSameOrBefore(extendedRangeEnd)
+      );
+    });
+    const startDate = values.rangeDate[0]
+      ? values.rangeDate[0].format("YYYY-MM-DD")
+      : null;
+    const endDate = values.rangeDate[1]
+      ? values.rangeDate[1].format("YYYY-MM-DD")
+      : null;
+    const params = {
+      name: values.name,
+      description: values.description,
+      numberPeople: values.numberPeople,
+      startDate: startDate,
+      endDate: endDate,
+      plan: filteredPlans,
+    };
+    const updateRepoWithPlan = async () => {
+      try {
+        const response = await repoApi.updatePlan(id, params);
+
+        console.log(response);
+        toast.success("Cập nhật mô tả thành công", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        setTimeout(() => {
+          navigate(`/schedule/${id}`);
+        }, 2000);
+      } catch (error) {
+        console.log(error);
+        toast.error(error.response.data.message, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+    };
+    updateRepoWithPlan();
   };
 
   const handleRepoEdit = () => {
@@ -171,6 +237,7 @@ const ScheduleEdit = () => {
           </Form>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };
