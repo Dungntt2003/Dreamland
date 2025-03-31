@@ -27,6 +27,7 @@ import VNPayPayment from "views/pages/payment/payment";
 import LikedService from "views/pages/liked-service/liked-service";
 import PaymentResult from "views/pages/payment/payment-result";
 import AIGen from "views/pages/ai-gen/testAiGen";
+import ScheduleEdit from "views/pages/schedule-detail/schedule-edit";
 const AllRoutes = () => {
   return (
     <Routes>
@@ -97,6 +98,10 @@ const AllRoutes = () => {
       <Route
         path="/favorite"
         element={<MainLayout component={<LikedService />} />}
+      />
+      <Route
+        path="/schedule-edit/:id"
+        element={<MainLayout component={<ScheduleEdit />} />}
       />
       <Route
         path="/api/v1/payment/vnpay-return"

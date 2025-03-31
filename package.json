@@ -47,6 +47,7 @@
     "react-scripts": "5.0.1",
     "react-simple-star-rating": "^5.1.7",
     "react-toastify": "^10.0.6",
+    "react-tooltip": "^5.28.0",
     "sass": "^1.80.6",
     "swiper": "^11.1.15",
     "uuid": "^11.0.2",

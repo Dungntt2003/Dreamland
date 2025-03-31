@@ -67,7 +67,7 @@ const ScheduleDetail = () => {
   };
 
   const handleEdit = () => {
-    navigate(`/schedule/${id}`);
+    navigate(`/schedule-edit/${id}`);
   };
 
   const handleShareLink = (value) => {

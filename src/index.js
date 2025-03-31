@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./index.scss";
 import "react-toastify/dist/ReactToastify.css";
+import "react-tooltip/dist/react-tooltip.css";
 import "@fontsource/roboto";
 import i18n from "utils/i18n";
 const root = ReactDOM.createRoot(document.getElementById("root"));

@@ -350,7 +350,7 @@ const DraggableCalendar = () => {
               onClick={handleSave}
               ref={ref2}
             >
-              Lưu
+              Lưu tạm thời
             </Button>
             <Button className="button" onClick={handleFinish} ref={ref3}>
               Hoàn thành
