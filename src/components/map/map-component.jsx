@@ -168,7 +168,7 @@ const MapComponent = ({ locations }) => {
             const infoWindow = new window.google.maps.InfoWindow({
               content: `<div style="padding: 5px;">
                 <strong>🚗 ${leg.duration.text}</strong><br>
-                (${leg.distance.text})
+                (${leg.distance.text})<br>
                   <a href="${googleMapsLink}" target="_blank" rel="noopener noreferrer">
                     🧭 Hướng dẫn đường đi
                   </a>

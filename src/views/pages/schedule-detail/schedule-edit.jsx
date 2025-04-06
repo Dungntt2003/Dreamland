@@ -60,6 +60,7 @@ const ScheduleEdit = () => {
         start.isSameOrAfter(rangeStart) && end.isSameOrBefore(extendedRangeEnd)
       );
     });
+    // console.log(filteredPlans);
     const startDate = values.rangeDate[0]
       ? values.rangeDate[0].format("YYYY-MM-DD")
       : null;

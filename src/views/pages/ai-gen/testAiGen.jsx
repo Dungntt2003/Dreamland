@@ -19,7 +19,7 @@ const AIGen = () => {
 
   return (
     <div style={{ padding: 30 }}>
-      <h2>🧠 Hỏi AI từ OpenRouter</h2>
+      <h2>Ask AI</h2>
       <textarea
         value={question}
         onChange={(e) => setQuestion(e.target.value)}
