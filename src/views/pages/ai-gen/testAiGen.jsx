@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import aiApi from "api/aiApi";
 
 const AIGen = () => {
   const [question, setQuestion] = useState("");
@@ -7,9 +7,7 @@ const AIGen = () => {
 
   const handleAsk = async () => {
     try {
-      const res = await axios.post("http://localhost:8000/api/v1/ai/ask-ai", {
-        question,
-      });
+      const res = await aiApi.getResBasic(question);
       setReply(res.data.reply);
     } catch (err) {
       console.error(err);

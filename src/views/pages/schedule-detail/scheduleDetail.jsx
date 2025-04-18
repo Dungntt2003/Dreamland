@@ -1,14 +1,14 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import repoApi from "api/repoApi";
-import { Timeline, Button, Select, FloatButton } from "antd";
+import { Timeline, Button, Select, FloatButton, Modal } from "antd";
 import ExportToDOCX from "utils/exportToDOCX";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPen,
   faPrint,
-  faShare,
   faMap,
+  faBook,
 } from "@fortawesome/free-solid-svg-icons";
 import { toast, ToastContainer } from "react-toastify";
 import FullCalendar from "@fullcalendar/react";
@@ -16,6 +16,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import reverseFormat from "utils/reverseFormatRepo";
+import aiApi from "api/aiApi";
 const ScheduleDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -23,12 +24,28 @@ const ScheduleDetail = () => {
   const [repo, setRepo] = useState(null);
   const [events, setEvents] = useState([]);
   const [item, setItem] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [date, setDate] = useState(null);
+  const [experience, setExperience] = useState(null);
+  const [query, setQuery] = useState(null);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const getFullRepo = async () => {
       try {
         const response = await repoApi.getADemoRepo(id);
         // console.log(response);
+        const listServices = response.data.data.plan
+          .map((item) => {
+            return `${item.label} ${item.children}`;
+          })
+          .join(". ");
+        setQuery(
+          `Du lịch ${
+            response.data.data.destination
+              ? response.data.data.destination
+              : "Hà Giang"
+          } với lộ trình như sau: ${listServices}`
+        );
         setDate({
           start: new Date(response.data.data.startDate)
             .toISOString()
@@ -50,6 +67,36 @@ const ScheduleDetail = () => {
     };
     getFullRepo();
   }, [id]);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+    setExperience(null);
+    setLoading(true);
+    const getAiGen = async () => {
+      try {
+        const params = {
+          itinerary: query,
+        };
+        const response = await aiApi.getDetailWithAI(params);
+        console.log(response);
+        setExperience(response.data.data);
+      } catch (error) {
+        console.log(error);
+        setExperience("Lỗi khi lấy dữ liệu từ AI.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    getAiGen();
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
   const handleExport = () => {
     const resultString = item
@@ -194,17 +241,33 @@ const ScheduleDetail = () => {
           />
         </div>
       </div>
-      <FloatButton
-        shape="circle"
-        type="primary"
-        onClick={handleMap}
-        tooltip="Xem bản đồ"
-        style={{
-          insetInlineEnd: 94,
-        }}
-        icon={<FontAwesomeIcon icon={faMap} />}
-      />
+      <FloatButton.Group shape="circle" style={{ insetInlineEnd: 94 }}>
+        <FloatButton
+          type="primary"
+          onClick={showModal}
+          tooltip="Mô tả lộ trình"
+          icon={<FontAwesomeIcon icon={faBook} />}
+        />
+        <FloatButton
+          type="primary"
+          onClick={handleMap}
+          tooltip="Xem bản đồ"
+          icon={<FontAwesomeIcon icon={faMap} />}
+        />
+      </FloatButton.Group>
       <ToastContainer />
+      <Modal
+        title="Mô tả lộ trình"
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        {loading ? (
+          <div>⏳ Đang tạo mô tả lộ trình từ AI...</div>
+        ) : (
+          <div style={{ whiteSpace: "pre-line" }}>{experience}</div>
+        )}
+      </Modal>
     </div>
   );
 };
