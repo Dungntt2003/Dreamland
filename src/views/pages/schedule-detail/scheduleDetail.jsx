@@ -17,6 +17,8 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import reverseFormat from "utils/reverseFormatRepo";
 import aiApi from "api/aiApi";
+import Markdown from "react-markdown";
+import TextToSpeech from "components/text-to-speech/TTP";
 const ScheduleDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -258,6 +260,7 @@ const ScheduleDetail = () => {
       <ToastContainer />
       <Modal
         title="Mô tả lộ trình"
+        width="50%"
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -265,7 +268,16 @@ const ScheduleDetail = () => {
         {loading ? (
           <div>⏳ Đang tạo mô tả lộ trình từ AI...</div>
         ) : (
-          <div style={{ whiteSpace: "pre-line" }}>{experience}</div>
+          <div style={{ whiteSpace: "pre-line" }}>
+            {experience ? (
+              <>
+                <TextToSpeech text={experience} />
+                <Markdown>{experience}</Markdown>
+              </>
+            ) : (
+              <div>Không có dữ liệu mô tả lộ trình.</div>
+            )}
+          </div>
         )}
       </Modal>
     </div>
