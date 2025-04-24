@@ -28,6 +28,8 @@ import LikedService from "views/pages/liked-service/liked-service";
 import PaymentResult from "views/pages/payment/payment-result";
 import AIGen from "views/pages/ai-gen/testAiGen";
 import ScheduleEdit from "views/pages/schedule-detail/schedule-edit";
+import VoiceText from "views/pages/test/tts";
+import PaymentService from "views/pages/payment-service/payment-service";
 const AllRoutes = () => {
   return (
     <Routes>
@@ -118,6 +120,14 @@ const AllRoutes = () => {
       <Route
         path="/vnpay"
         element={<MainLayout component={<VNPayPayment />} />}
+      />
+      <Route
+        path="/payment-service/:id"
+        element={<MainLayout component={<PaymentService />} />}
+      />
+      <Route
+        path="/voice-text"
+        element={<MainLayout component={<VoiceText />} />}
       />
       <Route path="/chat-ai" element={<MainLayout component={<AIGen />} />} />
       <Route element={<ProtectedRoute requiredRole="user" />}>

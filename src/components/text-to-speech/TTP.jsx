@@ -1,49 +1,34 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import axios from "axios";
 
-function TextToSpeech({ text }) {
-  const [isLoaded, setIsLoaded] = useState(false);
+const TextToSpeech = ({ text }) => {
+  const apiKey = "Lanvhg8WHdavBTk1VtyYGysUi4NHnpxO";
+  const url = "https://api.fpt.ai/hmi/tts/v5";
 
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src =
-      "https://code.responsivevoice.org/responsivevoice.js?key=aMhBnPYG";
-    script.async = true;
-    script.onload = () => setIsLoaded(true);
-    document.body.appendChild(script);
-
-    return () => {
-      if (window.responsiveVoice) {
-        window.responsiveVoice.cancel();
-      }
-      document.body.removeChild(script);
-    };
-  }, []);
-
-  const speak = () => {
-    if (window.responsiveVoice && text) {
-      window.responsiveVoice.speak(text, "Vietnamese Female", {
-        rate: 1,
-        pitch: 1,
+  const callFptTTS = async () => {
+    try {
+      const response = await axios.post(url, text, {
+        headers: {
+          "api-key": apiKey,
+          speed: "",
+          voice: "banmai",
+          "Content-Type": "text/plain",
+        },
       });
-    }
-  };
 
-  const stop = () => {
-    if (window.responsiveVoice) {
-      window.responsiveVoice.cancel();
+      const audioUrl = response.data.async;
+      const audio = new Audio(audioUrl);
+      audio.play();
+    } catch (err) {
+      console.error("Lỗi:", err.message || err);
     }
   };
 
   return (
     <div>
-      <button onClick={speak} disabled={!isLoaded}>
-        Đọc văn bản
-      </button>
-      <button onClick={stop} disabled={!isLoaded}>
-        Dừng đọc
-      </button>
+      <button onClick={callFptTTS}>🔊 Đọc văn bản bằng FPT.AI</button>
     </div>
   );
-}
+};
 
 export default TextToSpeech;

@@ -9,6 +9,7 @@ import {
   faPrint,
   faMap,
   faBook,
+  faMoneyBill,
 } from "@fortawesome/free-solid-svg-icons";
 import { toast, ToastContainer } from "react-toastify";
 import FullCalendar from "@fullcalendar/react";
@@ -18,7 +19,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import reverseFormat from "utils/reverseFormatRepo";
 import aiApi from "api/aiApi";
 import Markdown from "react-markdown";
-import TextToSpeech from "components/text-to-speech/TTP";
+// import TextToSpeech from "components/text-to-speech/TTP";
 const ScheduleDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -117,6 +118,10 @@ const ScheduleDetail = () => {
 
   const handleEdit = () => {
     navigate(`/schedule-edit/${id}`);
+  };
+
+  const handlePayment = () => {
+    navigate(`/payment-service/${id}`);
   };
 
   const handleShareLink = (value) => {
@@ -256,6 +261,12 @@ const ScheduleDetail = () => {
           tooltip="Xem bản đồ"
           icon={<FontAwesomeIcon icon={faMap} />}
         />
+        <FloatButton
+          type="primary"
+          onClick={handlePayment}
+          tooltip="Thanh toán dịch vụ"
+          icon={<FontAwesomeIcon icon={faMoneyBill} />}
+        />
       </FloatButton.Group>
       <ToastContainer />
       <Modal
@@ -266,12 +277,12 @@ const ScheduleDetail = () => {
         onCancel={handleCancel}
       >
         {loading ? (
-          <div>⏳ Đang tạo mô tả lộ trình từ AI...</div>
+          <div>Đang tạo mô tả lộ trình từ AI...</div>
         ) : (
           <div style={{ whiteSpace: "pre-line" }}>
             {experience ? (
               <>
-                <TextToSpeech text={experience} />
+                {/* <TextToSpeech text={experience} /> */}
                 <Markdown>{experience}</Markdown>
               </>
             ) : (
