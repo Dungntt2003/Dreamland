@@ -14,43 +14,65 @@ import repoApi from "api/repoApi";
 import entertainmentApi from "api/entertainmentApi";
 const PaymentService = () => {
   const { id } = useParams();
+  const [enterList, setEnterList] = useState([]);
   useEffect(() => {
     const getRealRepo = async () => {
       try {
         const response = await repoApi.getADemoRepo(id);
-        console.log(response);
+        const enterRes = await entertainmentApi.getListEntertaiments();
+        const filteredEnter = response.data.data.plan.filter(
+          (item) => item.children && item.children.includes("Vui chơi tại")
+        );
+        const repoEnter = enterRes.data.data
+          .filter(
+            (item) =>
+              item.name &&
+              filteredEnter.some(
+                (enter) => enter.children && enter.children.includes(item.name)
+              )
+          )
+          .filter(
+            (item, index, self) =>
+              index === self.findIndex((t) => t.name === item.name)
+          );
+        setEnterList(repoEnter);
       } catch (error) {
         console.log(error);
       }
     };
     getRealRepo();
   }, [id]);
-  const Items = [
-    {
-      key: 1,
-      label: "Vui chơi",
-      children: <PaymentEntertainment />,
-      icon: <FontAwesomeIcon icon={faWater} />,
-    },
-    {
-      key: 2,
-      label: "Khách sạn",
-      children: <PaymentHotel />,
-      icon: <FontAwesomeIcon icon={faHotel} />,
-    },
-    {
-      key: 3,
-      label: "Nhà hàng",
-      children: <PaymentRestaurant />,
-      icon: <FontAwesomeIcon icon={faUtensils} />,
-    },
-  ];
   const handleChange = (key) => {
     // console.log(key);
   };
   return (
     <div style={{ padding: "16px" }}>
-      <Tabs defaultActiveKey="1" items={Items} onChange={handleChange} />
+      <Tabs
+        defaultActiveKey="1"
+        items={[
+          {
+            key: 1,
+            label: "Vui chơi",
+            children: (
+              <PaymentEntertainment listService={enterList} repoId={id} />
+            ),
+            icon: <FontAwesomeIcon icon={faWater} />,
+          },
+          {
+            key: 2,
+            label: "Khách sạn",
+            children: <PaymentHotel />,
+            icon: <FontAwesomeIcon icon={faHotel} />,
+          },
+          {
+            key: 3,
+            label: "Nhà hàng",
+            children: <PaymentRestaurant />,
+            icon: <FontAwesomeIcon icon={faUtensils} />,
+          },
+        ]}
+        onChange={handleChange}
+      />
     </div>
   );
 };

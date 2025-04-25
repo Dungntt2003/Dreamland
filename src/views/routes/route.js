@@ -30,6 +30,7 @@ import AIGen from "views/pages/ai-gen/testAiGen";
 import ScheduleEdit from "views/pages/schedule-detail/schedule-edit";
 import VoiceText from "views/pages/test/tts";
 import PaymentService from "views/pages/payment-service/payment-service";
+import EnterProcess from "views/pages/payment-service/process/enter-process";
 const AllRoutes = () => {
   return (
     <Routes>
@@ -120,6 +121,10 @@ const AllRoutes = () => {
       <Route
         path="/vnpay"
         element={<MainLayout component={<VNPayPayment />} />}
+      />
+      <Route
+        path="/payment-enter"
+        element={<MainLayout component={<EnterProcess />} />}
       />
       <Route
         path="/payment-service/:id"

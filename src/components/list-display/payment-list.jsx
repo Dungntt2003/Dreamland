@@ -1,4 +1,4 @@
-const ListPayment = ({ listServices, CardComponent, link }) => {
+const ListPayment = ({ listServices, CardComponent, link, repoId }) => {
   return (
     <div style={{ padding: "16px" }}>
       <div
@@ -8,7 +8,12 @@ const ListPayment = ({ listServices, CardComponent, link }) => {
         }}
       >
         {listServices.map((item) => (
-          <CardComponent item={item} key={item.id} link={link} />
+          <CardComponent
+            item={item}
+            key={item.id}
+            link={link}
+            repoId={repoId}
+          />
         ))}
       </div>
     </div>

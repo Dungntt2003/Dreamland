@@ -1,10 +1,15 @@
-import { Card, Rate } from "antd";
+import { Card, Rate, Button } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot, faMoneyBill } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const { Meta } = Card;
 
-const CardPaymentEnter = ({ item, link }) => {
+const CardPaymentEnter = ({ item, link, repoId }) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/payment-enter?repoId=${repoId}&serviceId=${item.id}`);
+  };
   return (
     <div style={{ width: "25%", padding: "8px" }}>
       <Card
@@ -22,38 +27,44 @@ const CardPaymentEnter = ({ item, link }) => {
           </div>
         }
       >
-        <Link to={`/${link}/${item.id}`} className="link" key={item.id}>
-          <Meta
-            title={item.name}
-            description={
+        <Meta
+          title={
+            <Link to={`/${link}/${item.id}`} className="link" key={item.id}>
+              {item.name}
+            </Link>
+          }
+          description={
+            <div>
               <div>
-                <div>
-                  <FontAwesomeIcon
-                    icon={faMoneyBill}
-                    style={{ marginRight: "12px" }}
-                  />
-                  {item.price ? item.price : "100.000"}
-                </div>
-                <div className="truncate-2-lines">
-                  <FontAwesomeIcon
-                    icon={faLocationDot}
-                    style={{ marginRight: "12px" }}
-                  />
-                  {item.address}
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    margin: "8px 0",
-                  }}
-                >
-                  <Rate disabled defaultValue={item.rate} />
-                </div>
+                <FontAwesomeIcon
+                  icon={faMoneyBill}
+                  style={{ marginRight: "12px" }}
+                />
+                {item.price ? item.price : "100.000"}
               </div>
-            }
-          />
-        </Link>
+              <div className="truncate-2-lines">
+                <FontAwesomeIcon
+                  icon={faLocationDot}
+                  style={{ marginRight: "12px" }}
+                />
+                {item.address}
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  margin: "8px 0",
+                }}
+              >
+                <Rate disabled defaultValue={item.rate} />
+                <Button className="button" onClick={handleClick}>
+                  Đặt vé
+                </Button>
+              </div>
+            </div>
+          }
+        />
       </Card>
     </div>
   );
