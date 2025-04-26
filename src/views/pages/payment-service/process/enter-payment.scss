@@ -14,3 +14,10 @@
   color: #333;
   cursor: pointer;
 }
+
+.payment-info-title {
+  font-size: 18px;
+  color: var(--primary-color);
+  padding: 2px 4px;
+  border-left: 4px solid var(--secondary-color);
+}
