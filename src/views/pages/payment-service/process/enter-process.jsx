@@ -56,6 +56,7 @@ const EnterProcess = () => {
   const [countAdult, setCountAdult] = useState(0);
   const [countChild, setCountChild] = useState(0);
   const [isChecked, setIsChecked] = useState(false);
+  const [dataForm, setDataForm] = useState({});
 
   useEffect(() => {
     const getInfo = async () => {
@@ -110,6 +111,16 @@ const EnterProcess = () => {
 
   const prev = () => {
     setCurrent(current - 1);
+  };
+
+  const handleGetDataForm = async () => {
+    try {
+      const values = await form.validateFields();
+      setDataForm(values);
+      setCurrent(current + 1);
+    } catch (errorInfo) {
+      console.log("Validation Failed:", errorInfo);
+    }
   };
 
   const handleIncrease = () => {
@@ -296,144 +307,294 @@ const EnterProcess = () => {
           )}
           {current === 1 && (
             <>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <div>
                 <div
-                  style={{ width: "60%", height: "100%", overflowY: "auto" }}
+                  style={{ display: "flex", justifyContent: "space-between" }}
                 >
                   <div
-                    style={{ fontSize: "30px", color: "var(--primary-color)" }}
+                    style={{ width: "60%", height: "100%", overflowY: "auto" }}
                   >
-                    Điền thông tin
-                  </div>
-                  <div>
-                    <div className="payment-info-title">Thông tin đơn hàng</div>
                     <div
                       style={{
-                        margin: "16px 0",
-                        display: "flex",
-                        padding: "8px",
-                        border: "1px solid #ccc",
-                        borderRadius: "10px",
+                        fontSize: "30px",
+                        color: "var(--primary-color)",
                       }}
                     >
-                      <img
-                        src={enter.images[0]}
-                        alt="anh enter"
+                      Điền thông tin
+                    </div>
+                    <div>
+                      <div className="payment-info-title">
+                        Thông tin đơn hàng
+                      </div>
+                      <div
                         style={{
-                          width: "200px",
+                          margin: "16px 0",
+                          display: "flex",
+                          padding: "8px",
+                          border: "1px solid #ccc",
                           borderRadius: "10px",
-                          margin: "0 16px",
                         }}
-                      />
+                      >
+                        <img
+                          src={enter.images[0]}
+                          alt="anh enter"
+                          style={{
+                            width: "200px",
+                            borderRadius: "10px",
+                            margin: "0 16px",
+                          }}
+                        />
+                        <div>
+                          <div>{enter.name}</div>
+                          <div>Giá: {enter.price}</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="payment-info-title">
+                        Thông tin liên lạc
+                      </div>
+                      <p style={{ fontSize: "14px", color: "#333" }}>
+                        Chúng tôi sẽ thông báo mọi thay đổi về đơn hàng cho bạn
+                      </p>
                       <div>
-                        <div>{enter.name}</div>
-                        <div>Giá: {enter.price}</div>
+                        <Form
+                          form={form}
+                          name="basic"
+                          labelCol={{
+                            span: 4,
+                          }}
+                          wrapperCol={{
+                            span: 16,
+                          }}
+                          style={{
+                            minWidth: 600,
+                            margin: "16px 0",
+                          }}
+                          initialValues={{
+                            name: user.name,
+                            email: user.email,
+                            phone: user.phone,
+                          }}
+                        >
+                          <Form.Item
+                            name="name"
+                            label="Họ và tên"
+                            rules={[
+                              { required: true, message: "Hãy nhập tên mới" },
+                            ]}
+                          >
+                            <Input
+                              prefix={<FontAwesomeIcon icon={faSignature} />}
+                            />
+                          </Form.Item>
+                          <Form.Item
+                            name="email"
+                            label="Email"
+                            rules={[{ required: true }]}
+                          >
+                            <Input
+                              // disabled
+                              prefix={<FontAwesomeIcon icon={faUser} />}
+                            />
+                          </Form.Item>
+                          <Form.Item
+                            name="phone"
+                            label="Số điện thoại"
+                            rules={[
+                              {
+                                required: true,
+                                message: "Hãy nhập số điện thoại mới",
+                              },
+                              {
+                                pattern: /^\d+$/,
+                                message: "Số điện thoại chỉ bao gồm chữ số",
+                              },
+                              {
+                                min: 9,
+                                message: "Số điện thoại yêu cầu ít nhất 9 số",
+                              },
+                              {
+                                max: 11,
+                                message:
+                                  "Số điện thoại không được vượt qua 11 số",
+                              },
+                            ]}
+                          >
+                            <Input
+                              prefix={<FontAwesomeIcon icon={faPhone} />}
+                            />
+                          </Form.Item>
+                        </Form>
+                      </div>
+                    </div>
+                    <div>
+                      <div>
+                        <Checkbox>
+                          Tôi muốn là người đầu tiên nhận các ưu đãi độc quyền
+                          qua email và tin nhắn
+                        </Checkbox>
+                      </div>
+                      <p>
+                        <Checkbox
+                          onChange={(e) => setIsChecked(e.target.checked)}
+                        >
+                          Tôi đã hiểu và đồng ý với Điều khoản sử dụng chung và
+                          Chính sách quyền riêng tư của SmartTrip
+                        </Checkbox>
+                      </p>
+                      <p
+                        style={{
+                          padding: "4px 8px",
+                          background: "#fcf3de",
+                          border: "1px solid red",
+                          borderRadius: "10px",
+                          width: "fit-content",
+                          fontSize: "14px",
+                        }}
+                      >
+                        Vui lòng điền thông tin chính xác. Một khi đã gửi thông
+                        tin, bạn sẽ không thay đổi được.
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      width: "40%",
+                      padding: "54px",
+                      position: "sticky",
+                      height: "fit-content",
+                      top: "600",
+                    }}
+                  >
+                    <div style={{ fontWeight: "bold", fontSize: "20px" }}>
+                      {enter.name}
+                    </div>
+                    <hr />
+                    <div style={{ color: "#7e7c79", fontSize: "14px" }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <div>Ngày:</div>
+                        <div>{enter.label}</div>
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <div>Đơn vị:</div>
+                        <div>
+                          Người lớn * {countAdult} <br />
+                          Trẻ em * {countChild}
+                        </div>
+                      </div>
+                    </div>
+                    <hr />
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <div>Tổng cộng: </div>
+                      <div style={{ color: "red" }}>
+                        {formatCurrency(
+                          (countAdult + countChild) * parsePrice(enter.price)
+                        )}
                       </div>
                     </div>
                   </div>
-
-                  <div>
-                    <div className="payment-info-title">Thông tin liên lạc</div>
-                    <p style={{ fontSize: "14px", color: "#333" }}>
-                      Chúng tôi sẽ thông báo mọi thay đổi về đơn hàng cho bạn
-                    </p>
-                    <div>
-                      <Form
-                        form={form}
-                        name="basic"
-                        labelCol={{
-                          span: 4,
-                        }}
-                        wrapperCol={{
-                          span: 16,
-                        }}
-                        style={{
-                          minWidth: 600,
-                          margin: "16px 0",
-                        }}
-                        initialValues={{
-                          name: user.name,
-                          email: user.email,
-                          phone: user.phone,
-                        }}
-                      >
-                        <Form.Item
-                          name="name"
-                          label="Họ và tên"
-                          rules={[
-                            { required: true, message: "Hãy nhập tên mới" },
-                          ]}
-                        >
-                          <Input
-                            prefix={<FontAwesomeIcon icon={faSignature} />}
-                          />
-                        </Form.Item>
-                        <Form.Item
-                          name="email"
-                          label="Email"
-                          rules={[{ required: true }]}
-                        >
-                          <Input
-                            // disabled
-                            prefix={<FontAwesomeIcon icon={faUser} />}
-                          />
-                        </Form.Item>
-                        <Form.Item
-                          name="phone"
-                          label="Số điện thoại"
-                          rules={[
-                            {
-                              required: true,
-                              message: "Hãy nhập số điện thoại mới",
-                            },
-                            {
-                              pattern: /^\d+$/,
-                              message: "Số điện thoại chỉ bao gồm chữ số",
-                            },
-                            {
-                              min: 9,
-                              message: "Số điện thoại yêu cầu ít nhất 9 số",
-                            },
-                            {
-                              max: 11,
-                              message:
-                                "Số điện thoại không được vượt qua 11 số",
-                            },
-                          ]}
-                        >
-                          <Input prefix={<FontAwesomeIcon icon={faPhone} />} />
-                        </Form.Item>
-                      </Form>
+                </div>
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <Button type="primary" onClick={prev} className="button">
+                    Trở lại
+                  </Button>
+                  <Button
+                    type="primary"
+                    onClick={handleGetDataForm}
+                    className="button"
+                    disabled={!isChecked}
+                  >
+                    Tiếp
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
+          {current === 2 && (
+            <>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  minWidth: "50%",
+                }}
+              >
+                <div>
+                  <div
+                    style={{
+                      padding: "16px 32px",
+                      backgroundColor: "var(--background-color)",
+                      borderRadius: "54px",
+                      border: "1px solid var(--primary-color)",
+                      marginBottom: "24px",
+                    }}
+                  >
+                    <div style={{ fontSize: "20px", fontWeight: "bold" }}>
+                      {enter.name}
                     </div>
-                  </div>
-                  <div>
-                    <div>
-                      <Checkbox>
-                        Tôi muốn là người đầu tiên nhận các ưu đãi độc quyền qua
-                        email và tin nhắn
-                      </Checkbox>
+                    <div className="confirm-payment-enter">
+                      <span className="confirm-payment-label">Ngày đặt vé</span>
+                      <span className="confirm-payment-value">
+                        {enter.label}
+                      </span>
                     </div>
-                    <p>
-                      <Checkbox
-                        onChange={(e) => setIsChecked(e.target.checked)}
+                    <div className="confirm-payment-enter">
+                      <span className="confirm-payment-label">Đơn vị</span>
+                      <span className="confirm-payment-value">
+                        Người lớn * {countAdult} <br />
+                        Trẻ em * {countChild}
+                      </span>
+                    </div>
+                    <div className="confirm-payment-enter">
+                      <span className="confirm-payment-label">Họ và tên</span>
+                      <span className="confirm-payment-value">
+                        {dataForm.name}
+                      </span>
+                    </div>
+                    <div className="confirm-payment-enter">
+                      <span className="confirm-payment-label">Email</span>
+                      <span className="confirm-payment-value">
+                        {dataForm.email}
+                      </span>
+                    </div>
+                    <div className="confirm-payment-enter">
+                      <span className="confirm-payment-label">SĐT</span>
+                      <span className="confirm-payment-value">
+                        {dataForm.phone}
+                      </span>
+                    </div>
+                    <div className="confirm-payment-enter">
+                      <span
+                        className="confirm-payment-label"
+                        style={{ color: "red" }}
                       >
-                        Tôi đã hiểu và đồng ý với Điều khoản sử dụng chung và
-                        Chính sách quyền riêng tư của SmartTrip
-                      </Checkbox>
-                    </p>
-                    <p
-                      style={{
-                        padding: "4px 8px",
-                        background: "#fcf3de",
-                        border: "1px solid red",
-                        borderRadius: "10px",
-                        width: "fit-content",
-                        fontSize: "14px",
-                      }}
-                    >
-                      Vui lòng điền thông tin chính xác. Một khi đã gửi thông
-                      tin, bạn sẽ không thay đổi được.
-                    </p>
+                        Tổng cộng
+                      </span>
+                      <span style={{ fontSize: "20px", color: "red" }}>
+                        {formatCurrency(
+                          (countAdult + countChild) * parsePrice(enter.price)
+                        )}
+                      </span>
+                    </div>
                   </div>
                   <div
                     style={{ display: "flex", justifyContent: "space-between" }}
@@ -447,65 +608,12 @@ const EnterProcess = () => {
                       className="button"
                       disabled={!isChecked}
                     >
-                      Tiếp
+                      Thanh toán
                     </Button>
-                  </div>
-                </div>
-                <div
-                  style={{
-                    width: "40%",
-                    padding: "54px",
-                    position: "sticky",
-                    height: "fit-content",
-                    top: "600",
-                  }}
-                >
-                  <div style={{ fontWeight: "bold", fontSize: "20px" }}>
-                    {enter.name}
-                  </div>
-                  <hr />
-                  <div style={{ color: "#7e7c79", fontSize: "14px" }}>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <div>Ngày:</div>
-                      <div>{enter.label}</div>
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <div>Đơn vị:</div>
-                      <div>
-                        Người lớn * {countAdult} <br />
-                        Trẻ em * {countChild}
-                      </div>
-                    </div>
-                  </div>
-                  <hr />
-                  <div
-                    style={{ display: "flex", justifyContent: "space-between" }}
-                  >
-                    <div>Tổng cộng: </div>
-                    <div style={{ color: "red" }}>
-                      {formatCurrency(
-                        (countAdult + countChild) * parsePrice(enter.price)
-                      )}
-                    </div>
                   </div>
                 </div>
               </div>
             </>
-          )}
-          {current === 2 && (
-            <Button type="primary" className="button">
-              Hoàn tất
-            </Button>
           )}
         </div>
       </div>

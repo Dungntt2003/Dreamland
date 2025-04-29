@@ -21,3 +21,20 @@
   padding: 2px 4px;
   border-left: 4px solid var(--secondary-color);
 }
+
+.confirm-payment-enter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 8px 0;
+}
+
+.confirm-payment-label {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.confirm-payment-value {
+  font-size: 14px;
+  color: #333;
+}
