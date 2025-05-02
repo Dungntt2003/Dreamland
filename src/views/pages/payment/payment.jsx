@@ -8,7 +8,7 @@ const VNPayPayment = () => {
     try {
       const response = await paymentApi.paymentVnpay({
         amount: 100000,
-        orderInfo: "Thanh",
+        orderInfo: "Thanh toán cho đơn hàng",
       });
 
       setPayUrl(response.data.paymentUrl);
