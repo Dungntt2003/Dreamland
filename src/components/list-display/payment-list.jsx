@@ -7,14 +7,15 @@ const ListPayment = ({ listServices, CardComponent, link, repoId }) => {
           flexWrap: "wrap",
         }}
       >
-        {listServices.map((item) => (
-          <CardComponent
-            item={item}
-            key={item.id}
-            link={link}
-            repoId={repoId}
-          />
-        ))}
+        {listServices &&
+          listServices.map((item) => (
+            <CardComponent
+              item={item}
+              key={item.id}
+              link={link}
+              repoId={repoId}
+            />
+          ))}
       </div>
     </div>
   );

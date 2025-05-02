@@ -29,6 +29,9 @@ import formatCurrency from "utils/formatCurrency";
 import dayjs from "dayjs";
 import { useAuth } from "context/authContext";
 import { useForm } from "antd/es/form/Form";
+import RestaurantDefaultImg from "assets/image/restaurant-default.png";
+
+const { TextArea } = Input;
 
 const steps = [
   {
@@ -134,6 +137,7 @@ const ItemPaymentProcess = ({ type }) => {
   const handleGetDataForm = async () => {
     try {
       const values = await form.validateFields();
+      //   console.log("Success:", values);
       setDataForm(values);
       setCurrent(current + 1);
     } catch (errorInfo) {
@@ -191,6 +195,18 @@ const ItemPaymentProcess = ({ type }) => {
                   >
                     {item.name}
                   </div>
+                  {type === "restaurant" && (
+                    <div
+                      style={{
+                        textAlign: "center",
+                        fontSize: "20px",
+                        color: "red",
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faPhone} />
+                      {item.phone}
+                    </div>
+                  )}
                   <div style={{ display: "flex", justifyContent: "center" }}>
                     <div style={{ display: "flex" }}>
                       {type === "entertainment" && (
@@ -390,7 +406,11 @@ const ItemPaymentProcess = ({ type }) => {
                         }}
                       >
                         <img
-                          src={item.images[0]}
+                          src={
+                            item.images[0]
+                              ? item.images[0]
+                              : RestaurantDefaultImg
+                          }
                           alt="anh enter"
                           style={{
                             width: "200px",
@@ -400,6 +420,9 @@ const ItemPaymentProcess = ({ type }) => {
                         />
                         <div>
                           <div>{item.name}</div>
+                          {type === "restaurant" && (
+                            <div>SDT: {item.phone}</div>
+                          )}
                           {type === "entertainment" && (
                             <div>Giá: {item.price}</div>
                           )}
@@ -482,6 +505,14 @@ const ItemPaymentProcess = ({ type }) => {
                               prefix={<FontAwesomeIcon icon={faPhone} />}
                             />
                           </Form.Item>
+                          {type === "restaurant" && (
+                            <Form.Item name="note" label="Ghi chú">
+                              <TextArea
+                                rows={4}
+                                placeholder="Yêu cầu đặc biệt (dị ứng, vị trí bàn)"
+                              />
+                            </Form.Item>
+                          )}
                         </Form>
                       </div>
                     </div>
@@ -500,6 +531,23 @@ const ItemPaymentProcess = ({ type }) => {
                           Chính sách quyền riêng tư của SmartTrip
                         </Checkbox>
                       </p>
+                      {type === "restaurant" && (
+                        <p
+                          style={{
+                            padding: "4px 8px",
+                            background: "#fcf3de",
+                            border: "1px solid red",
+                            borderRadius: "10px",
+                            width: "fit-content",
+                            fontSize: "14px",
+                          }}
+                        >
+                          Bạn có thể đặt bàn nhanh chóng hơn khi gọi đặt bàn{" "}
+                          <span style={{ fontWeight: "bold" }}>
+                            {item.phone}
+                          </span>
+                        </p>
+                      )}
                       <p
                         style={{
                           padding: "4px 8px",
@@ -538,6 +586,17 @@ const ItemPaymentProcess = ({ type }) => {
                         <div>Ngày:</div>
                         <div>{date}</div>
                       </div>
+                      {type === "restaurant" && (
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <div>Giờ:</div>
+                          <div>{startTime}</div>
+                        </div>
+                      )}
                       <div
                         style={{
                           display: "flex",
@@ -611,9 +670,23 @@ const ItemPaymentProcess = ({ type }) => {
                       {item.name}
                     </div>
                     <div className="confirm-payment-enter">
-                      <span className="confirm-payment-label">Ngày đặt vé</span>
+                      <span className="confirm-payment-label">
+                        {type === "entertainment" && "Ngày đặt vé"}
+                        {type === "restaurant" && "Ngày đặt bàn"}
+                      </span>
                       <span className="confirm-payment-value">{date}</span>
                     </div>
+
+                    {type === "restaurant" && (
+                      <>
+                        <div className="confirm-payment-enter">
+                          <span className="confirm-payment-label">Giờ</span>
+                          <span className="confirm-payment-value">
+                            {startTime}
+                          </span>
+                        </div>
+                      </>
+                    )}
                     <div className="confirm-payment-enter">
                       <span className="confirm-payment-label">Đơn vị</span>
                       <span className="confirm-payment-value">
@@ -639,6 +712,16 @@ const ItemPaymentProcess = ({ type }) => {
                         {dataForm.phone}
                       </span>
                     </div>
+                    {type === "restaurant" && dataForm.note !== null && (
+                      <>
+                        <div className="confirm-payment-enter">
+                          <span className="confirm-payment-label">Ghi chú</span>
+                          <span className="confirm-payment-value">
+                            {dataForm.note}
+                          </span>
+                        </div>
+                      </>
+                    )}
                     {type === "entertainment" && (
                       <div className="confirm-payment-enter">
                         <span
@@ -667,7 +750,8 @@ const ItemPaymentProcess = ({ type }) => {
                       className="button"
                       disabled={!isChecked}
                     >
-                      Thanh toán
+                      {type === "entertainment" && "Thanh toán"}
+                      {type === "restaurant" && "Đặt bàn"}
                     </Button>
                   </div>
                 </div>

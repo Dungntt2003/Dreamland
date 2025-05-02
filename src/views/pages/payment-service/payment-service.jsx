@@ -13,16 +13,19 @@ import PaymentRestaurant from "./paymentRestaurant";
 import repoApi from "api/repoApi";
 import entertainmentApi from "api/entertainmentApi";
 import restaurantApi from "api/restaurantApi";
+import hotelApi from "api/hotelApi";
 const PaymentService = () => {
   const { id } = useParams();
   const [enterList, setEnterList] = useState([]);
   const [resList, setResList] = useState([]);
+  const [hotelList, setHotelList] = useState([]);
   useEffect(() => {
     const getRealRepo = async () => {
       try {
         const response = await repoApi.getADemoRepo(id);
         const enterRes = await entertainmentApi.getListEntertaiments();
         const resRes = await restaurantApi.getRestaurants();
+        const hotelRes = await hotelApi.getListHotels();
         const filteredEnter = response.data.data.plan.filter(
           (item) => item.children && item.children.includes("Vui chơi tại")
         );
@@ -54,6 +57,25 @@ const PaymentService = () => {
             (item, index, self) =>
               index === self.findIndex((t) => t.name === item.name)
           );
+
+        const filteredHotel = response.data.data.plan.filter(
+          (item) => item.children && item.children.includes("Nghỉ dưỡng tại")
+        );
+        const repoHotel = hotelRes.data.data
+          .filter(
+            (item) =>
+              item.name &&
+              filteredHotel.some(
+                (enter) => enter.children && enter.children.includes(item.name)
+              )
+          )
+          .filter(
+            (item, index, self) =>
+              index === self.findIndex((t) => t.name === item.name)
+          );
+
+        setHotelList(repoHotel);
+        // console.log(repoHotel);
         setResList(repoRes);
         setEnterList(repoEnter);
       } catch (error) {
@@ -81,7 +103,7 @@ const PaymentService = () => {
           {
             key: 2,
             label: "Khách sạn",
-            children: <PaymentHotel />,
+            children: <PaymentHotel listService={hotelList} repoId={id} />,
             icon: <FontAwesomeIcon icon={faHotel} />,
           },
           {
