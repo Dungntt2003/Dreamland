@@ -32,6 +32,7 @@ import VoiceText from "views/pages/test/tts";
 import PaymentService from "views/pages/payment-service/payment-service";
 import EnterProcess from "views/pages/payment-service/process/enter-process";
 import RestaurantProcess from "views/pages/payment-service/process/restaurant-process";
+import HotelPaymentProcess from "views/pages/payment-service/process/hotel-process";
 const AllRoutes = () => {
   return (
     <Routes>
@@ -130,6 +131,10 @@ const AllRoutes = () => {
       <Route
         path="/payment-restaurant"
         element={<MainLayout component={<RestaurantProcess />} />}
+      />
+      <Route
+        path="/payment-hotel"
+        element={<MainLayout component={<HotelPaymentProcess />} />}
       />
       <Route
         path="/payment-service/:id"
