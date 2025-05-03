@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 
 const TextToSpeech = ({ text }) => {
-  const apiKey = "Lanvhg8WHdavBTk1VtyYGysUi4NHnpxO";
+  const apiKey = process.env.FPT_KEY;
   const url = "https://api.fpt.ai/hmi/tts/v5";
 
   const callFptTTS = async () => {

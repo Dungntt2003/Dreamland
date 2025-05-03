@@ -22,6 +22,7 @@ import formatCurrency from "utils/formatCurrency";
 import dayjs from "dayjs";
 import { useAuth } from "context/authContext";
 import { useForm } from "antd/es/form/Form";
+import handlePayment from "components/payment/handlePayment";
 
 const steps = [
   {
@@ -266,6 +267,14 @@ const HotelPaymentProcess = ({ type }) => {
     const numberBefore = match ? match[1] : null;
 
     return numberBefore;
+  };
+
+  const handlePay = () => {
+    const data = {
+      amount: numberOfNights * roomData.price * 1.1 * room,
+      orderInfo: "Đặt phòng khách sạn",
+    };
+    handlePayment(data);
   };
 
   return (
@@ -695,7 +704,11 @@ const HotelPaymentProcess = ({ type }) => {
                     <Button type="primary" onClick={prev} className="button">
                       Trở lại
                     </Button>
-                    <Button type="primary" onClick={next} className="button">
+                    <Button
+                      type="primary"
+                      onClick={handlePay}
+                      className="button"
+                    >
                       Thanh toán
                     </Button>
                   </div>

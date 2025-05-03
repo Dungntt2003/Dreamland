@@ -9,12 +9,13 @@ import {
   TimePicker,
 } from "antd";
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import repoApi from "api/repoApi";
 import userApi from "api/userApi";
 import entertainmentApi from "api/entertainmentApi";
 import restaurantApi from "api/restaurantApi";
+import handlePayment from "components/payment/handlePayment";
 import {
   faCartShopping,
   faCircleInfo,
@@ -50,6 +51,7 @@ const steps = [
 const formatTime = "HH:mm";
 
 const ItemPaymentProcess = ({ type }) => {
+  const navigate = useNavigate();
   const { id } = useAuth();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -164,6 +166,19 @@ const ItemPaymentProcess = ({ type }) => {
   const parsePrice = (priceStr) => {
     if (!priceStr) return 0;
     return Number(priceStr.replace(/[^\d]/g, ""));
+  };
+
+  const handlePay = () => {
+    const data = {
+      amount: (countAdult + countChild) * parsePrice(item.price),
+      orderInfo: "Thanh toán vé vui chơi",
+    };
+    if (type === "entertainment") {
+      handlePayment(data);
+    }
+    if (type === "restaurant") {
+      navigate("/order-restaurant");
+    }
   };
 
   return (
@@ -746,7 +761,7 @@ const ItemPaymentProcess = ({ type }) => {
                     </Button>
                     <Button
                       type="primary"
-                      onClick={next}
+                      onClick={handlePay}
                       className="button"
                       disabled={!isChecked}
                     >

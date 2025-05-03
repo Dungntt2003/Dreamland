@@ -14,14 +14,14 @@ const PaymentResult = () => {
 
     if (responseCode === "00") {
       setStatus("success");
-      setTimeout(() => {
-        navigate("/homepage");
-      }, 5000);
+      // setTimeout(() => {
+      //   navigate("/homepage");
+      // }, 5000);
     } else {
       setStatus("failed");
-      setTimeout(() => {
-        navigate("/vnpay");
-      }, 5000);
+      // setTimeout(() => {
+      //   navigate("/vnpay");
+      // }, 5000);
     }
   }, [searchParams, navigate]);
   return (
@@ -30,14 +30,12 @@ const PaymentResult = () => {
       {status === "invalid" && <p>Không có thông tin kết quả hợp lệ.</p>}
       {status === "success" && (
         <>
-          <h2 style={{ color: "green" }}>🎉 Thanh toán thành công!</h2>
-          <p>Bạn sẽ được chuyển về trang chủ sau 5 giây...</p>
+          <h2 style={{ color: "green" }}>Thanh toán thành công!</h2>
         </>
       )}
       {status === "failed" && (
         <>
-          <h2 style={{ color: "red" }}>❌ Thanh toán thất bại!</h2>
-          <p>Bạn sẽ được quay lại trang thanh toán sau 5 giây...</p>
+          <h2 style={{ color: "red" }}>Thanh toán thất bại!</h2>
         </>
       )}
     </div>
