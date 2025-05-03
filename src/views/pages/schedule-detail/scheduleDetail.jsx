@@ -19,7 +19,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import reverseFormat from "utils/reverseFormatRepo";
 import aiApi from "api/aiApi";
 import Markdown from "react-markdown";
-// import TextToSpeech from "components/text-to-speech/TTP";
+import TextToSpeech from "components/text-to-speech/TTP";
 const ScheduleDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -282,7 +282,7 @@ const ScheduleDetail = () => {
           <div style={{ whiteSpace: "pre-line" }}>
             {experience ? (
               <>
-                {/* <TextToSpeech text={experience} /> */}
+                <TextToSpeech text={experience} />
                 <Markdown>{experience}</Markdown>
               </>
             ) : (

@@ -1,8 +1,9 @@
 import React from "react";
 import axios from "axios";
+import { Button } from "antd";
 
 const TextToSpeech = ({ text }) => {
-  const apiKey = process.env.FPT_KEY;
+  const apiKey = "Lanvhg8WHdavBTk1VtyYGysUi4NHnpxO";
   const url = "https://api.fpt.ai/hmi/tts/v5";
 
   const callFptTTS = async () => {
@@ -26,7 +27,9 @@ const TextToSpeech = ({ text }) => {
 
   return (
     <div>
-      <button onClick={callFptTTS}>🔊 Đọc văn bản bằng FPT.AI</button>
+      <Button onClick={callFptTTS} className="button">
+        Đọc
+      </Button>
     </div>
   );
 };
