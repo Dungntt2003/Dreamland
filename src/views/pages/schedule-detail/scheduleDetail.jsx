@@ -282,7 +282,9 @@ const ScheduleDetail = () => {
           <div style={{ whiteSpace: "pre-line" }}>
             {experience ? (
               <>
-                <TextToSpeech text={experience} />
+                <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                  <TextToSpeech text={experience.slice(0, 200)} />
+                </div>
                 <Markdown>{experience}</Markdown>
               </>
             ) : (
