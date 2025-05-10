@@ -4,7 +4,8 @@ const handlePayment = async (data) => {
   try {
     const response = await paymentApi.paymentVnpay({
       amount: data.amount,
-      orderInfo: data.orderInfo,
+      serviceId: data.serviceId,
+      repoId: data.repoId,
     });
     window.location.href = response.data.paymentUrl;
   } catch (error) {
@@ -12,4 +13,13 @@ const handlePayment = async (data) => {
   }
 };
 
-export default handlePayment;
+const handleCreatePayment = async (data) => {
+  try {
+    const response = await paymentApi.createPayment(data);
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export { handlePayment, handleCreatePayment };

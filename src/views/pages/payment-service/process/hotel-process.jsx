@@ -22,7 +22,10 @@ import formatCurrency from "utils/formatCurrency";
 import dayjs from "dayjs";
 import { useAuth } from "context/authContext";
 import { useForm } from "antd/es/form/Form";
-import handlePayment from "components/payment/handlePayment";
+import {
+  handlePayment,
+  handleCreatePayment,
+} from "components/payment/handlePayment";
 
 const steps = [
   {
@@ -269,11 +272,28 @@ const HotelPaymentProcess = ({ type }) => {
     return numberBefore;
   };
 
-  const handlePay = () => {
+  const handlePay = async () => {
     const data = {
       amount: numberOfNights * roomData.price * 1.1 * room,
-      orderInfo: "Đặt phòng khách sạn",
+      repoId: repoId,
+      serviceId: serviceId,
     };
+    const dataHotel = {
+      service_id: serviceId,
+      repository_id: repoId,
+      amount: numberOfNights * roomData.price * 1.1 * room,
+      email: dataForm.email,
+      name: dataForm.name,
+      phone: dataForm.phone,
+      countAdult: countAdult,
+      countChild: countChild,
+      subId: roomData.id,
+      orderDate: `${vacation} (${numberOfNights} đêm)`,
+      service_type: "hotel",
+      result: "pending",
+    };
+    const response = await handleCreatePayment(dataHotel);
+    console.log("response", response);
     handlePayment(data);
   };
 

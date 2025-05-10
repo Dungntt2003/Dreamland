@@ -15,7 +15,10 @@ import repoApi from "api/repoApi";
 import userApi from "api/userApi";
 import entertainmentApi from "api/entertainmentApi";
 import restaurantApi from "api/restaurantApi";
-import handlePayment from "components/payment/handlePayment";
+import {
+  handlePayment,
+  handleCreatePayment,
+} from "components/payment/handlePayment";
 import {
   faCartShopping,
   faCircleInfo,
@@ -168,15 +171,45 @@ const ItemPaymentProcess = ({ type }) => {
     return Number(priceStr.replace(/[^\d]/g, ""));
   };
 
-  const handlePay = () => {
+  const handlePay = async () => {
     const data = {
       amount: (countAdult + countChild) * parsePrice(item.price),
-      orderInfo: "Thanh toán vé vui chơi",
+      serviceId: serviceId,
+      repoId: repoId,
+    };
+    const dataPayment = {
+      service_id: serviceId,
+      repository_id: repoId,
+      name: dataForm.name,
+      email: dataForm.email,
+      phone: dataForm.phone,
     };
     if (type === "entertainment") {
+      const paymentEnter = {
+        ...dataPayment,
+        amount: (countAdult + countChild) * parsePrice(item.price),
+        countAdult: countAdult,
+        countChild: countChild,
+        orderDate: date,
+        service_type: "entertainment",
+        result: "pending",
+      };
+      const response = await handleCreatePayment(paymentEnter);
+      console.log(response);
       handlePayment(data);
     }
     if (type === "restaurant") {
+      const paymentRes = {
+        ...dataPayment,
+        note: dataForm.note,
+        countAdult: countAdult,
+        countChild: countChild,
+        orderDate: date,
+        service_type: "restaurant",
+        result: "success",
+      };
+      const response = await handleCreatePayment(paymentRes);
+      console.log(response);
       navigate("/order-restaurant");
     }
   };

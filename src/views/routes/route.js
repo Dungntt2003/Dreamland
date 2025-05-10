@@ -34,6 +34,7 @@ import EnterProcess from "views/pages/payment-service/process/enter-process";
 import RestaurantProcess from "views/pages/payment-service/process/restaurant-process";
 import HotelPaymentProcess from "views/pages/payment-service/process/hotel-process";
 import PaymentResultRestaurant from "views/pages/result/order-restaurant";
+import PaymentInfo from "views/pages/payment/payment-result-service/payment-info";
 const AllRoutes = () => {
   return (
     <Routes>
@@ -124,6 +125,10 @@ const AllRoutes = () => {
       <Route
         path="/vnpay"
         element={<MainLayout component={<VNPayPayment />} />}
+      />
+      <Route
+        path="/payment-info"
+        element={<MainLayout component={<PaymentInfo />} />}
       />
       <Route
         path="/payment-enter"
