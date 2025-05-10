@@ -28,7 +28,7 @@ const TextToSpeech = ({ text }) => {
   return (
     <div>
       <Button onClick={callFptTTS} className="button">
-        Đọc
+        Đọc với FPT AI
       </Button>
     </div>
   );

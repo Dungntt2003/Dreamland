@@ -20,6 +20,7 @@ import reverseFormat from "utils/reverseFormatRepo";
 import aiApi from "api/aiApi";
 import Markdown from "react-markdown";
 import TextToSpeech from "components/text-to-speech/TTP";
+import VietnameseTextReader from "components/text-to-speech/ttv";
 const ScheduleDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -282,8 +283,12 @@ const ScheduleDetail = () => {
           <div style={{ whiteSpace: "pre-line" }}>
             {experience ? (
               <>
-                <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                <div
+                  style={{ display: "flex", justifyContent: "space-around" }}
+                >
                   <TextToSpeech text={experience.slice(0, 200)} />
+                  {/* <TextToSpeechButton text={experience} /> */}
+                  <VietnameseTextReader text={experience.slice(0, 300)} />
                 </div>
                 <Markdown>{experience}</Markdown>
               </>

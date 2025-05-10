@@ -355,17 +355,24 @@ const ItemPaymentProcess = ({ type }) => {
                           </div>
                         </div>
                       </div>
-                      <div>
-                        <div
-                          style={{ fontWeight: "bold", marginBottom: "16px" }}
-                        >
-                          Chọn thời gian
-                        </div>
-                        <TimePicker
-                          value={dayjs(startTime, formatTime)}
-                          format={formatTime}
-                        />
-                      </div>
+                      {type === "restaurant" && (
+                        <>
+                          <div>
+                            <div
+                              style={{
+                                fontWeight: "bold",
+                                marginBottom: "16px",
+                              }}
+                            >
+                              Chọn thời gian
+                            </div>
+                            <TimePicker
+                              value={dayjs(startTime, formatTime)}
+                              format={formatTime}
+                            />
+                          </div>
+                        </>
+                      )}
                       <div style={{ width: "20%" }}>
                         {type === "entertainment" && (
                           <>
