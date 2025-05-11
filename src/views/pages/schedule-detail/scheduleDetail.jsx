@@ -10,6 +10,7 @@ import {
   faMap,
   faBook,
   faMoneyBill,
+  faTimeline,
 } from "@fortawesome/free-solid-svg-icons";
 import { toast, ToastContainer } from "react-toastify";
 import FullCalendar from "@fullcalendar/react";
@@ -21,6 +22,7 @@ import aiApi from "api/aiApi";
 import Markdown from "react-markdown";
 import TextToSpeech from "components/text-to-speech/TTP";
 import VietnameseTextReader from "components/text-to-speech/ttv";
+import generateItineraryDescription from "utils/genDescription";
 const ScheduleDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -29,6 +31,7 @@ const ScheduleDetail = () => {
   const [events, setEvents] = useState([]);
   const [item, setItem] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpenDes, setIsModalOpenDes] = useState(false);
   const [date, setDate] = useState(null);
   const [experience, setExperience] = useState(null);
   const [query, setQuery] = useState(null);
@@ -71,6 +74,17 @@ const ScheduleDetail = () => {
     };
     getFullRepo();
   }, [id]);
+
+  const showModalDes = () => {
+    setIsModalOpenDes(true);
+  };
+
+  const handleOkDes = () => {
+    setIsModalOpenDes(false);
+  };
+  const handleCancelDes = () => {
+    setIsModalOpenDes(false);
+  };
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -252,8 +266,14 @@ const ScheduleDetail = () => {
       <FloatButton.Group shape="circle" style={{ insetInlineEnd: 94 }}>
         <FloatButton
           type="primary"
-          onClick={showModal}
+          onClick={showModalDes}
           tooltip="Mô tả lộ trình"
+          icon={<FontAwesomeIcon icon={faTimeline} />}
+        />
+        <FloatButton
+          type="primary"
+          onClick={showModal}
+          tooltip="Cẩm nang cho lộ trình"
           icon={<FontAwesomeIcon icon={faBook} />}
         />
         <FloatButton
@@ -271,14 +291,14 @@ const ScheduleDetail = () => {
       </FloatButton.Group>
       <ToastContainer />
       <Modal
-        title="Mô tả lộ trình"
+        title="Cẩm nang cho lộ trình"
         width="50%"
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
       >
         {loading ? (
-          <div>Đang tạo mô tả lộ trình từ AI...</div>
+          <div>Đang tạo cẩm nang cho lộ trình từ AI...</div>
         ) : (
           <div style={{ whiteSpace: "pre-line" }}>
             {experience ? (
@@ -293,10 +313,19 @@ const ScheduleDetail = () => {
                 <Markdown>{experience}</Markdown>
               </>
             ) : (
-              <div>Không có dữ liệu mô tả lộ trình.</div>
+              <div>Không có dữ liệu cẩm nang.</div>
             )}
           </div>
         )}
+      </Modal>
+      <Modal
+        title="Mô tả lộ trình"
+        width="50%"
+        open={isModalOpenDes}
+        onOk={handleOkDes}
+        onCancel={handleCancelDes}
+      >
+        <Markdown>{generateItineraryDescription(item)}</Markdown>
       </Modal>
     </div>
   );
