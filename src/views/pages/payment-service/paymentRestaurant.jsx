@@ -1,6 +1,6 @@
 import ListPayment from "components/list-display/payment-list";
 import CardPaymentRestaurant from "components/payment-card/card-res";
-const PaymentRestaurant = ({ listService, repoId }) => {
+const PaymentRestaurant = ({ listService, repoId, servicePayment }) => {
   return (
     <div>
       <ListPayment
@@ -8,6 +8,7 @@ const PaymentRestaurant = ({ listService, repoId }) => {
         CardComponent={CardPaymentRestaurant}
         link="restaurant"
         repoId={repoId}
+        servicePayment={servicePayment}
       />
     </div>
   );

@@ -19,10 +19,12 @@ const PaymentService = () => {
   const [enterList, setEnterList] = useState([]);
   const [resList, setResList] = useState([]);
   const [hotelList, setHotelList] = useState([]);
+  const [servicePayment, setServicePayment] = useState([]);
   useEffect(() => {
     const getRealRepo = async () => {
       try {
         const response = await repoApi.getADemoRepo(id);
+        setServicePayment(response.data.data.servicepayment);
         const enterRes = await entertainmentApi.getListEntertaiments();
         const resRes = await restaurantApi.getRestaurants();
         const hotelRes = await hotelApi.getListHotels();
@@ -96,20 +98,42 @@ const PaymentService = () => {
             key: 1,
             label: "Vui chơi",
             children: (
-              <PaymentEntertainment listService={enterList} repoId={id} />
+              <PaymentEntertainment
+                listService={enterList}
+                repoId={id}
+                servicePayment={servicePayment.filter(
+                  (payment) => payment.service_type === "entertainment"
+                )}
+              />
             ),
             icon: <FontAwesomeIcon icon={faWater} />,
           },
           {
             key: 2,
             label: "Khách sạn",
-            children: <PaymentHotel listService={hotelList} repoId={id} />,
+            children: (
+              <PaymentHotel
+                listService={hotelList}
+                repoId={id}
+                servicePayment={servicePayment.filter(
+                  (payment) => payment.service_type === "hotel"
+                )}
+              />
+            ),
             icon: <FontAwesomeIcon icon={faHotel} />,
           },
           {
             key: 3,
             label: "Nhà hàng",
-            children: <PaymentRestaurant listService={resList} repoId={id} />,
+            children: (
+              <PaymentRestaurant
+                listService={resList}
+                repoId={id}
+                servicePayment={servicePayment.filter(
+                  (payment) => payment.service_type === "restaurant"
+                )}
+              />
+            ),
             icon: <FontAwesomeIcon icon={faUtensils} />,
           },
         ]}

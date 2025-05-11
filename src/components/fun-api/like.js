@@ -21,7 +21,7 @@ const unLike = async (params) => {
 const handleLike = async (status, params) => {
   const action = status ? unLike : clickLike;
   const response = await action(params);
-  // console.log(response);
+  console.log(response);
 };
 
 const checkMatchService = (likedService, id, type) => {

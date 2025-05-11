@@ -210,7 +210,7 @@ const ItemPaymentProcess = ({ type }) => {
       };
       const response = await handleCreatePayment(paymentRes);
       console.log(response);
-      navigate("/order-restaurant");
+      navigate(`/order-restaurant?repoId=${repoId}&serviceId=${serviceId}`);
     }
   };
 

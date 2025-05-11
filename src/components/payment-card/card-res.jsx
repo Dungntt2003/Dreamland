@@ -5,12 +5,17 @@ import { Link, useNavigate } from "react-router-dom";
 import RestaurantDefaultImg from "assets/image/restaurant-default.png";
 const { Meta } = Card;
 
-const CardPaymentRestaurant = ({ item, link, repoId }) => {
+const CardPaymentRestaurant = ({ item, link, repoId, checkPayment }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
     navigate(`/payment-restaurant?repoId=${repoId}&serviceId=${item.id}`);
   };
+
+  const handleViewOrder = () => {
+    navigate(`/payment-info?repoId=${repoId}&serviceId=${item.id}`);
+  };
+
   return (
     <div style={{ width: "25%", padding: "8px" }}>
       <Card
@@ -52,9 +57,19 @@ const CardPaymentRestaurant = ({ item, link, repoId }) => {
                 }}
               >
                 <Rate disabled defaultValue={item.rate} />
-                <Button className="button" onClick={handleClick}>
-                  Đặt bàn
-                </Button>
+                {checkPayment === true ? (
+                  <>
+                    <Button className="button" onClick={handleViewOrder}>
+                      Xem đặt trước
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button className="button" onClick={handleClick}>
+                      Đặt bàn
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           }

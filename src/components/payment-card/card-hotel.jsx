@@ -5,11 +5,15 @@ import { Link, useNavigate } from "react-router-dom";
 import HotelDefaultImg from "assets/image/hotel-default.jpg";
 const { Meta } = Card;
 
-const CardPaymentHotel = ({ item, link, repoId }) => {
+const CardPaymentHotel = ({ item, link, repoId, checkPayment }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
     navigate(`/payment-hotel?repoId=${repoId}&serviceId=${item.id}`);
+  };
+
+  const handleViewOrder = () => {
+    navigate(`/payment-info?repoId=${repoId}&serviceId=${item.id}`);
   };
   return (
     <div style={{ width: "25%", padding: "8px" }}>
@@ -52,9 +56,19 @@ const CardPaymentHotel = ({ item, link, repoId }) => {
                 }}
               >
                 <Rate disabled defaultValue={item.rate} />
-                <Button className="button" onClick={handleClick}>
-                  Đặt phòng
-                </Button>
+                {checkPayment === true ? (
+                  <>
+                    <Button className="button" onClick={handleViewOrder}>
+                      Xem vé
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button className="button" onClick={handleClick}>
+                      Đặt vé
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           }

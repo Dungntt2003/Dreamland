@@ -98,7 +98,14 @@ const PaymentInfo = () => {
         <div
           style={{ width: "50%", display: "flex", justifyContent: "center" }}
         >
-          <QRCodeCanvas value={payment.id} size={250} />
+          {payment && (
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <QRCodeCanvas value={payment.id} size={250} />
+              <p style={{ marginTop: "20px", color: "red" }}>
+                Vui lòng đưa mã này cho nhân viên
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>

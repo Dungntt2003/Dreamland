@@ -1,4 +1,10 @@
-const ListPayment = ({ listServices, CardComponent, link, repoId }) => {
+const ListPayment = ({
+  listServices,
+  CardComponent,
+  link,
+  repoId,
+  servicePayment,
+}) => {
   return (
     <div style={{ padding: "16px" }}>
       <div
@@ -14,6 +20,9 @@ const ListPayment = ({ listServices, CardComponent, link, repoId }) => {
               key={item.id}
               link={link}
               repoId={repoId}
+              checkPayment={servicePayment.some(
+                (payment) => payment.service_id === item.id
+              )}
             />
           ))}
       </div>

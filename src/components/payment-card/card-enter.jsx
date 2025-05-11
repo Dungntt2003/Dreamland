@@ -4,12 +4,16 @@ import { faLocationDot, faMoneyBill } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 const { Meta } = Card;
 
-const CardPaymentEnter = ({ item, link, repoId }) => {
+const CardPaymentEnter = ({ item, link, repoId, checkPayment }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
     navigate(`/payment-enter?repoId=${repoId}&serviceId=${item.id}`);
   };
+  const handleViewOrder = () => {
+    navigate(`/payment-info?repoId=${repoId}&serviceId=${item.id}`);
+  };
+  // console.log("check payment", checkPayment);
   return (
     <div style={{ width: "25%", padding: "8px" }}>
       <Card
@@ -58,9 +62,20 @@ const CardPaymentEnter = ({ item, link, repoId }) => {
                 }}
               >
                 <Rate disabled defaultValue={item.rate} />
-                <Button className="button" onClick={handleClick}>
-                  Đặt vé
-                </Button>
+
+                {checkPayment === true ? (
+                  <>
+                    <Button className="button" onClick={handleViewOrder}>
+                      Xem vé
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button className="button" onClick={handleClick}>
+                      Đặt vé
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           }
