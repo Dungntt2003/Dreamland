@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import paymentApi from "api/paymentApi";
+import mailApi from "api/mailApi";
 const PaymentResult = () => {
   const [searchParams] = useSearchParams();
   const [status, setStatus] = useState("loading");
+  const [paymentData, setPaymentData] = useState(null);
   const navigate = useNavigate();
   useEffect(() => {
     const responseCode = searchParams.get("vnp_ResponseCode");
@@ -27,6 +29,7 @@ const PaymentResult = () => {
           service_id: serviceId,
           repository_id: repoId,
         });
+        setPaymentData(response.data.data);
         if (response.status === 200) {
           const updateData = await paymentApi.updatePayment(
             response.data.data.id,
@@ -41,8 +44,32 @@ const PaymentResult = () => {
       }
     };
 
+    const sendEmail = async (data) => {
+      try {
+        const response = await mailApi.sendMail(data);
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     if (responseCode === "00") {
       updateStatus("success");
+      sendEmail({
+        email: paymentData.email,
+        name: paymentData.name,
+        payment: {
+          service_name: paymentData.service_type,
+          orderDate: paymentData.orderDate,
+          countAdult: paymentData.countAdult,
+          countChild: paymentData.countChild,
+          name: paymentData.name,
+          email: paymentData.email,
+          phone: paymentData.phone,
+          amound: paymentData.amount,
+          id: paymentData.service_id,
+        },
+      });
       setStatus("success");
       setTimeout(() => {
         navigate(`/payment-info?repoId=${repoId}&serviceId=${serviceId}`);
