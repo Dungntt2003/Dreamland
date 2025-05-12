@@ -1,57 +1,63 @@
-import { useEffect, useRef } from "react";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+import { useEffect, useState } from "react";
+
+// Fix lỗi icon mặc định
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
+  iconUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
+  shadowUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+});
 
 const GoogleMapComponent = ({ address }) => {
-  const mapRef = useRef(null);
+  const [position, setPosition] = useState(null);
 
   useEffect(() => {
-    const initMap = (location) => {
-      if (!mapRef.current || !window.google || !window.google.maps) return;
+    if (!address) return;
 
-      const map = new window.google.maps.Map(mapRef.current, {
-        center: location,
-        zoom: 18,
-      });
+    const fetchCoordinates = async () => {
+      try {
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+            address
+          )}`
+        );
+        const data = await res.json();
 
-      new window.google.maps.Marker({
-        position: location,
-        map,
-        title: address || "Hà Nội",
-      });
-    };
-
-    const geocodeAddress = (addr) => {
-      const geocoder = new window.google.maps.Geocoder();
-      geocoder.geocode({ address: addr }, (results, status) => {
-        if (status === "OK" && results.length > 0) {
-          initMap(results[0].geometry.location);
+        if (data && data.length > 0) {
+          setPosition([parseFloat(data[0].lat), parseFloat(data[0].lon)]);
         } else {
-          console.error("Lỗi geocode hoặc không tìm thấy địa chỉ:", status);
-          initMap({ lat: 21.028511, lng: 105.804817 });
+          console.warn("Không tìm thấy vị trí từ địa chỉ.");
         }
-      });
+      } catch (err) {
+        console.error("Lỗi khi geocoding địa chỉ:", err);
+      }
     };
 
-    if (window.google && window.google.maps) {
-      if (address) {
-        geocodeAddress(address);
-      } else {
-        initMap({ lat: 21.028511, lng: 105.804817 });
-      }
-    } else {
-      console.error("Google Maps chưa được load. Hãy kiểm tra lại script.");
-    }
+    fetchCoordinates();
   }, [address]);
 
+  if (!position) return <p>Đang tải bản đồ...</p>;
+
   return (
-    <div
-      ref={mapRef}
-      style={{
-        width: "100%",
-        height: "400px",
-        border: "1px solid var(--text-color)",
-        borderRadius: "10px",
-      }}
-    />
+    <MapContainer
+      center={position}
+      zoom={15}
+      style={{ height: "400px", width: "100%" }}
+    >
+      <TileLayer
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      />
+      <Marker position={position}>
+        <Popup>{address}</Popup>
+      </Marker>
+    </MapContainer>
   );
 };
 

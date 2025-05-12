@@ -1,9 +1,11 @@
 import paymentApi from "api/paymentApi";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import formatCurrency from "utils/formatCurrency";
 import { QRCodeCanvas } from "qrcode.react";
+import { Button } from "antd";
 const PaymentInfo = () => {
+  const navigate = useNavigate();
   const [payment, setPayment] = useState(null);
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -21,8 +23,17 @@ const PaymentInfo = () => {
     };
     fetchPaymentInfo();
   }, [repoId, serviceId]);
+
+  const handleReturn = () => {
+    navigate(`/schedule-detail/${repoId}`);
+  };
   return (
     <div style={{ padding: "16px" }}>
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <Button className="button" onClick={handleReturn}>
+          Quay về lộ trình
+        </Button>
+      </div>
       <div
         style={{
           textAlign: "center",

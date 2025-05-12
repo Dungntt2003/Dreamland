@@ -119,7 +119,6 @@ const DraggableCalendar = () => {
         const response = await demoRepoApi.getServices(id);
         setExternalEvents(
           response.data.data.map((item) => {
-            // console.log(item);
             return {
               id: item.id,
               type: item.service_type,
@@ -134,21 +133,41 @@ const DraggableCalendar = () => {
         console.log(error);
       }
     };
-    // console.log(externalEvents);
     getRepoReal();
-    // console.log(date);
     getDemoRepo();
-    // Initialize external draggable events
-    new Draggable(externalEventsRef.current, {
-      itemSelector: ".fc-event",
-      eventData: function (eventEl) {
-        return {
-          title: eventEl.innerText.trim(),
-          id: String(new Date().getTime()),
-        };
-      },
-    });
   }, [id]);
+
+  // Tạo Draggable sau khi externalEvents đã được cập nhật
+  // Biến lưu trữ tham chiếu đến instance Draggable
+  const draggableInstanceRef = useRef(null);
+
+  useEffect(() => {
+    if (externalEventsRef.current && externalEvents.length > 0) {
+      // Hủy instance Draggable cũ nếu tồn tại
+      if (draggableInstanceRef.current) {
+        draggableInstanceRef.current.destroy();
+      }
+
+      // Tạo instance Draggable mới và lưu tham chiếu
+      draggableInstanceRef.current = new Draggable(externalEventsRef.current, {
+        itemSelector: ".fc-event",
+        eventData: function (eventEl) {
+          // Tạo ID duy nhất cho mỗi sự kiện
+          return {
+            title: eventEl.innerText.trim(),
+            id: uuidv4(), // Tạo ID duy nhất ngay tại đây
+          };
+        },
+      });
+    }
+
+    // Cleanup khi component unmount
+    return () => {
+      if (draggableInstanceRef.current) {
+        draggableInstanceRef.current.destroy();
+      }
+    };
+  }, [externalEvents]);
 
   // get all service from api
   useEffect(() => {
@@ -172,9 +191,9 @@ const DraggableCalendar = () => {
   }, [id]);
 
   const handleEventReceive = (info) => {
-    const eventId = uuidv4();
+    // Chỉ thêm event vào state nếu nó chưa tồn tại
     const newEvent = {
-      id: eventId,
+      id: info.event.id, // Sử dụng ID được tạo từ Draggable
       title: info.event.title,
       start: info.event.start,
       end: info.event.end || info.event.start,
@@ -182,16 +201,16 @@ const DraggableCalendar = () => {
       borderColor: "var(--secondary-color)",
       textColor: "white",
     };
-    // Add event to state
+
+    // Thêm sự kiện vào state chỉ khi nó chưa tồn tại
     setEvents((prevEvents) => {
-      if (!prevEvents.some((event) => event.id === eventId)) {
+      if (!prevEvents.some((event) => event.id === newEvent.id)) {
         return [...prevEvents, newEvent];
       }
       return prevEvents;
     });
 
-    // Remove the event from FullCalendar (this prevents the default duplicate behavior)
-    info.event.remove();
+    // Không cần phải xóa sự kiện ở đây vì FullCalendar sẽ thêm nó tự động
   };
 
   const handleDeleteEvent = (eventId) => {
@@ -215,6 +234,16 @@ const DraggableCalendar = () => {
       data: eventData,
     };
     localStorage.setItem("schedule", JSON.stringify(jsonData));
+    toast.success("Lưu lộ trình thành công", {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
   };
 
   const handleFinish = () => {
@@ -365,14 +394,12 @@ const DraggableCalendar = () => {
       </div>
       <div style={{ display: "flex", height: "100vh" }}>
         {/* Draggable Events Section */}
-        <div style={{ width: "30%", marginLeft: "24px" }}>
+        <div style={{ width: "30%", marginLeft: "24px" }} ref={ref1}>
           <div style={{ fontSize: "30px", margin: "54px 0 24px" }}>DỊCH VỤ</div>
           <div
             id="external-events-list"
             ref={externalEventsRef}
-            // className="d-flex flex-wrap"
             style={{
-              // flexDirection: "column",
               maxHeight: "60vh",
               overflowY: "auto",
             }}
@@ -392,7 +419,6 @@ const DraggableCalendar = () => {
                   style={{ fontSize: "14px", fontWeight: "200" }}
                 >
                   {event.title}
-                  {/* {isHover && "test message"} */}
                 </div>
               </div>
             ))}
@@ -411,7 +437,6 @@ const DraggableCalendar = () => {
             editable={true}
             droppable={true}
             initialView="timeGridDay"
-            // initialDate="2025-01-20"
             validRange={{
               start: date ? date.start : null,
               end: date ? date.end : null,
@@ -432,7 +457,6 @@ const DraggableCalendar = () => {
             locale="vi"
             timeZone="local"
             height="80%"
-            // slotDuration="01:00:00"
           />
         </div>
       </div>

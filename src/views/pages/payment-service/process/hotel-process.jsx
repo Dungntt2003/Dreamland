@@ -1,7 +1,7 @@
 import "./enter-payment.scss";
 import { Steps, Button, Form, Input, Checkbox, Dropdown, Table } from "antd";
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import repoApi from "api/repoApi";
 import userApi from "api/userApi";
@@ -43,6 +43,7 @@ const steps = [
 ];
 
 const HotelPaymentProcess = ({ type }) => {
+  const navigate = useNavigate();
   const { id } = useAuth();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -297,8 +298,23 @@ const HotelPaymentProcess = ({ type }) => {
     handlePayment(data);
   };
 
+  const handleReturn = () => {
+    navigate(`/schedule-detail/${repoId}`);
+  };
+
   return (
     <div style={{ padding: "16px" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          marginBottom: "12px",
+        }}
+      >
+        <Button className="button" onClick={handleReturn}>
+          Quay về lộ trình
+        </Button>
+      </div>
       <div className="payment-progress-bar" style={{ padding: "4px 32px" }}>
         <Steps current={current} items={steps} />
       </div>

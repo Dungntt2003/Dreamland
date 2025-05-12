@@ -214,8 +214,23 @@ const ItemPaymentProcess = ({ type }) => {
     }
   };
 
+  const handleReturn = () => {
+    navigate(`/schedule-detail/${repoId}`);
+  };
+
   return (
     <div style={{ padding: "16px" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          marginBottom: "12px",
+        }}
+      >
+        <Button className="button" onClick={handleReturn}>
+          Quay về lộ trình
+        </Button>
+      </div>
       <div className="payment-progress-bar" style={{ padding: "4px 32px" }}>
         <Steps current={current} items={steps} />
       </div>

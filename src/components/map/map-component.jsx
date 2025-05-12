@@ -12,7 +12,7 @@ const MapComponent = ({ locations }) => {
 
   useEffect(() => {
     if (!window.google) {
-      console.error("Google Maps API chưa được tải");
+      console.error("Google Maps PI chưa được tải");
       return;
     }
 
