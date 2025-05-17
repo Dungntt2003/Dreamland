@@ -17,6 +17,7 @@ import { Link } from "react-router-dom";
 import loginApi from "api/loginApi";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import RegisterIng from "assets/image/register-img.jpg";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -120,9 +121,9 @@ const Register = () => {
     </Form.Item>
   );
 
-  const handleCheck = (e) => {
-    setCheck(e.target.checked);
-  };
+  // const handleCheck = (e) => {
+  //   setCheck(e.target.checked);
+  // };
   const options = provinces.map((item) => {
     return { value: item.name, label: item.name };
   });
@@ -227,6 +228,10 @@ const Register = () => {
                     required: true,
                     message: "Hãy nhập số điện thoại!",
                   },
+                  {
+                    pattern: /^[0-9]+$/,
+                    message: "Số điện thoại chỉ được chứa chữ số!",
+                  },
                 ]}
               >
                 <Input
@@ -293,6 +298,12 @@ const Register = () => {
                     required: true,
                     message: "Hãy nhập mật khẩu!",
                   },
+                  {
+                    pattern:
+                      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,16}$/,
+                    message:
+                      "Mật khẩu phải có 6-16 ký tự, gồm ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt!",
+                  },
                 ]}
               >
                 <Input.Password />
@@ -325,7 +336,7 @@ const Register = () => {
               </Form.Item>
             </div>
 
-            <Form.Item
+            {/* <Form.Item
               name="business_register"
               valuePropName="checked"
               onChange={handleCheck}
@@ -335,7 +346,7 @@ const Register = () => {
               }}
             >
               <Checkbox>Đăng ký kinh doanh</Checkbox>
-            </Form.Item>
+            </Form.Item> */}
 
             {check === true && (
               <>
@@ -476,6 +487,13 @@ const Register = () => {
           </Form>
         </div>
         <ToastContainer />
+      </div>
+      <div className="register-img">
+        <img
+          src={RegisterIng}
+          alt="register-bg"
+          style={{ width: "100%", borderRadius: "30px" }}
+        />
       </div>
     </div>
   );

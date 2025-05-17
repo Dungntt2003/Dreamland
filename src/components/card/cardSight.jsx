@@ -6,6 +6,7 @@ import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import Heart from "react-heart";
 import { handleLike } from "components/fun-api/like";
 import { useAuth } from "context/authContext";
+import SightDefault from "assets/image/sight-default.jpg";
 
 const { Meta } = Card;
 const CardSight = ({ item, link, active }) => {
@@ -27,12 +28,13 @@ const CardSight = ({ item, link, active }) => {
         style={{
           // width: 300,
           margin: "0px 0 16px",
+          borderRadius: "15px",
         }}
         cover={
           <div style={{ position: "relative" }}>
             <img
               alt="example"
-              src={item.images[0]}
+              src={item.images[0] ? item.images[0] : SightDefault}
               style={{ height: "170px", width: "100%" }}
             />
             <div

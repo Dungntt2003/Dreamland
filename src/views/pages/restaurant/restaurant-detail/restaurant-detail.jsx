@@ -35,6 +35,7 @@ import { useParams, Link } from "react-router-dom";
 import restaurantApi from "api/restaurantApi";
 import SplitParagraph from "utils/splitPara";
 import formatCurrency from "utils/formatCurrency";
+import Markdown from "react-markdown";
 const { TextArea } = Input;
 const { Meta } = Card;
 
@@ -189,32 +190,36 @@ const RestaurantDetail = () => {
               />
               {restaurant.address}
             </div>
-            <div className="sight-detail-ratings">
-              <Rate defaultValue={restaurant.rate} disabled />
-            </div>
-            <div className="sight-detail-button-grp">
-              {/* <Button className="button">THÊM VÀO LỘ TRÌNH</Button> */}
-              <div style={{ width: "2rem", marginLeft: "48px" }}>
-                <Heart
-                  isActive={active}
-                  onClick={() => setActive(!active)}
-                  animationScale={1.2}
-                  animationTrigger="both"
-                  animationDuration={0.2}
-                  className={`customHeart${active ? " active" : ""}`}
-                />
+            <div style={{ display: "flex" }}>
+              <div className="sight-detail-ratings">
+                <Rate value={restaurant.rate} disabled />
+              </div>
+              <div className="sight-detail-button-grp">
+                {/* <Button className="button">THÊM VÀO LỘ TRÌNH</Button> */}
+                <div style={{ width: "2rem", marginLeft: "48px" }}>
+                  <Heart
+                    isActive={active}
+                    onClick={() => setActive(!active)}
+                    animationScale={1.2}
+                    animationTrigger="both"
+                    animationDuration={0.2}
+                    className={`customHeart${active ? " active" : ""}`}
+                  />
+                </div>
               </div>
             </div>
           </div>
           <div className="sight-detail-menu">
-            <div className="sight-detail-video">
-              <ReactPlayer
-                url={restaurant.video}
-                controls
-                width="100%"
-                height="500px"
-              />
-            </div>
+            {restaurant.vide && (
+              <div className="sight-detail-video">
+                <ReactPlayer
+                  url={restaurant.video}
+                  controls
+                  width="100%"
+                  height="500px"
+                />
+              </div>
+            )}
             <div className="sight-detail-img-grp">
               <div className="sight-detail-img-main">
                 <img
@@ -264,55 +269,26 @@ const RestaurantDetail = () => {
                 style={{
                   background: "var(--white-color)",
                 }}
-                items={
-                  [
-                    {
-                      key: "1",
-                      label: (
-                        <div
-                          style={{
-                            background: "var(--background-color)",
-                            fontSize: "16px",
-                            padding: "8px 16px",
-                            borderRadius: "16px",
-                          }}
-                        >
-                          Giới thiệu chi tiết
-                        </div>
-                      ),
-                      children: <div>{restaurant.description}</div>,
-                    },
-                  ]
-                  // restaurant.description &&
-                  // Object.keys(parseDes(restaurant.description)).map(
-                  //   (key, index) => ({
-                  //     key: (index + 1).toString(),
-                  //     label: (
-                  //       <div
-                  //         style={{
-                  //           fontSize: "18px",
-                  //           color: "var(--primary-color)",
-                  //         }}
-                  //       >
-                  //         {key}
-                  //       </div>
-                  //     ),
-                  //     children:
-                  //       key === "Điểm nổi bật" ? (
-                  //         <div>
-                  //           {
-                  //             <SplitParagraph
-                  //               text={parseDes(restaurant.description)[key]}
-                  //             />
-                  //           }
-                  //         </div>
-                  //       ) : (
-                  //         <div>{parseDes(restaurant.description)[key]}</div>
-                  //       ),
-                  //     style: panelStyle,
-                  //   })
-                  // )
-                }
+                items={[
+                  {
+                    key: "1",
+                    label: (
+                      <div
+                        style={{
+                          background: "var(--background-color)",
+                          fontSize: "16px",
+                          padding: "8px 16px",
+                          borderRadius: "16px",
+                        }}
+                      >
+                        Giới thiệu chi tiết
+                      </div>
+                    ),
+                    children: (
+                      <div>{<Markdown>{restaurant.description}</Markdown>}</div>
+                    ),
+                  },
+                ]}
               />
             </div>
             <div className="sight-detail-box-item">
@@ -355,34 +331,36 @@ const RestaurantDetail = () => {
             </div> */}
           </div>
         </div>
-        <div
-          className="restaurant-menu"
-          style={{ backgroundColor: "#f2f7f3", padding: "16px" }}
-        >
+        {menu.length > 0 && (
           <div
-            className="menu-list"
-            style={{ backgroundColor: "white", padding: "16px" }}
+            className="restaurant-menu"
+            style={{ backgroundColor: "#f2f7f3", padding: "16px" }}
           >
-            <div className="header2 sight-dettail-header-mark">THỰC ĐƠN</div>
             <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: "16px",
-                marginTop: "16px",
-              }}
+              className="menu-list"
+              style={{ backgroundColor: "white", padding: "16px" }}
             >
-              {currentItems.map((item, index) => item)}
+              <div className="header2 sight-dettail-header-mark">THỰC ĐƠN</div>
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: "16px",
+                  marginTop: "16px",
+                }}
+              >
+                {currentItems.map((item, index) => item)}
+              </div>
+              <AntPagination
+                current={currentPage}
+                pageSize={itemsPerPage}
+                total={menu.length}
+                onChange={handleChangePage}
+                style={{ marginTop: "20px", textAlign: "center" }}
+              />
             </div>
-            <AntPagination
-              current={currentPage}
-              pageSize={itemsPerPage}
-              total={menu.length}
-              onChange={handleChangePage}
-              style={{ marginTop: "20px", textAlign: "center" }}
-            />
           </div>
-        </div>
+        )}
       </div>
       <Modal
         title="Chi tiết món ăn"

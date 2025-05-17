@@ -104,7 +104,7 @@ const Login = () => {
                   },
                 ]}
               >
-                <Input
+                <Input.Password
                   prefix={<LockOutlined />}
                   type="password"
                   placeholder={t("password")}

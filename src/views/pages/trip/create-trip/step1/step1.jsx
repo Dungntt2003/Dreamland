@@ -18,11 +18,15 @@ const Step1 = () => {
   const { id } = useParams();
   const [count, setCount] = useState(0);
   const [demoRepo, setDemoRepo] = useState([]);
+  const [destinationArr, setDestinationArr] = useState([]);
   useEffect(() => {
     const getDemoRepo = async () => {
       try {
         const response = await repoApi.getADemoRepo(id);
         setCount(response.data.data.demorepodetail.length);
+        setDestinationArr(
+          response.data.data.destination.split(",").map((item) => item.trim())
+        );
         setDemoRepo(response.data.data.demorepodetail);
       } catch (error) {
         console.log(error);
@@ -44,6 +48,7 @@ const Step1 = () => {
           data={demoRepo}
           count={count}
           handleUpdateCount={handleCount}
+          destinationArr={destinationArr}
         />
       ),
       icon: <FontAwesomeIcon icon={faMountain} />,

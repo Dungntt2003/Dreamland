@@ -26,7 +26,7 @@ import likeApi from "api/likeApi";
 import { useAuth } from "context/authContext";
 import nearByApi from "api/nearbyApi";
 
-const SightView = ({ data, count, handleUpdateCount }) => {
+const SightView = ({ data, count, handleUpdateCount, destinationArr }) => {
   const { id: user_id } = useAuth();
   const ref1 = useRef(null);
   const ref2 = useRef(null);
@@ -65,6 +65,7 @@ const SightView = ({ data, count, handleUpdateCount }) => {
     const getListSights = async () => {
       try {
         const response = await sightApi.getAllSights();
+        // làm từ đoạn này
         setSightData(response.data.data);
         setFilteredData(response.data.data);
       } catch (error) {

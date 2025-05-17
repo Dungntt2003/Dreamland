@@ -17,6 +17,7 @@ import { Collapse, Form, Input, Button, Rate } from "antd";
 import GoogleMapComponent from "components/google-maps/googleMaps";
 import { useParams } from "react-router-dom";
 import sightApi from "api/sightApi";
+import splitTextIntoParagraphs from "utils/splitParaChunk";
 const { TextArea } = Input;
 const SightDetail = () => {
   const { id } = useParams();
@@ -82,20 +83,22 @@ const SightDetail = () => {
             />
             {sight.address}
           </div>
-          <div className="sight-detail-ratings">
-            <Rate disabled defaultValue={sight.rate} />
-          </div>
-          <div className="sight-detail-button-grp">
-            {/* <Button className="button">THÊM VÀO LỘ TRÌNH</Button> */}
-            <div style={{ width: "2rem", marginLeft: "48px" }}>
-              <Heart
-                isActive={active}
-                onClick={() => setActive(!active)}
-                animationScale={1.2}
-                animationTrigger="both"
-                animationDuration={0.2}
-                className={`customHeart${active ? " active" : ""}`}
-              />
+          <div style={{ display: "flex" }}>
+            <div className="sight-detail-ratings">
+              <Rate disabled value={sight.rate} />
+            </div>
+            <div className="sight-detail-button-grp">
+              {/* <Button className="button">THÊM VÀO LỘ TRÌNH</Button> */}
+              <div style={{ width: "2rem", marginLeft: "48px" }}>
+                <Heart
+                  isActive={active}
+                  onClick={() => setActive(!active)}
+                  animationScale={1.2}
+                  animationTrigger="both"
+                  animationDuration={0.2}
+                  className={`customHeart${active ? " active" : ""}`}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -147,35 +150,39 @@ const SightDetail = () => {
               style={{
                 background: "var(--white-color)",
               }}
-              items={
-                sight.description &&
-                Object.keys(parseDes(sight.description)).map((key, index) => ({
-                  key: (index + 1).toString(),
+              items={[
+                {
+                  key: "1",
                   label: (
                     <div
                       style={{
                         fontSize: "18px",
                         color: "var(--primary-color)",
+                        background: "var(--background-color)",
+                        padding: "4px 12px",
+                        borderRadius: "10px",
                       }}
                     >
-                      {key}
+                      Giới thiệu chi tiết
                     </div>
                   ),
-                  children:
-                    key === "Cảnh đẹp" ? (
-                      <div>
-                        {parseList(parseDes(sight.description)[key]).map(
-                          (item, index) => (
-                            <div style={{ margin: "6px 0" }}>{item}</div>
+                  children: (
+                    <div>
+                      {sight.description &&
+                        splitTextIntoParagraphs(sight.description).map(
+                          (para, index) => (
+                            <p
+                              key={index}
+                              style={{ marginBottom: "1.5em", lineHeight: 1.6 }}
+                            >
+                              {para}
+                            </p>
                           )
                         )}
-                      </div>
-                    ) : (
-                      <div>{parseDes(sight.description)[key]}</div>
-                    ),
-                  style: panelStyle,
-                }))
-              }
+                    </div>
+                  ),
+                },
+              ]}
             />
           </div>
           <div className="sight-detail-box-item">
@@ -184,7 +191,7 @@ const SightDetail = () => {
               <GoogleMapComponent address={sight.address} />
             </div>
           </div>
-          <div className="sight-detail-box-item">
+          {/* <div className="sight-detail-box-item">
             <div className="header2 sight-dettail-header-mark">ĐÁNH GIÁ</div>
             <Form
               name="cmt-form"
@@ -207,7 +214,7 @@ const SightDetail = () => {
                 </Button>
               </Form.Item>
             </Form>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

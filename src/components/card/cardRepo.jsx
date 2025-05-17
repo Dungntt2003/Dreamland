@@ -53,6 +53,7 @@ const CardRepo = ({ item, index }) => {
         hoverable
         style={{
           margin: "0px 0 16px",
+          borderRadius: "15px",
         }}
         cover={
           <div style={{ position: "relative" }}>

@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import Heart from "react-heart";
 import { handleLike } from "components/fun-api/like";
 import { useAuth } from "context/authContext";
+import SightDefault from "assets/image/sight-default.jpg";
 const SightItem = ({ item, checkSightExist, handleAddRepo, active }) => {
   const { id } = useAuth();
   const [like, setLike] = useState(active);
@@ -29,7 +30,7 @@ const SightItem = ({ item, checkSightExist, handleAddRepo, active }) => {
         <div style={{ position: "relative" }}>
           <img
             alt="example"
-            src={item.images[0]}
+            src={item.images[0] ? item.images[0] : SightDefault}
             style={{ height: "170px", width: "100%" }}
           />
           <div

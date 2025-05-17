@@ -106,20 +106,22 @@ const EnterDetail = () => {
               />
               {enter.address}
             </div>
-            <div className="sight-detail-ratings">
-              <Rate defaultValue={enter.rate} disabled />
-            </div>
-            <div className="sight-detail-button-grp">
-              {/* <Button className="button">THÊM VÀO LỘ TRÌNH</Button> */}
-              <div style={{ width: "2rem", marginLeft: "48px" }}>
-                <Heart
-                  isActive={active}
-                  onClick={() => setActive(!active)}
-                  animationScale={1.2}
-                  animationTrigger="both"
-                  animationDuration={0.2}
-                  className={`customHeart${active ? " active" : ""}`}
-                />
+            <div style={{ display: "flex" }}>
+              <div className="sight-detail-ratings">
+                <Rate value={enter.rate} disabled />
+              </div>
+              <div className="sight-detail-button-grp">
+                {/* <Button className="button">THÊM VÀO LỘ TRÌNH</Button> */}
+                <div style={{ width: "2rem", marginLeft: "48px" }}>
+                  <Heart
+                    isActive={active}
+                    onClick={() => setActive(!active)}
+                    animationScale={1.2}
+                    animationTrigger="both"
+                    animationDuration={0.2}
+                    className={`customHeart${active ? " active" : ""}`}
+                  />
+                </div>
               </div>
             </div>
           </div>

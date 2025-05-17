@@ -1,19 +1,23 @@
-.register-form-container {
-  margin: auto;
-  width: 50%;
-}
-
 .register-wrap-container {
   margin-top: -55px;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
+  background-color: var(--background-color);
 }
 .register-container {
-  background-color: var(--background-color);
   padding: 16px;
   border-radius: 20px;
-  margin-top: -72px;
+  width: 50%;
 }
 
 .register-header {
   text-align: center;
   text-transform: uppercase;
+}
+
+.register-img {
+  width: 40%;
 }

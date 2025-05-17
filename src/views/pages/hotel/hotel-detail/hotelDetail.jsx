@@ -182,20 +182,22 @@ const HotelDetail = () => {
               />
               {hotel.address}
             </div>
-            <div className="sight-detail-ratings">
-              <Rate defaultValue={hotel.rate} disabled />
-            </div>
-            <div className="sight-detail-button-grp">
-              {/* <Button className="button">THÊM VÀO LỘ TRÌNH</Button> */}
-              <div style={{ width: "2rem", marginLeft: "48px" }}>
-                <Heart
-                  isActive={active}
-                  onClick={() => setActive(!active)}
-                  animationScale={1.2}
-                  animationTrigger="both"
-                  animationDuration={0.2}
-                  className={`customHeart${active ? " active" : ""}`}
-                />
+            <div style={{ display: "flex" }}>
+              <div className="sight-detail-ratings">
+                <Rate value={hotel.rate} disabled />
+              </div>
+              <div className="sight-detail-button-grp">
+                {/* <Button className="button">THÊM VÀO LỘ TRÌNH</Button> */}
+                <div style={{ width: "2rem", marginLeft: "48px" }}>
+                  <Heart
+                    isActive={active}
+                    onClick={() => setActive(!active)}
+                    animationScale={1.2}
+                    animationTrigger="both"
+                    animationDuration={0.2}
+                    className={`customHeart${active ? " active" : ""}`}
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -340,15 +342,19 @@ const HotelDetail = () => {
               />
             </div>
             <div className="sight-detail-box-item">
-              <div className="header2 sight-dettail-header-mark">
-                GẦN ĐỊA ĐIỂM NỔI TIẾNG
-              </div>
-              <div style={{ display: "flex", flexWrap: "wrap" }}>
-                {hotel.near_location &&
-                  parseList(hotel.near_location).map((item) => {
-                    return <div style={{ width: "50%" }}>{item}</div>;
-                  })}
-              </div>
+              {hotel.near_location && (
+                <>
+                  <div className="header2 sight-dettail-header-mark">
+                    GẦN ĐỊA ĐIỂM NỔI TIẾNG
+                  </div>
+                  <div style={{ display: "flex", flexWrap: "wrap" }}>
+                    {hotel.near_location &&
+                      parseList(hotel.near_location).map((item) => {
+                        return <div style={{ width: "50%" }}>{item}</div>;
+                      })}
+                  </div>
+                </>
+              )}
             </div>
             <div className="sight-detail-box-item">
               <div className="header2 sight-dettail-header-mark">VỊ TRÍ</div>

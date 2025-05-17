@@ -137,31 +137,24 @@ const DraggableCalendar = () => {
     getDemoRepo();
   }, [id]);
 
-  // Tạo Draggable sau khi externalEvents đã được cập nhật
-  // Biến lưu trữ tham chiếu đến instance Draggable
   const draggableInstanceRef = useRef(null);
 
   useEffect(() => {
     if (externalEventsRef.current && externalEvents.length > 0) {
-      // Hủy instance Draggable cũ nếu tồn tại
       if (draggableInstanceRef.current) {
         draggableInstanceRef.current.destroy();
       }
-
-      // Tạo instance Draggable mới và lưu tham chiếu
       draggableInstanceRef.current = new Draggable(externalEventsRef.current, {
         itemSelector: ".fc-event",
         eventData: function (eventEl) {
-          // Tạo ID duy nhất cho mỗi sự kiện
           return {
             title: eventEl.innerText.trim(),
-            id: uuidv4(), // Tạo ID duy nhất ngay tại đây
+            id: uuidv4(),
           };
         },
       });
     }
 
-    // Cleanup khi component unmount
     return () => {
       if (draggableInstanceRef.current) {
         draggableInstanceRef.current.destroy();
@@ -169,7 +162,6 @@ const DraggableCalendar = () => {
     };
   }, [externalEvents]);
 
-  // get all service from api
   useEffect(() => {
     const getAllServices = async () => {
       try {
@@ -191,9 +183,8 @@ const DraggableCalendar = () => {
   }, [id]);
 
   const handleEventReceive = (info) => {
-    // Chỉ thêm event vào state nếu nó chưa tồn tại
     const newEvent = {
-      id: info.event.id, // Sử dụng ID được tạo từ Draggable
+      id: info.event.id,
       title: info.event.title,
       start: info.event.start,
       end: info.event.end || info.event.start,
@@ -202,15 +193,12 @@ const DraggableCalendar = () => {
       textColor: "white",
     };
 
-    // Thêm sự kiện vào state chỉ khi nó chưa tồn tại
     setEvents((prevEvents) => {
       if (!prevEvents.some((event) => event.id === newEvent.id)) {
         return [...prevEvents, newEvent];
       }
       return prevEvents;
     });
-
-    // Không cần phải xóa sự kiện ở đây vì FullCalendar sẽ thêm nó tự động
   };
 
   const handleDeleteEvent = (eventId) => {

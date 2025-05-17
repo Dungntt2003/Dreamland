@@ -27,6 +27,7 @@ const CardHotel = ({ item, link, active }) => {
         style={{
           // width: 300,
           margin: "0px 0 16px",
+          borderRadius: "15px",
         }}
         cover={
           <div style={{ position: "relative" }}>
