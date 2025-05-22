@@ -18,6 +18,7 @@ import GoogleMapComponent from "components/google-maps/googleMaps";
 import { useParams } from "react-router-dom";
 import sightApi from "api/sightApi";
 import splitTextIntoParagraphs from "utils/splitParaChunk";
+import MapboxMapWithAddress from "components/google-maps/mapbox";
 const { TextArea } = Input;
 const SightDetail = () => {
   const { id } = useParams();
@@ -188,33 +189,13 @@ const SightDetail = () => {
           <div className="sight-detail-box-item">
             <div className="header2 sight-dettail-header-mark">VỊ TRÍ</div>
             <div className="sight-detail-map">
-              <GoogleMapComponent address={sight.address} />
+              {/* <GoogleMapComponent address={sight.address} /> */}
+              <MapboxMapWithAddress
+                address={sight.address}
+                style={{ with: "100%" }}
+              />
             </div>
           </div>
-          {/* <div className="sight-detail-box-item">
-            <div className="header2 sight-dettail-header-mark">ĐÁNH GIÁ</div>
-            <Form
-              name="cmt-form"
-              initialValues={{
-                remember: true,
-              }}
-              onFinish={onFinish}
-              onFinishFailed={onFinishFailed}
-              autoComplete="off"
-            >
-              <Form.Item>
-                <Rate tooltips={desc} onChange={handleRating} />
-              </Form.Item>
-              <Form.Item name="comment">
-                <TextArea rows={4} placeholder="Nhập đánh giá của bạn ở đây" />
-              </Form.Item>
-              <Form.Item>
-                <Button type="primary" className="button" htmlType="submit">
-                  Gửi đánh giá
-                </Button>
-              </Form.Item>
-            </Form>
-          </div> */}
         </div>
       </div>
     </div>

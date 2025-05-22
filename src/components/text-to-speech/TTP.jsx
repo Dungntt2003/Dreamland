@@ -5,7 +5,7 @@ import { Button } from "antd";
 const TextToSpeech = ({ text }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [audioUrl, setAudioUrl] = useState(null);
-  const apiKey = "Lanvhg8WHdavBTk1VtyYGysUi4NHnpxO";
+  const apiKey = process.env.REACT_APP_TTS_API_KEY;
   const url = "https://api.fpt.ai/hmi/tts/v5";
 
   const callFptTTS = async () => {
