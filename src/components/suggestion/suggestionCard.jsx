@@ -10,6 +10,7 @@ const SuggestionSection = ({
   checkSightExist,
   handleAddRepo,
   type,
+  handleRemoveService,
 }) => {
   const itemsPerPage = 4;
 
@@ -37,6 +38,7 @@ const SuggestionSection = ({
             item={sight}
             checkSightExist={checkSightExist}
             handleAddRepo={handleAddRepo}
+            handleRemoveService={handleRemoveService}
             active={false}
           />
         ));

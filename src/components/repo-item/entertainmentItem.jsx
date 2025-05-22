@@ -12,6 +12,7 @@ const EntertainmentItem = ({
   checkSightExist,
   handleAddRepo,
   active,
+  handleRemoveService,
 }) => {
   const { id } = useAuth();
   const [like, setLike] = useState(active);
@@ -102,16 +103,14 @@ const EntertainmentItem = ({
         </Button>
       ) : (
         <Button
-          className="button"
+          className="button-v2"
           style={{
             width: "100%",
             marginTop: "16px",
-            opacity: "0.5",
-            cursor: "none",
           }}
-          disabled
+          onClick={() => handleRemoveService(item.id)}
         >
-          ĐÃ THÊM VÀO LỘ TRÌNH
+          LOẠI KHỎI LỘ TRÌNH
         </Button>
       )}
     </Card>

@@ -93,6 +93,29 @@ const Entertainment = ({ data, count, handleUpdateCount, destinationArr }) => {
     addToRepo();
     setServiceId(service_id);
   };
+
+  const handleRemoveService = (service_id) => {
+    const removeService = async () => {
+      try {
+        const response = await demoRepoApi.removeService(
+          service_id,
+          "entertainment",
+          id
+        );
+        handleUpdateCount(count - 1);
+        const index = data.findIndex(
+          (item) =>
+            item.service_id === service_id &&
+            item.service_type === "entertainment"
+        );
+        if (index !== -1) data.splice(index, 1);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    removeService();
+  };
+
   const likedData = enterData.filter(
     (enter) =>
       checkMatchService(likedServices, enter.id, "entertainment") &&
@@ -107,6 +130,7 @@ const Entertainment = ({ data, count, handleUpdateCount, destinationArr }) => {
       checkSightExist={checkSightExist}
       handleAddRepo={handleAddRepo}
       active={checkMatchService(likedServices, enter.id, "entertainment")}
+      handleRemoveService={handleRemoveService}
     />
   ));
 
@@ -174,6 +198,7 @@ const Entertainment = ({ data, count, handleUpdateCount, destinationArr }) => {
               checkMatchService={checkMatchService}
               checkSightExist={checkSightExist}
               handleAddRepo={handleAddRepo}
+              handleRemoveService={handleRemoveService}
               type="entertainment"
             />
           </div>
@@ -189,7 +214,8 @@ const Entertainment = ({ data, count, handleUpdateCount, destinationArr }) => {
                     checkSightExist,
                     handleAddRepo,
                     checkMatchService,
-                    likedServices
+                    likedServices,
+                    handleRemoveService
                   )}
                 />
               </>

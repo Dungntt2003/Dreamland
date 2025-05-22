@@ -120,7 +120,7 @@ const DraggableCalendar = () => {
         setExternalEvents(
           response.data.data.map((item) => {
             return {
-              id: item.id,
+              id: item.service_id,
               type: item.service_type,
               title:
                 getKeyForService(item.service_type) +
@@ -320,6 +320,19 @@ const DraggableCalendar = () => {
     navigate(`/create-trip-step1/${id}`);
   };
 
+  const handleRemoveExternalEvent = (eventId, type) => {
+    setExternalEvents((prev) => prev.filter((e) => e.id !== eventId));
+    const removeFromRepo = async () => {
+      try {
+        const response = await demoRepoApi.removeService(eventId, type, id);
+        // console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    removeFromRepo();
+  };
+
   const renderEventContent = (eventInfo) => {
     return (
       <div style={{ fontSize: "16px" }}>
@@ -382,7 +395,7 @@ const DraggableCalendar = () => {
       </div>
       <div style={{ display: "flex", height: "100vh" }}>
         {/* Draggable Events Section */}
-        <div style={{ width: "40%", marginLeft: "24px" }} ref={ref1}>
+        <div style={{ width: "45%", marginLeft: "24px" }} ref={ref1}>
           <div style={{ fontSize: "30px", margin: "54px 0 24px" }}>DỊCH VỤ</div>
           <div
             id="external-events-list"
@@ -405,9 +418,7 @@ const DraggableCalendar = () => {
               >
                 <span
                   onClick={() =>
-                    setExternalEvents((prev) =>
-                      prev.filter((e) => e.id !== event.id)
-                    )
+                    handleRemoveExternalEvent(event.id, event.type)
                   }
                   style={{
                     position: "absolute",

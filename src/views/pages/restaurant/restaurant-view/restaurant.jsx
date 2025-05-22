@@ -95,6 +95,27 @@ const Restaurant = ({ data, count, handleUpdateCount, destinationArr }) => {
     setServiceId(service_id);
   };
 
+  const handleRemoveService = (service_id) => {
+    const removeService = async () => {
+      try {
+        const response = await demoRepoApi.removeService(
+          service_id,
+          "restaurant",
+          id
+        );
+        handleUpdateCount(count - 1);
+        const index = data.findIndex(
+          (item) =>
+            item.service_id === service_id && item.service_type === "restaurant"
+        );
+        if (index !== -1) data.splice(index, 1);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    removeService();
+  };
+
   const likedData = resData.filter(
     (res) =>
       checkMatchService(likedServices, res.id, "restaurant") &&
@@ -109,6 +130,7 @@ const Restaurant = ({ data, count, handleUpdateCount, destinationArr }) => {
       checkSightExist={checkSightExist}
       handleAddRepo={handleAddRepo}
       active={checkMatchService(likedServices, res.id, "restaurant")}
+      handleRemoveService={handleRemoveService}
     />
   ));
 
@@ -176,6 +198,7 @@ const Restaurant = ({ data, count, handleUpdateCount, destinationArr }) => {
               checkMatchService={checkMatchService}
               checkSightExist={checkSightExist}
               handleAddRepo={handleAddRepo}
+              handleRemoveService={handleRemoveService}
               type="restaurant"
             />
           </div>
@@ -191,7 +214,8 @@ const Restaurant = ({ data, count, handleUpdateCount, destinationArr }) => {
                     checkSightExist,
                     handleAddRepo,
                     checkMatchService,
-                    likedServices
+                    likedServices,
+                    handleRemoveService
                   )}
                 />
               </>

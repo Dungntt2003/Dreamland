@@ -9,7 +9,13 @@ import { handleLike } from "components/fun-api/like";
 import { useAuth } from "context/authContext";
 import DefaultRestaurant from "assets/image/restaurant-default.png";
 
-const RestaurantItem = ({ item, checkSightExist, handleAddRepo, active }) => {
+const RestaurantItem = ({
+  item,
+  checkSightExist,
+  handleAddRepo,
+  active,
+  handleRemoveService,
+}) => {
   const { id } = useAuth();
   const [like, setLike] = useState(active);
   const handleChange = (service_id) => {
@@ -88,16 +94,14 @@ const RestaurantItem = ({ item, checkSightExist, handleAddRepo, active }) => {
         </Button>
       ) : (
         <Button
-          className="button"
+          className="button-v2"
           style={{
             width: "100%",
             marginTop: "16px",
-            opacity: "0.5",
-            cursor: "none",
           }}
-          disabled
+          onClick={() => handleRemoveService(item.id)}
         >
-          ĐÃ THÊM VÀO LỘ TRÌNH
+          LOẠI KHỎI LỘ TRÌNH
         </Button>
       )}
     </Card>

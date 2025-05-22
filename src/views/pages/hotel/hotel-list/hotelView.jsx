@@ -89,6 +89,27 @@ const HotelView = ({ data, count, handleUpdateCount, destinationArr }) => {
     setServiceId(service_id);
   };
 
+  const handleRemoveService = (service_id) => {
+    const removeService = async () => {
+      try {
+        const response = await demoRepoApi.removeService(
+          service_id,
+          "hotel",
+          id
+        );
+        handleUpdateCount(count - 1);
+        const index = data.findIndex(
+          (item) =>
+            item.service_id === service_id && item.service_type === "hotel"
+        );
+        if (index !== -1) data.splice(index, 1);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    removeService();
+  };
+
   const checkSightExist = (hotel_id) => {
     const found = data.find((item) => item.service_id === hotel_id);
     return found !== undefined;
@@ -107,6 +128,7 @@ const HotelView = ({ data, count, handleUpdateCount, destinationArr }) => {
       checkSightExist={checkSightExist}
       handleAddRepo={handleAddRepo}
       active={checkMatchService(likedServices, hotel.id, "hotel")}
+      handleRemoveService={handleRemoveService}
     />
   ));
 
@@ -174,6 +196,7 @@ const HotelView = ({ data, count, handleUpdateCount, destinationArr }) => {
               checkMatchService={checkMatchService}
               checkSightExist={checkSightExist}
               handleAddRepo={handleAddRepo}
+              handleRemoveService={handleRemoveService}
               type="hotel"
             />
           </div>
@@ -189,7 +212,8 @@ const HotelView = ({ data, count, handleUpdateCount, destinationArr }) => {
                     checkSightExist,
                     handleAddRepo,
                     checkMatchService,
-                    likedServices
+                    likedServices,
+                    handleRemoveService
                   )}
                 />
               </>

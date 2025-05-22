@@ -118,6 +118,27 @@ const SightView = ({ data, count, handleUpdateCount, destinationArr }) => {
     setServiceId(service_id);
   };
 
+  const handleRemoveService = (service_id) => {
+    const removeService = async () => {
+      try {
+        const response = await demoRepoApi.removeService(
+          service_id,
+          "sight",
+          id
+        );
+        handleUpdateCount(count - 1);
+        const index = data.findIndex(
+          (item) =>
+            item.service_id === service_id && item.service_type === "sight"
+        );
+        if (index !== -1) data.splice(index, 1);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    removeService();
+  };
+
   const likedData = sightData.filter(
     (sight) =>
       checkMatchService(likedServices, sight.id, "sight") &&
@@ -131,56 +152,10 @@ const SightView = ({ data, count, handleUpdateCount, destinationArr }) => {
       item={sight}
       checkSightExist={checkSightExist}
       handleAddRepo={handleAddRepo}
+      handleRemoveService={handleRemoveService}
       active={checkMatchService(likedServices, sight.id, "sight")}
     />
   ));
-
-  // const nearCard = nearServices.map((item) => {
-  //   switch (item.type) {
-  //     case "sight":
-  //       return (
-  //         <SightItem
-  //           key={item.id}
-  //           item={item}
-  //           checkSightExist={checkSightExist}
-  //           handleAddRepo={handleAddRepo}
-  //           active={checkMatchService(likedServices, item.id, "sight")}
-  //         />
-  //       );
-  //     case "entertainment":
-  //       return (
-  //         <EntertainmentItem
-  //           key={item.id}
-  //           item={item}
-  //           checkSightExist={checkSightExist}
-  //           handleAddRepo={handleAddRepo}
-  //           active={checkMatchService(likedServices, item.id, "entertainment")}
-  //         />
-  //       );
-  //     case "hotel":
-  //       return (
-  //         <HotelItem
-  //           key={item.id}
-  //           item={item}
-  //           checkSightExist={checkSightExist}
-  //           handleAddRepo={handleAddRepo}
-  //           active={checkMatchService(likedServices, item.id, "hotel")}
-  //         />
-  //       );
-  //     case "restaurant":
-  //       return (
-  //         <RestaurantItem
-  //           key={item.id}
-  //           item={item}
-  //           checkSightExist={checkSightExist}
-  //           handleAddRepo={handleAddRepo}
-  //           active={checkMatchService(likedServices, item.id, "restaurant")}
-  //         />
-  //       );
-  //     default:
-  //       return null;
-  //   }
-  // });
 
   const handleSearch = (e) => {
     if (e.target.value === "") {
@@ -256,6 +231,7 @@ const SightView = ({ data, count, handleUpdateCount, destinationArr }) => {
               checkMatchService={checkMatchService}
               checkSightExist={checkSightExist}
               handleAddRepo={handleAddRepo}
+              handleRemoveService={handleRemoveService}
               type="sight"
             />
           </div>
@@ -273,7 +249,8 @@ const SightView = ({ data, count, handleUpdateCount, destinationArr }) => {
                     checkSightExist,
                     handleAddRepo,
                     checkMatchService,
-                    likedServices
+                    likedServices,
+                    handleRemoveService
                   )}
                 />
               </>
@@ -299,6 +276,7 @@ const SightView = ({ data, count, handleUpdateCount, destinationArr }) => {
                 item={sight}
                 checkSightExist={checkSightExist}
                 handleAddRepo={handleAddRepo}
+                handleRemoveService={handleRemoveService}
               />
             ))}
           </div>
