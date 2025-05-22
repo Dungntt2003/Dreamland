@@ -382,7 +382,7 @@ const DraggableCalendar = () => {
       </div>
       <div style={{ display: "flex", height: "100vh" }}>
         {/* Draggable Events Section */}
-        <div style={{ width: "30%", marginLeft: "24px" }} ref={ref1}>
+        <div style={{ width: "40%", marginLeft: "24px" }} ref={ref1}>
           <div style={{ fontSize: "30px", margin: "54px 0 24px" }}>DỊCH VỤ</div>
           <div
             id="external-events-list"
@@ -397,11 +397,31 @@ const DraggableCalendar = () => {
                 key={event.id}
                 className="fc-event badge me-3 my-1"
                 style={{
+                  position: "relative",
                   backgroundColor: "#74c476",
                   padding: "6px 6px",
                   color: "black",
                 }}
               >
+                <span
+                  onClick={() =>
+                    setExternalEvents((prev) =>
+                      prev.filter((e) => e.id !== event.id)
+                    )
+                  }
+                  style={{
+                    position: "absolute",
+                    top: "-2px",
+                    right: "-4px",
+                    cursor: "pointer",
+                    fontWeight: "bold",
+                    fontSize: "14px",
+                    color: "red",
+                  }}
+                >
+                  ×
+                </span>
+
                 <div
                   className="fc-event-main"
                   style={{ fontSize: "14px", fontWeight: "200" }}
