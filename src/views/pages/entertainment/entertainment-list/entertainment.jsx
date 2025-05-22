@@ -2,7 +2,7 @@ import "../../sightseeing/sight-view/sightView";
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
-import { Card, Pagination as AntPagination, Input, FloatButton } from "antd";
+import { Input, FloatButton } from "antd";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -15,17 +15,21 @@ import EntertainmentItem from "components/repo-item/entertainmentItem";
 import { checkMatchService } from "components/fun-api/like";
 import likeApi from "api/likeApi";
 import { useAuth } from "context/authContext";
+import SuggestionSection from "components/suggestion/suggestionCard";
+import nearByApi from "api/nearbyApi";
+import PaginationSection from "components/paginationItem/paginationSection";
+import getNearCard from "utils/nearCard";
 
-const Entertainment = ({ data, count, handleUpdateCount }) => {
+const Entertainment = ({ data, count, handleUpdateCount, destinationArr }) => {
   const { id: user_id } = useAuth();
   const { id } = useParams();
   const [searchTerm, setSearchTerm] = useState("");
+  const [serviceId, setServiceId] = useState(null);
+  const [nearServices, setNearServices] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [search, setSearch] = useState(false);
   const [likedServices, setLikedServices] = useState([]);
   const [enterData, setEnterData] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 4;
   useEffect(() => {
     const getListEnters = async () => {
       try {
@@ -47,6 +51,23 @@ const Entertainment = ({ data, count, handleUpdateCount }) => {
     getLiked();
     getListEnters();
   }, []);
+
+  useEffect(() => {
+    if (serviceId === null) return;
+    const getNearServices = async () => {
+      try {
+        const response = await nearByApi.getNearServices(
+          serviceId,
+          "entertainment",
+          30
+        );
+        setNearServices(response.data.nearby);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getNearServices();
+  }, [serviceId]);
 
   const checkSightExist = (entertainment_id) => {
     const found = data.find((item) => item.service_id === entertainment_id);
@@ -70,9 +91,14 @@ const Entertainment = ({ data, count, handleUpdateCount }) => {
       }
     };
     addToRepo();
+    setServiceId(service_id);
   };
-  const likedData = enterData.filter((enter) =>
-    checkMatchService(likedServices, enter.id, "entertainment")
+  const likedData = enterData.filter(
+    (enter) =>
+      checkMatchService(likedServices, enter.id, "entertainment") &&
+      destinationArr.some((destination) =>
+        enter.address.toLowerCase().includes(destination.toLowerCase())
+      )
   );
   const likedCard = likedData.map((enter) => (
     <EntertainmentItem
@@ -83,26 +109,7 @@ const Entertainment = ({ data, count, handleUpdateCount }) => {
       active={checkMatchService(likedServices, enter.id, "entertainment")}
     />
   ));
-  const otherData = enterData.filter(
-    (enter) => !checkMatchService(likedServices, enter.id, "entertainment")
-  );
-  const otherCard = otherData.map((enter) => (
-    <EntertainmentItem
-      key={enter.id}
-      item={enter}
-      checkSightExist={checkSightExist}
-      handleAddRepo={handleAddRepo}
-      active={checkMatchService(likedServices, enter.id, "entertainment")}
-    />
-  ));
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = otherCard.slice(indexOfFirstItem, indexOfLastItem);
-
-  const handleChangePage = (page) => {
-    setCurrentPage(page);
-  };
   const handleSearch = (e) => {
     if (e.target.value === "") {
       setSearch(false);
@@ -135,44 +142,62 @@ const Entertainment = ({ data, count, handleUpdateCount }) => {
       </div>
       {search === false ? (
         <>
+          {likedCard.length > 0 && (
+            <>
+              <div>
+                <div style={{ fontSize: "20px" }}>
+                  DANH SÁCH YÊU THÍCH CỦA BẠN
+                </div>
+                <Swiper
+                  modules={[Navigation, Pagination, Scrollbar, A11y]}
+                  spaceBetween={50}
+                  slidesPerView={4}
+                  navigation
+                  pagination={{ clickable: true }}
+                  scrollbar={{ draggable: true }}
+                  grabCursor={true}
+                  style={{ padding: "24px 0 32px" }}
+                >
+                  {likedCard.map((item, index) => {
+                    return <SwiperSlide key={index}>{item}</SwiperSlide>;
+                  })}
+                </Swiper>
+              </div>
+            </>
+          )}
           <div>
-            <div style={{ fontSize: "20px" }}>DANH SÁCH YÊU THÍCH CỦA BẠN</div>
-            <Swiper
-              modules={[Navigation, Pagination, Scrollbar, A11y]}
-              spaceBetween={50}
-              slidesPerView={4}
-              navigation
-              pagination={{ clickable: true }}
-              scrollbar={{ draggable: true }}
-              grabCursor={true}
-              style={{ padding: "24px 0 32px" }}
-            >
-              {likedCard.map((item, index) => {
-                return <SwiperSlide key={index}>{item}</SwiperSlide>;
-              })}
-            </Swiper>
+            <SuggestionSection
+              SightItem={EntertainmentItem}
+              sightData={enterData}
+              likedServices={likedServices}
+              destinationArr={destinationArr}
+              checkMatchService={checkMatchService}
+              checkSightExist={checkSightExist}
+              handleAddRepo={handleAddRepo}
+              type="entertainment"
+            />
           </div>
           <div>
-            <div style={{ fontSize: "20px", margin: "16px 0" }}>
-              DANH SÁCH ĐỊA ĐIỂM ĐỀ XUẤT KHÁC
+            <div style={{ fontSize: "20px", marginTop: "24px" }}>
+              CÁC ĐỊA ĐIỂM Ở GẦN
             </div>
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: "16px",
-                marginTop: "16px",
-              }}
-            >
-              {currentItems.map((item, index) => item)}
-            </div>
-            <AntPagination
-              current={currentPage}
-              pageSize={itemsPerPage}
-              total={otherCard.length}
-              onChange={handleChangePage}
-              style={{ marginTop: "20px", textAlign: "center" }}
-            />
+            {nearServices.length > 0 ? (
+              <>
+                <PaginationSection
+                  data={getNearCard(
+                    nearServices,
+                    checkSightExist,
+                    handleAddRepo,
+                    checkMatchService,
+                    likedServices
+                  )}
+                />
+              </>
+            ) : (
+              <p style={{ color: "red", fontSize: "16px" }}>
+                Chưa có địa điểm nào đề xuất
+              </p>
+            )}
           </div>
         </>
       ) : (

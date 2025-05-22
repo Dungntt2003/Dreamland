@@ -2,13 +2,7 @@ import "./sightView.scss";
 import { useState, useEffect, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
-import {
-  Button,
-  Pagination as AntPagination,
-  Input,
-  FloatButton,
-  Tour,
-} from "antd";
+import { Button, Input, FloatButton, Tour } from "antd";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -18,13 +12,13 @@ import sightApi from "api/sightApi";
 import demoRepoApi from "api/demoRepoApi";
 import { ToastContainer, toast } from "react-toastify";
 import SightItem from "components/repo-item/sightItem";
-import EntertainmentItem from "components/repo-item/entertainmentItem";
-import HotelItem from "components/repo-item/hotelItem";
-import RestaurantItem from "components/repo-item/restaurantItem";
 import { checkMatchService } from "components/fun-api/like";
 import likeApi from "api/likeApi";
 import { useAuth } from "context/authContext";
 import nearByApi from "api/nearbyApi";
+import SuggestionSection from "components/suggestion/suggestionCard";
+import PaginationSection from "components/paginationItem/paginationSection";
+import getNearCard from "utils/nearCard";
 
 const SightView = ({ data, count, handleUpdateCount, destinationArr }) => {
   const { id: user_id } = useAuth();
@@ -52,15 +46,14 @@ const SightView = ({ data, count, handleUpdateCount, destinationArr }) => {
     },
   ];
   const { id } = useParams();
-  const [serviceId, setServiceId] = useState();
+  const [serviceId, setServiceId] = useState(null);
   const [nearServices, setNearServices] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [likedServices, setLikedServices] = useState([]);
   const [search, setSearch] = useState(false);
   const [sightData, setSightData] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 4;
+
   useEffect(() => {
     const getListSights = async () => {
       try {
@@ -85,12 +78,13 @@ const SightView = ({ data, count, handleUpdateCount, destinationArr }) => {
   }, []);
 
   useEffect(() => {
+    if (serviceId === null) return;
     const getNearServices = async () => {
       try {
         const response = await nearByApi.getNearServices(
           serviceId,
           "sight",
-          100
+          30
         );
         setNearServices(response.data.nearby);
       } catch (error) {
@@ -124,8 +118,12 @@ const SightView = ({ data, count, handleUpdateCount, destinationArr }) => {
     setServiceId(service_id);
   };
 
-  const likedData = sightData.filter((sight) =>
-    checkMatchService(likedServices, sight.id, "sight")
+  const likedData = sightData.filter(
+    (sight) =>
+      checkMatchService(likedServices, sight.id, "sight") &&
+      destinationArr.some((destination) =>
+        sight.address.toLowerCase().includes(destination.toLowerCase())
+      )
   );
   const likedCard = likedData.map((sight) => (
     <SightItem
@@ -136,73 +134,54 @@ const SightView = ({ data, count, handleUpdateCount, destinationArr }) => {
       active={checkMatchService(likedServices, sight.id, "sight")}
     />
   ));
-  const otherData = sightData.filter(
-    (sight) => !checkMatchService(likedServices, sight.id, "sight")
-  );
-  const otherCard = otherData.map((sight) => (
-    <SightItem
-      key={sight.id}
-      item={sight}
-      checkSightExist={checkSightExist}
-      handleAddRepo={handleAddRepo}
-      active={checkMatchService(likedServices, sight.id, "sight")}
-    />
-  ));
 
-  const nearCard = nearServices.map((item) => {
-    switch (item.type) {
-      case "sight":
-        return (
-          <SightItem
-            key={item.id}
-            item={item}
-            checkSightExist={checkSightExist}
-            handleAddRepo={handleAddRepo}
-            active={checkMatchService(likedServices, item.id, "sight")}
-          />
-        );
-      case "entertainment":
-        return (
-          <EntertainmentItem
-            key={item.id}
-            item={item}
-            checkSightExist={checkSightExist}
-            handleAddRepo={handleAddRepo}
-            active={checkMatchService(likedServices, item.id, "entertainment")}
-          />
-        );
-      case "hotel":
-        return (
-          <HotelItem
-            key={item.id}
-            item={item}
-            checkSightExist={checkSightExist}
-            handleAddRepo={handleAddRepo}
-            active={checkMatchService(likedServices, item.id, "hotel")}
-          />
-        );
-      case "restaurant":
-        return (
-          <RestaurantItem
-            key={item.id}
-            item={item}
-            checkSightExist={checkSightExist}
-            handleAddRepo={handleAddRepo}
-            active={checkMatchService(likedServices, item.id, "restaurant")}
-          />
-        );
-      default:
-        return null;
-    }
-  });
+  // const nearCard = nearServices.map((item) => {
+  //   switch (item.type) {
+  //     case "sight":
+  //       return (
+  //         <SightItem
+  //           key={item.id}
+  //           item={item}
+  //           checkSightExist={checkSightExist}
+  //           handleAddRepo={handleAddRepo}
+  //           active={checkMatchService(likedServices, item.id, "sight")}
+  //         />
+  //       );
+  //     case "entertainment":
+  //       return (
+  //         <EntertainmentItem
+  //           key={item.id}
+  //           item={item}
+  //           checkSightExist={checkSightExist}
+  //           handleAddRepo={handleAddRepo}
+  //           active={checkMatchService(likedServices, item.id, "entertainment")}
+  //         />
+  //       );
+  //     case "hotel":
+  //       return (
+  //         <HotelItem
+  //           key={item.id}
+  //           item={item}
+  //           checkSightExist={checkSightExist}
+  //           handleAddRepo={handleAddRepo}
+  //           active={checkMatchService(likedServices, item.id, "hotel")}
+  //         />
+  //       );
+  //     case "restaurant":
+  //       return (
+  //         <RestaurantItem
+  //           key={item.id}
+  //           item={item}
+  //           checkSightExist={checkSightExist}
+  //           handleAddRepo={handleAddRepo}
+  //           active={checkMatchService(likedServices, item.id, "restaurant")}
+  //         />
+  //       );
+  //     default:
+  //       return null;
+  //   }
+  // });
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = otherCard.slice(indexOfFirstItem, indexOfLastItem);
-
-  const handleChangePage = (page) => {
-    setCurrentPage(page);
-  };
   const handleSearch = (e) => {
     if (e.target.value === "") {
       setSearch(false);
@@ -243,67 +222,66 @@ const SightView = ({ data, count, handleUpdateCount, destinationArr }) => {
       {search === false ? (
         <>
           <div>
-            <div>
-              <div style={{ fontSize: "20px" }}>
-                DANH SÁCH YÊU THÍCH CỦA BẠN
-              </div>
-              <Swiper
-                modules={[Navigation, Pagination, Scrollbar, A11y]}
-                spaceBetween={50}
-                slidesPerView={4}
-                navigation
-                pagination={{ clickable: true }}
-                scrollbar={{ draggable: true }}
-                grabCursor={true}
-                style={{ padding: "24px 0 32px" }}
-              >
-                {likedCard.map((item, index) => {
-                  return <SwiperSlide key={index}>{item}</SwiperSlide>;
-                })}
-              </Swiper>
-            </div>
+            {likedCard.length > 0 && (
+              <>
+                <div>
+                  <div style={{ fontSize: "20px" }}>
+                    DANH SÁCH YÊU THÍCH CỦA BẠN
+                  </div>
+                  <Swiper
+                    modules={[Navigation, Pagination, Scrollbar, A11y]}
+                    spaceBetween={50}
+                    slidesPerView={4}
+                    navigation
+                    pagination={{ clickable: true }}
+                    scrollbar={{ draggable: true }}
+                    grabCursor={true}
+                    style={{ padding: "24px 0 32px" }}
+                  >
+                    {likedCard.map((item, index) => {
+                      return <SwiperSlide key={index}>{item}</SwiperSlide>;
+                    })}
+                  </Swiper>
+                </div>
+              </>
+            )}
           </div>
 
           <div>
-            <div style={{ fontSize: "20px", margin: "16px 0" }}>
-              DANH SÁCH ĐỊA ĐIỂM ĐỀ XUẤT KHÁC
-            </div>
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: "16px",
-                marginTop: "16px",
-              }}
-            >
-              {currentItems.map((item, index) => item)}
-            </div>
-            <AntPagination
-              current={currentPage}
-              pageSize={itemsPerPage}
-              total={otherCard.length}
-              onChange={handleChangePage}
-              style={{ marginTop: "20px", textAlign: "center" }}
+            <SuggestionSection
+              SightItem={SightItem}
+              sightData={sightData}
+              likedServices={likedServices}
+              destinationArr={destinationArr}
+              checkMatchService={checkMatchService}
+              checkSightExist={checkSightExist}
+              handleAddRepo={handleAddRepo}
+              type="sight"
             />
           </div>
+
+          {/* near location  */}
           <div>
             <div style={{ fontSize: "20px", marginTop: "24px" }}>
               CÁC ĐỊA ĐIỂM Ở GẦN
             </div>
-            <Swiper
-              modules={[Navigation, Pagination, Scrollbar, A11y]}
-              spaceBetween={50}
-              slidesPerView={4}
-              navigation
-              pagination={{ clickable: true }}
-              scrollbar={{ draggable: true }}
-              grabCursor={true}
-              style={{ padding: "24px 0 32px" }}
-            >
-              {nearCard.map((item, index) => {
-                return <SwiperSlide key={index}>{item}</SwiperSlide>;
-              })}
-            </Swiper>
+            {nearServices.length > 0 ? (
+              <>
+                <PaginationSection
+                  data={getNearCard(
+                    nearServices,
+                    checkSightExist,
+                    handleAddRepo,
+                    checkMatchService,
+                    likedServices
+                  )}
+                />
+              </>
+            ) : (
+              <p style={{ color: "red", fontSize: "16px" }}>
+                Chưa có địa điểm nào đề xuất
+              </p>
+            )}
           </div>
         </>
       ) : (

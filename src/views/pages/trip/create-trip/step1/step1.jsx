@@ -61,6 +61,7 @@ const Step1 = () => {
           data={demoRepo}
           count={count}
           handleUpdateCount={handleCount}
+          destinationArr={destinationArr}
         />
       ),
       icon: <FontAwesomeIcon icon={faWater} />,
@@ -73,6 +74,7 @@ const Step1 = () => {
           data={demoRepo}
           count={count}
           handleUpdateCount={handleCount}
+          destinationArr={destinationArr}
         />
       ),
       icon: <FontAwesomeIcon icon={faHotel} />,
@@ -85,6 +87,7 @@ const Step1 = () => {
           data={demoRepo}
           count={count}
           handleUpdateCount={handleCount}
+          destinationArr={destinationArr}
         />
       ),
       icon: <FontAwesomeIcon icon={faUtensils} />,
