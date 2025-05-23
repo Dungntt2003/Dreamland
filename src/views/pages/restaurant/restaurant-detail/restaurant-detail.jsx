@@ -1,10 +1,8 @@
 import "../../sightseeing/sight-detail/sightDetail";
 import checkOpen from "utils/checkOpenTime";
-import { Rating } from "react-simple-star-rating";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect } from "react";
 import Heart from "react-heart";
-import { parseDes, parseList } from "utils/parseDescription";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import DefaultRestaurant from "assets/image/restaurant-default.png";
@@ -33,8 +31,8 @@ import {
 import GoogleMapComponent from "components/google-maps/googleMaps";
 import { useParams, Link } from "react-router-dom";
 import restaurantApi from "api/restaurantApi";
-import SplitParagraph from "utils/splitPara";
 import formatCurrency from "utils/formatCurrency";
+import MapboxMapWithAddress from "components/google-maps/mapbox";
 import Markdown from "react-markdown";
 const { TextArea } = Input;
 const { Meta } = Card;
@@ -294,41 +292,10 @@ const RestaurantDetail = () => {
             <div className="sight-detail-box-item">
               <div className="header2 sight-dettail-header-mark">VỊ TRÍ</div>
               <div className="sight-detail-map">
-                <GoogleMapComponent address={restaurant.address} />
+                {/* <GoogleMapComponent address={restaurant.address} /> */}
+                <MapboxMapWithAddress address={restaurant.address} />
               </div>
             </div>
-            {/* <div className="sight-detail-box-item">
-              <div className="header2 sight-dettail-header-mark">ĐÁNH GIÁ</div>
-              <Form
-                name="cmt-form"
-                initialValues={{
-                  remember: true,
-                }}
-                onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
-                autoComplete="off"
-              >
-                <Form.Item>
-                  <Rating
-                    onClick={handleRating}
-                    transition="true"
-                    showTooltip="true"
-                    tooltipDefaultText="Đánh giá của bạn"
-                  />
-                </Form.Item>
-                <Form.Item name="comment">
-                  <TextArea
-                    rows={4}
-                    placeholder="Nhập đánh giá của bạn ở đây"
-                  />
-                </Form.Item>
-                <Form.Item>
-                  <Button type="primary" className="button" htmlType="submit">
-                    Gửi đánh giá
-                  </Button>
-                </Form.Item>
-              </Form>
-            </div> */}
           </div>
         </div>
         {menu.length > 0 && (

@@ -32,7 +32,7 @@ import {
 import GoogleMapComponent from "components/google-maps/googleMaps";
 import { useParams, Link } from "react-router-dom";
 import hotelApi from "api/hotelApi";
-import SplitParagraph from "utils/splitPara";
+import MapboxMapWithAddress from "components/google-maps/mapbox";
 import formatCurrency from "utils/formatCurrency";
 const { TextArea } = Input;
 const { Meta } = Card;
@@ -142,38 +142,6 @@ const HotelDetail = () => {
         <div className="sight-detail-container">
           <div className="sight-detail-banner">
             <div className="sight-detail-name header1">{hotel.name}</div>
-            {/* <div className="sight-detail-open">
-              <FontAwesomeIcon className="sight-detail-icon" icon={faClock} />
-              {checkOpen(restaurant.open, restaurant.close) === true
-                ? "Đang mở cửa"
-                : "Đóng cửa"}
-            </div> */}
-            {/* <div
-              style={{
-                margin: "16px 0",
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              <div>
-                <FontAwesomeIcon icon={faPhone} className="sight-detail-icon" />
-                {restaurant.phone}
-              </div>
-              <Link
-                className="link"
-                to={`zalo://call?phone=${restaurant.phone}`}
-              >
-                <Button
-                  style={{
-                    backgroundColor: "red",
-                    color: "white",
-                    marginLeft: "24px",
-                  }}
-                >
-                  Gọi đặt bàn
-                </Button>
-              </Link>
-            </div> */}
 
             <div className="sight-detail-address">
               <FontAwesomeIcon
@@ -251,94 +219,32 @@ const HotelDetail = () => {
                 style={{
                   background: "var(--white-color)",
                 }}
-                items={
-                  [
-                    {
-                      key: "1",
-                      label: (
-                        <div
-                          style={{
-                            background: "var(--background-color)",
-                            fontSize: "16px",
-                            padding: "8px 16px",
-                            borderRadius: "16px",
-                          }}
-                        >
-                          Lịch sử hình thành và dịch vụ
-                        </div>
-                      ),
-                      children: (
-                        <div
-                          style={{
-                            padding: "4px 8px",
-                          }}
-                        >
-                          {hotel.description}
-                        </div>
-                      ),
-                    },
-                  ]
-                  // &&
-                  // Object.keys(parseDes(hotel.description)).map(
-                  //   (key, index) => ({
-                  //     key: (index + 1).toString(),
-                  //     label: (
-                  //       <div
-                  //         style={{
-                  //           fontSize: "18px",
-                  //           color: "var(--primary-color)",
-                  //         }}
-                  //       >
-                  //         {key}
-                  //       </div>
-                  //     ),
-                  //     children:
-                  //       key === "Điểm nổi bật" ? (
-                  //         <div>
-                  //           {parseList(parseDes(hotel.description)[key]).map(
-                  //             (item) => {
-                  //               return (
-                  //                 <div style={{ margin: "4px 0" }}>
-                  //                   <FontAwesomeIcon
-                  //                     icon={faCheck}
-                  //                     style={{
-                  //                       fontSize: "20px",
-                  //                       marginRight: "16px",
-                  //                       color: "var(--primary-color)",
-                  //                     }}
-                  //                   />
-                  //                   {item}
-                  //                 </div>
-                  //               );
-                  //             }
-                  //           )}
-                  //         </div>
-                  //       ) : (
-                  //         <div style={{ display: "flex", flexWrap: "wrap" }}>
-                  //           {parseList(parseDes(hotel.description)[key]).map(
-                  //             (item) => {
-                  //               return (
-                  //                 <div
-                  //                   style={{
-                  //                     backgroundColor: "var(--primary-color)",
-                  //                     padding: "4px 8px",
-                  //                     width: "fit-content",
-                  //                     color: "white",
-                  //                     borderRadius: "4px",
-                  //                     margin: "4px",
-                  //                   }}
-                  //                 >
-                  //                   {item}
-                  //                 </div>
-                  //               );
-                  //             }
-                  //           )}
-                  //         </div>
-                  //       ),
-                  //     style: panelStyle,
-                  //   })
-                  // )
-                }
+                items={[
+                  {
+                    key: "1",
+                    label: (
+                      <div
+                        style={{
+                          background: "var(--background-color)",
+                          fontSize: "16px",
+                          padding: "8px 16px",
+                          borderRadius: "16px",
+                        }}
+                      >
+                        Lịch sử hình thành và dịch vụ
+                      </div>
+                    ),
+                    children: (
+                      <div
+                        style={{
+                          padding: "4px 8px",
+                        }}
+                      >
+                        {hotel.description}
+                      </div>
+                    ),
+                  },
+                ]}
               />
             </div>
             <div className="sight-detail-box-item">
@@ -359,41 +265,10 @@ const HotelDetail = () => {
             <div className="sight-detail-box-item">
               <div className="header2 sight-dettail-header-mark">VỊ TRÍ</div>
               <div className="sight-detail-map">
-                <GoogleMapComponent address={hotel.address} />
+                {/* <GoogleMapComponent address={hotel.address} /> */}
+                <MapboxMapWithAddress address={hotel.address} />
               </div>
             </div>
-            {/* <div className="sight-detail-box-item">
-              <div className="header2 sight-dettail-header-mark">ĐÁNH GIÁ</div>
-              <Form
-                name="cmt-form"
-                initialValues={{
-                  remember: true,
-                }}
-                onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
-                autoComplete="off"
-              >
-                <Form.Item>
-                  <Rating
-                    onClick={handleRating}
-                    transition="true"
-                    showTooltip="true"
-                    tooltipDefaultText="Đánh giá của bạn"
-                  />
-                </Form.Item>
-                <Form.Item name="comment">
-                  <TextArea
-                    rows={4}
-                    placeholder="Nhập đánh giá của bạn ở đây"
-                  />
-                </Form.Item>
-                <Form.Item>
-                  <Button type="primary" className="button" htmlType="submit">
-                    Gửi đánh giá
-                  </Button>
-                </Form.Item>
-              </Form>
-            </div> */}
           </div>
         </div>
         <div

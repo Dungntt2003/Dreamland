@@ -18,6 +18,7 @@ import {
 import { CaretRightOutlined } from "@ant-design/icons";
 import { Collapse, Form, Input, Button, Rate } from "antd";
 import GoogleMapComponent from "components/google-maps/googleMaps";
+import MapboxMapWithAddress from "components/google-maps/mapbox";
 import { useParams } from "react-router-dom";
 import entertainmentApi from "api/entertainmentApi";
 const { TextArea } = Input;
@@ -201,76 +202,15 @@ const EnterDetail = () => {
                     ),
                   },
                 ]}
-
-                // &&
-                // Object.keys(parseDes(enter.description)).map(
-                //   (key, index) => ({
-                //     key: (index + 1).toString(),
-                //     label: (
-                //       <div
-                //         style={{
-                //           fontSize: "18px",
-                //           color: "var(--primary-color)",
-                //         }}
-                //       >
-                //         {key}
-                //       </div>
-                //     ),
-                //     children:
-                //       key === "Cảnh đẹp" ? (
-                //         <div>
-                //           {parseList(parseDes(enter.description)[key]).map(
-                //             (item, index) => (
-                //               <div style={{ margin: "6px 0" }}>{item}</div>
-                //             )
-                //           )}
-                //         </div>
-                //       ) : (
-                //         <div>{parseDes(enter.description)[key]}</div>
-                //       ),
-                //     style: panelStyle,
-                //   })
-                // )
               />
             </div>
             <div className="sight-detail-box-item">
               <div className="header2 sight-dettail-header-mark">VỊ TRÍ</div>
               <div className="sight-detail-map">
-                <GoogleMapComponent address={enter.address} />
+                {/* <GoogleMapComponent address={enter.address} /> */}
+                <MapboxMapWithAddress address={enter.address} />
               </div>
             </div>
-            {/* <div className="sight-detail-box-item">
-              <div className="header2 sight-dettail-header-mark">ĐÁNH GIÁ</div> */}
-            {/* <Form
-                name="cmt-form"
-                initialValues={{
-                  remember: true,
-                }}
-                onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
-                autoComplete="off"
-              >
-                <Form.Item>
-                  <Rate
-                    onClick={handleRating}
-                    transition="true"
-                    showTooltip="true"
-                    tooltipDefaultText="Đánh giá của bạn"
-                  />
-                </Form.Item>
-                <Form.Item name="comment">
-                  <TextArea
-                    rows={4}
-                    placeholder="Nhập đánh giá của bạn ở đây"
-                  />
-                </Form.Item>
-                <Form.Item>
-                  <Button type="primary" className="button" htmlType="submit">
-                    Gửi đánh giá
-                  </Button>
-                </Form.Item>
-              </Form> */}
-            {/* </div> */}
           </div>
         </div>
       </div>
