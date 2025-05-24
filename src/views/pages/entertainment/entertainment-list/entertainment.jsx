@@ -84,6 +84,7 @@ const Entertainment = ({ data, count, handleUpdateCount, destinationArr }) => {
     const addToRepo = async () => {
       try {
         const response = await demoRepoApi.addAService(params);
+        console.log(response);
         handleUpdateCount(count + 1);
         data.push(params);
       } catch (error) {

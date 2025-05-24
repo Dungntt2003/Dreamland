@@ -116,13 +116,14 @@ const ScheduleDetail = () => {
     setIsModalOpen(false);
   };
 
-  const handleExport = () => {
-    const resultString = item
-      .map((event) => `${event.label}: ${event.children}`)
-      .join("\n");
-    // console.log(resultString);
-    ExportToDOCX(resultString);
+  const handleExportEx = (data) => {
+    ExportToDOCX(data, "experience.docx", "Cẩm nang cho lộ trình");
   };
+
+  const handleExportDes = (data) => {
+    ExportToDOCX(data, "itinerary-description.docx", "Mô tả lộ trình");
+  };
+
   const handleMap = () => {
     navigate(`/repo-map/${id}`);
   };
@@ -190,10 +191,6 @@ const ScheduleDetail = () => {
         }}
       >
         <div>
-          {/* <Button className="button" onClick={handleShare}>
-            <FontAwesomeIcon icon={faShare} />
-            Chia sẻ
-          </Button> */}
           <Select
             style={{
               width: "200px",
@@ -215,10 +212,10 @@ const ScheduleDetail = () => {
             <FontAwesomeIcon icon={faPen} />
             Chỉnh sửa
           </Button>
-          <Button className="button" onClick={handleExport}>
+          {/* <Button className="button" onClick={handleExport}>
             <FontAwesomeIcon icon={faPrint} />
             In
-          </Button>
+          </Button> */}
           <Button className="button" onClick={handleReturnHomepage}>
             Trở về trang chủ
           </Button>
@@ -303,12 +300,22 @@ const ScheduleDetail = () => {
           <div style={{ whiteSpace: "pre-line" }}>
             {experience ? (
               <>
-                <div
-                  style={{ display: "flex", justifyContent: "space-around" }}
-                >
-                  <TextToSpeech text={experience.slice(0, 200)} />
-                  {/* <TextToSpeechButton text={experience} /> */}
-                  <VietnameseTextReader text={experience.slice(0, 300)} />
+                <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                  <div
+                    style={{ display: "flex", justifyContent: "space-around" }}
+                  >
+                    <TextToSpeech text={experience.slice(0, 200)} />
+                    {/* <TextToSpeechButton text={experience} /> */}
+                    <VietnameseTextReader text={experience.slice(0, 300)} />
+                  </div>
+                  <div style={{ marginLeft: "16px" }}>
+                    <Button
+                      className="button"
+                      onClick={() => handleExportEx(experience)}
+                    >
+                      In cẩm nang
+                    </Button>
+                  </div>
                 </div>
                 <Markdown>{experience}</Markdown>
               </>
@@ -325,6 +332,14 @@ const ScheduleDetail = () => {
         onOk={handleOkDes}
         onCancel={handleCancelDes}
       >
+        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <Button
+            className="button"
+            onClick={() => handleExportDes(generateItineraryDescription(item))}
+          >
+            In mô tả
+          </Button>
+        </div>
         <Markdown>{generateItineraryDescription(item)}</Markdown>
       </Modal>
     </div>

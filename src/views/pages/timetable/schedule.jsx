@@ -63,6 +63,7 @@ const DraggableCalendar = () => {
   };
 
   const getNameFromItem = (item) => {
+    // console.log(item);
     switch (item.service_type) {
       case "sight":
         return item.sight.name;
@@ -211,7 +212,7 @@ const DraggableCalendar = () => {
     const allEvents = calendarRef.current.getApi().getEvents();
 
     const eventData = allEvents.map((event) => ({
-      title: event.title,
+      title: event.title.replace(/^×\s*/, ""),
       id: event.id,
       start: event.start,
       end: event.end ? event.end : event.start,
@@ -238,7 +239,7 @@ const DraggableCalendar = () => {
     const allEvents = calendarRef.current.getApi().getEvents();
 
     const eventData = allEvents.map((event) => ({
-      title: event.title,
+      title: event.title.replace(/^×\s*/, ""),
       id: event.id,
       start: event.start,
       end: event.end ? event.end : event.start,
@@ -336,7 +337,7 @@ const DraggableCalendar = () => {
   const renderEventContent = (eventInfo) => {
     return (
       <div style={{ fontSize: "16px" }}>
-        <span>{eventInfo.event.title}</span>
+        <span>{eventInfo.event.title.replace(/^×\s*/, "")}</span>
         <button
           onClick={(e) => {
             e.stopPropagation(); // Prevent triggering event click

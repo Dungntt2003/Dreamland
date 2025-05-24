@@ -2,7 +2,6 @@ import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import { Button } from "antd";
 import mapboxgl from "mapbox-gl";
 
-// Thêm CSS cho Mapbox GL JS
 const mapboxCSS = `
 @import url('https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css');
 
@@ -82,7 +81,6 @@ const MapComponent = ({ locations }) => {
 
     mapInstance.current = map;
 
-    // Thêm event listener để đóng popup khi click vào map
     map.on("click", () => {
       if (currentPopup.current) {
         currentPopup.current.remove();
@@ -99,18 +97,36 @@ const MapComponent = ({ locations }) => {
   }, [MAPBOX_TOKEN]);
 
   const clearMapObjects = useCallback(() => {
+    // Xóa tất cả markers
     markersRef.current.forEach((marker) => marker.remove());
     markersRef.current = [];
 
+    // Xóa popup hiện tại
     if (currentPopup.current) {
       currentPopup.current.remove();
       currentPopup.current = null;
     }
 
+    // Xóa route layer và source nếu tồn tại
     if (mapInstance.current) {
-      if (mapInstance.current.getSource("route")) {
-        mapInstance.current.removeLayer("route");
-        mapInstance.current.removeSource("route");
+      try {
+        // Kiểm tra và xóa layer trước
+        if (
+          mapInstance.current.getLayer &&
+          mapInstance.current.getLayer("route")
+        ) {
+          mapInstance.current.removeLayer("route");
+        }
+
+        // Kiểm tra và xóa source sau
+        if (
+          mapInstance.current.getSource &&
+          mapInstance.current.getSource("route")
+        ) {
+          mapInstance.current.removeSource("route");
+        }
+      } catch (error) {
+        console.warn("Error clearing map objects:", error);
       }
     }
   }, []);
@@ -198,7 +214,6 @@ const MapComponent = ({ locations }) => {
       currentPopup.current.remove();
     }
 
-    // Tạo popup mới
     const popup = new mapboxgl.Popup({
       closeButton: true,
       closeOnClick: false,
@@ -210,7 +225,6 @@ const MapComponent = ({ locations }) => {
 
     currentPopup.current = popup;
 
-    // Xử lý khi popup bị đóng
     popup.on("close", () => {
       currentPopup.current = null;
     });
@@ -220,9 +234,10 @@ const MapComponent = ({ locations }) => {
     if (!mapInstance.current || coordinates.length === 0) return;
 
     const displayMap = async () => {
+      // Xóa các objects cũ trước
       clearMapObjects();
 
-      // Tạo markers cho các địa điểm
+      // Thêm markers cho từng địa điểm
       coordinates.forEach((loc, index) => {
         const markerElement = document.createElement("div");
         markerElement.className = "custom-marker";
@@ -232,7 +247,6 @@ const MapComponent = ({ locations }) => {
           .setLngLat([loc.lng, loc.lat])
           .addTo(mapInstance.current);
 
-        // Xử lý click vào marker
         markerElement.addEventListener("click", (e) => {
           e.stopPropagation();
 
@@ -256,103 +270,108 @@ const MapComponent = ({ locations }) => {
         markersRef.current.push(marker);
       });
 
-      // Tạo route nếu có nhiều hơn 1 điểm
+      // Tạo route nếu có từ 2 điểm trở lên
       if (coordinates.length > 1) {
         const route = await createRoute(coordinates);
 
         if (route) {
-          // Thêm route lên map
-          mapInstance.current.addSource("route", {
-            type: "geojson",
-            data: {
-              type: "Feature",
-              properties: {},
-              geometry: route.geometry,
-            },
-          });
-
-          mapInstance.current.addLayer({
-            id: "route",
-            type: "line",
-            source: "route",
-            layout: {
-              "line-join": "round",
-              "line-cap": "round",
-            },
-            paint: {
-              "line-color": "#3b82f6",
-              "line-width": 4,
-            },
-          });
-
-          const totalDistance = route.distance / 1000; // km
-          const totalDuration = route.duration / 60; // phút
-
-          setSummary({
-            distance: totalDistance.toFixed(2) + " km",
-            duration: Math.floor(totalDuration) + " phút",
-          });
-
-          // Thêm markers cho route segments
-          if (route.legs) {
-            route.legs.forEach((leg, index) => {
-              if (index < coordinates.length - 1) {
-                const start = coordinates[index];
-                const end = coordinates[index + 1];
-                const midpoint = {
-                  lng: (start.lng + end.lng) / 2,
-                  lat: (start.lat + end.lat) / 2,
-                };
-
-                const routeMarkerElement = document.createElement("div");
-                routeMarkerElement.className = "route-marker";
-
-                const routeMarker = new mapboxgl.Marker(routeMarkerElement)
-                  .setLngLat([midpoint.lng, midpoint.lat])
-                  .addTo(mapInstance.current);
-
-                // Xử lý click vào route marker
-                routeMarkerElement.addEventListener("click", (e) => {
-                  e.stopPropagation();
-
-                  const routePopupContent = `
-                    <div style="padding: 8px; min-width: 180px;">
-                      <h4 style="margin: 0 0 8px 0; font-size: 14px; color: #333;">
-                        📍 ${start.name} → ${end.name}
-                      </h4>
-                      <div style="background: #f5f5f5; padding: 8px; border-radius: 4px; margin-bottom: 8px;">
-                        <p style="margin: 0 0 4px 0; font-size: 13px;">
-                          <strong>🚗 Thời gian: ${Math.floor(
-                            leg.duration / 60
-                          )} phút</strong>
-                        </p>
-                        <p style="margin: 0; font-size: 13px;">
-                          <strong>📏 Khoảng cách: ${(
-                            leg.distance / 1000
-                          ).toFixed(1)} km</strong>
-                        </p>
-                      </div>
-                      <a href="https://www.google.com/maps/dir/?api=1&origin=${
-                        start.lat
-                      },${start.lng}&destination=${end.lat},${end.lng}" 
-                         target="_blank" rel="noopener noreferrer" 
-                         style="color: #1890ff; text-decoration: none; font-size: 12px;">
-                        🧭 Mở Google Maps để chỉ đường
-                      </a>
-                    </div>
-                  `;
-
-                  showPopup(routePopupContent, [midpoint.lng, midpoint.lat]);
-                });
-
-                markersRef.current.push(routeMarker);
-              }
+          try {
+            // Thêm source cho route
+            mapInstance.current.addSource("route", {
+              type: "geojson",
+              data: {
+                type: "Feature",
+                properties: {},
+                geometry: route.geometry,
+              },
             });
+
+            // Thêm layer để hiển thị route
+            mapInstance.current.addLayer({
+              id: "route",
+              type: "line",
+              source: "route",
+              layout: {
+                "line-join": "round",
+                "line-cap": "round",
+              },
+              paint: {
+                "line-color": "#3b82f6",
+                "line-width": 4,
+              },
+            });
+
+            // Cập nhật thống kê
+            const totalDistance = route.distance / 1000; // km
+            const totalDuration = route.duration / 60; // phút
+
+            setSummary({
+              distance: totalDistance.toFixed(2) + " km",
+              duration: Math.floor(totalDuration) + " phút",
+            });
+
+            // Thêm markers cho từng đoạn đường
+            if (route.legs) {
+              route.legs.forEach((leg, index) => {
+                if (index < coordinates.length - 1) {
+                  const start = coordinates[index];
+                  const end = coordinates[index + 1];
+                  const midpoint = {
+                    lng: (start.lng + end.lng) / 2,
+                    lat: (start.lat + end.lat) / 2,
+                  };
+
+                  const routeMarkerElement = document.createElement("div");
+                  routeMarkerElement.className = "route-marker";
+
+                  const routeMarker = new mapboxgl.Marker(routeMarkerElement)
+                    .setLngLat([midpoint.lng, midpoint.lat])
+                    .addTo(mapInstance.current);
+
+                  routeMarkerElement.addEventListener("click", (e) => {
+                    e.stopPropagation();
+
+                    const routePopupContent = `
+                      <div style="padding: 8px; min-width: 180px;">
+                        <h4 style="margin: 0 0 8px 0; font-size: 14px; color: #333;">
+                          📍 ${start.name} → ${end.name}
+                        </h4>
+                        <div style="background: #f5f5f5; padding: 8px; border-radius: 4px; margin-bottom: 8px;">
+                          <p style="margin: 0 0 4px 0; font-size: 13px;">
+                            <strong>🚗 Thời gian: ${Math.floor(
+                              leg.duration / 60
+                            )} phút</strong>
+                          </p>
+                          <p style="margin: 0; font-size: 13px;">
+                            <strong>📏 Khoảng cách: ${(
+                              leg.distance / 1000
+                            ).toFixed(1)} km</strong>
+                          </p>
+                        </div>
+                        <a href="https://www.google.com/maps/dir/?api=1&origin=${
+                          start.lat
+                        },${start.lng}&destination=${end.lat},${end.lng}" 
+                           target="_blank" rel="noopener noreferrer" 
+                           style="color: #1890ff; text-decoration: none; font-size: 12px;">
+                          🧭 Mở Google Maps để chỉ đường
+                        </a>
+                      </div>
+                    `;
+
+                    showPopup(routePopupContent, [midpoint.lng, midpoint.lat]);
+                  });
+
+                  markersRef.current.push(routeMarker);
+                }
+              });
+            }
+          } catch (error) {
+            console.error("Error adding route to map:", error);
           }
         }
       }
 
-      // Fit bounds để hiển thị tất cả các điểm
+      // Điều chỉnh view để hiển thị tất cả điểm
       if (coordinates.length > 0) {
         const bounds = new mapboxgl.LngLatBounds();
         coordinates.forEach((coord) => {
@@ -362,7 +381,12 @@ const MapComponent = ({ locations }) => {
       }
     };
 
-    displayMap();
+    // Đợi map sẵn sàng trước khi hiển thị
+    if (mapInstance.current.loaded()) {
+      displayMap();
+    } else {
+      mapInstance.current.on("load", displayMap);
+    }
   }, [coordinates, clearMapObjects, createRoute, showPopup]);
 
   const mapStyle = useMemo(
@@ -377,7 +401,6 @@ const MapComponent = ({ locations }) => {
 
   const handleResetView = () => {
     if (mapInstance.current && coordinates.length) {
-      // Đóng popup hiện tại
       if (currentPopup.current) {
         currentPopup.current.remove();
         currentPopup.current = null;
@@ -393,14 +416,12 @@ const MapComponent = ({ locations }) => {
 
   const handleLocationClick = (loc, index) => {
     if (mapInstance.current) {
-      // Di chuyển camera đến vị trí
       mapInstance.current.flyTo({
         center: [loc.lng, loc.lat],
         zoom: 15,
         duration: 1000,
       });
 
-      // Hiển thị popup sau khi animation hoàn thành
       setTimeout(() => {
         const popupContent = `
           <div style="padding: 8px; max-width: 200px;">

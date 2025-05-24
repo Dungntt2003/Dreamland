@@ -173,7 +173,7 @@ const ItemPaymentProcess = ({ type }) => {
 
   const handlePay = async () => {
     const data = {
-      amount: (countAdult + countChild) * parsePrice(item.price),
+      amount: Math.round((countAdult + countChild) * parsePrice(item.price)),
       serviceId: serviceId,
       repoId: repoId,
     };
@@ -187,7 +187,7 @@ const ItemPaymentProcess = ({ type }) => {
     if (type === "entertainment") {
       const paymentEnter = {
         ...dataPayment,
-        amount: (countAdult + countChild) * parsePrice(item.price),
+        amount: Math.round((countAdult + countChild) * parsePrice(item.price)),
         countAdult: countAdult,
         countChild: countChild,
         orderDate: date,
@@ -426,7 +426,10 @@ const ItemPaymentProcess = ({ type }) => {
                           <>
                             Tổng tiền:
                             {formatCurrency(
-                              (countAdult + countChild) * parsePrice(item.price)
+                              Math.round(
+                                (countAdult + countChild) *
+                                  parsePrice(item.price)
+                              )
                             )}
                           </>
                         )}
@@ -691,7 +694,9 @@ const ItemPaymentProcess = ({ type }) => {
                         <div>Tổng cộng: </div>
                         <div style={{ color: "red" }}>
                           {formatCurrency(
-                            (countAdult + countChild) * parsePrice(item.price)
+                            Math.round(
+                              (countAdult + countChild) * parsePrice(item.price)
+                            )
                           )}
                         </div>
                       </div>
@@ -802,7 +807,9 @@ const ItemPaymentProcess = ({ type }) => {
                         </span>
                         <span style={{ fontSize: "20px", color: "red" }}>
                           {formatCurrency(
-                            (countAdult + countChild) * parsePrice(item.price)
+                            Math.round(
+                              (countAdult + countChild) * parsePrice(item.price)
+                            )
                           )}
                         </span>
                       </div>

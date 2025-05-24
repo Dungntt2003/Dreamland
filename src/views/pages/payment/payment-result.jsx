@@ -29,6 +29,7 @@ const PaymentResult = () => {
           service_id: serviceId,
           repository_id: repoId,
         });
+        console.log(response);
         setPaymentData(response.data.data);
         if (response.status === 200) {
           const updateData = await paymentApi.updatePayment(
@@ -55,25 +56,30 @@ const PaymentResult = () => {
 
     if (responseCode === "00") {
       updateStatus("success");
-      sendEmail({
-        email: paymentData.email,
-        name: paymentData.name,
-        payment: {
-          service_name: paymentData.service_type,
-          orderDate: paymentData.orderDate,
-          countAdult: paymentData.countAdult,
-          countChild: paymentData.countChild,
+      console.log(paymentData);
+      if (paymentData) {
+        sendEmail({
+          email: paymentData.email || "nguyenthuydung55555@gmail.com",
           name: paymentData.name,
-          email: paymentData.email,
-          phone: paymentData.phone,
-          amound: paymentData.amount,
-          id: paymentData.service_id,
-        },
-      });
+          payment: {
+            service_name: paymentData.service_type,
+            orderDate: paymentData.orderDate,
+            countAdult: paymentData.countAdult,
+            countChild: paymentData.countChild,
+            name: paymentData.name,
+            email: paymentData.email,
+            phone: paymentData.phone,
+            amount: paymentData.amount,
+            id: paymentData.service_id,
+          },
+        });
+      } else {
+        console.warn("paymentData is null or undefined. Email not sent.");
+      }
       setStatus("success");
-      setTimeout(() => {
-        navigate(`/payment-info?repoId=${repoId}&serviceId=${serviceId}`);
-      }, 5000);
+      // setTimeout(() => {
+      //   navigate(`/payment-info?repoId=${repoId}&serviceId=${serviceId}`);
+      // }, 5000);
     } else {
       updateStatus("fail");
       setStatus("failed");

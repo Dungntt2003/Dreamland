@@ -1,7 +1,7 @@
 import { saveAs } from "file-saver";
 import { Document, Packer, Paragraph, TextRun } from "docx";
 
-const ExportToDOCX = (data) => {
+const ExportToDOCX = (data, filename, title) => {
   const doc = new Document({
     sections: [
       {
@@ -10,7 +10,7 @@ const ExportToDOCX = (data) => {
           new Paragraph({
             children: [
               new TextRun({
-                text: "Danh sách sự kiện",
+                text: title,
                 bold: true,
                 size: 32,
               }),
@@ -34,7 +34,7 @@ const ExportToDOCX = (data) => {
   });
 
   Packer.toBlob(doc).then((blob) => {
-    saveAs(blob, "schedules.docx");
+    saveAs(blob, filename || "events.docx");
   });
 };
 

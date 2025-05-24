@@ -53,9 +53,9 @@ const RepoMap = () => {
       const mappedLocations = repo.plan
         .map((p) => {
           const matchedServices = listServices.filter(
-            (s) => p.children && p.children.includes(s.name)
+            (s) => p.children && p.children.trim().endsWith(s.name.trim())
           );
-
+          // console.log("matched services ", matchedServices);
           return matchedServices.map((service) => ({
             address: service.address,
             time: p.label,
@@ -67,7 +67,6 @@ const RepoMap = () => {
       setLocations(mappedLocations);
     }
   }, [repo, listServices]);
-  console.log(locations);
   return (
     <div>
       {locations.length > 0 ? (

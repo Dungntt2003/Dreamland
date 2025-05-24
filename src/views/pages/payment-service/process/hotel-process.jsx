@@ -275,14 +275,14 @@ const HotelPaymentProcess = ({ type }) => {
 
   const handlePay = async () => {
     const data = {
-      amount: numberOfNights * roomData.price * 1.1 * room,
+      amount: Math.round(numberOfNights * roomData.price * 1.1 * room),
       repoId: repoId,
       serviceId: serviceId,
     };
     const dataHotel = {
       service_id: serviceId,
       repository_id: repoId,
-      amount: numberOfNights * roomData.price * 1.1 * room,
+      amount: Math.round(numberOfNights * roomData.price * 1.1 * room),
       email: dataForm.email,
       name: dataForm.name,
       phone: dataForm.phone,
@@ -542,7 +542,9 @@ const HotelPaymentProcess = ({ type }) => {
                         <div>Thuế và phí</div>
                         <div>
                           {formatCurrency(
-                            numberOfNights * roomData.price * 0.1 * room
+                            Math.round(
+                              numberOfNights * roomData.price * 0.1 * room
+                            )
                           )}
                         </div>
                       </div>
@@ -558,7 +560,9 @@ const HotelPaymentProcess = ({ type }) => {
                           }}
                         >
                           {formatCurrency(
-                            numberOfNights * roomData.price * 1.1 * room
+                            Math.round(
+                              numberOfNights * roomData.price * 1.1 * room
+                            )
                           )}
                         </div>
                       </div>
@@ -619,7 +623,9 @@ const HotelPaymentProcess = ({ type }) => {
                         </div>
                         <div style={{ color: "red" }}>
                           {formatCurrency(
-                            numberOfNights * roomData.price * 1.1 * room
+                            Math.round(
+                              numberOfNights * roomData.price * 1.1 * room
+                            )
                           )}
                         </div>
                       </div>
@@ -729,7 +735,9 @@ const HotelPaymentProcess = ({ type }) => {
                       </span>
                       <span style={{ fontSize: "20px", color: "red" }}>
                         {formatCurrency(
-                          numberOfNights * roomData.price * 1.1 * room
+                          Math.round(
+                            numberOfNights * roomData.price * 1.1 * room
+                          )
                         )}
                       </span>
                     </div>
