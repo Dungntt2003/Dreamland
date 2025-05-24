@@ -20,6 +20,15 @@ const RepoList = () => {
     getList();
   }, []);
 
+  const loadRepos = async () => {
+    try {
+      const response = await repoApi.getListRepo(id);
+      setRepo(response.data.data);
+    } catch (error) {
+      console.error("Failed to load repos:", error);
+    }
+  };
+
   const handleCreateRepo = () => {
     navigate("/create-trip");
   };
@@ -41,9 +50,16 @@ const RepoList = () => {
           // justifyContent: "space-evenly",
         }}
       >
-        {repo.map((item, index) => (
-          <CardRepo item={item} index={index} key={item.id} />
-        ))}
+        {repo
+          .filter((item) => item.isHidden === false)
+          .map((item, index) => (
+            <CardRepo
+              item={item}
+              index={index}
+              key={item.id}
+              loadRepos={loadRepos}
+            />
+          ))}
       </div>
     </div>
   );

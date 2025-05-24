@@ -17,6 +17,10 @@ const repoApi = {
     const url = `/repositories/updateDescription/${id}`;
     return axiosClient.put(url, params);
   },
+  updateStatusRepo: (id) => {
+    const url = `/repositories/updateStatus/${id}`;
+    return axiosClient.put(url);
+  },
 };
 
 export default repoApi;

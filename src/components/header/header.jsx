@@ -37,6 +37,14 @@ const Header = () => {
     {
       key: "3",
       label: (
+        <Link to={`/repository/hidden`} className="link">
+          Lộ trình đã ẩn
+        </Link>
+      ),
+    },
+    {
+      key: "4",
+      label: (
         <Link
           to={`/personal-info/${id}`}
           className="link"

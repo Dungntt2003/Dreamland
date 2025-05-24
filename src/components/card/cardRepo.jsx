@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBookmark,
+  faEye,
   faLocationPin,
   faPen,
   faShare,
@@ -13,8 +14,9 @@ import { Tooltip } from "react-tooltip";
 import { getAvaFromIndex } from "utils/getRandomAvaRepo";
 import formatDate from "utils/formatDate";
 import { toast, ToastContainer } from "react-toastify";
+import repoApi from "api/repoApi";
 const { Meta } = Card;
-const CardRepo = ({ item, index }) => {
+const CardRepo = ({ item, index, loadRepos }) => {
   const navigate = useNavigate();
   const handleShare = async () => {
     if (navigator.share) {
@@ -47,6 +49,20 @@ const CardRepo = ({ item, index }) => {
   const handleEdit = () => {
     navigate(`/schedule/${item.id}`);
   };
+
+  const handleHidden = () => {
+    const updateStatus = async () => {
+      try {
+        const response = await repoApi.updateStatusRepo(item.id);
+        console.log(response);
+        await loadRepos();
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    updateStatus();
+  };
+
   return (
     <div style={{ width: "25%", padding: "8px" }}>
       <Card
@@ -66,7 +82,7 @@ const CardRepo = ({ item, index }) => {
               style={{
                 position: "absolute",
                 top: "8px",
-                right: "36px",
+                right: "70px",
                 width: "24px",
                 zIndex: 1,
               }}
@@ -90,6 +106,15 @@ const CardRepo = ({ item, index }) => {
                   style={{ marginLeft: "16px" }}
                   data-tooltip-id="tooltip-edit"
                   data-tooltip-content="Chỉnh sửa"
+                />
+                <FontAwesomeIcon
+                  icon={faEye}
+                  onClick={handleHidden}
+                  style={{ marginLeft: "16px", color: "red" }}
+                  data-tooltip-id="tooltip-hidden"
+                  data-tooltip-content={
+                    item.isHidden === true ? "Hiển thị" : "Ẩn lộ trình"
+                  }
                 />
               </div>
             </div>
@@ -139,6 +164,7 @@ const CardRepo = ({ item, index }) => {
       </Card>
       <Tooltip id="tooltip-share" />
       <Tooltip id="tooltip-edit" />
+      <Tooltip id="tooltip-hidden" />
       <ToastContainer />
     </div>
   );

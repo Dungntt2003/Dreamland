@@ -35,6 +35,7 @@ import RestaurantProcess from "views/pages/payment-service/process/restaurant-pr
 import HotelPaymentProcess from "views/pages/payment-service/process/hotel-process";
 import PaymentResultRestaurant from "views/pages/result/order-restaurant";
 import PaymentInfo from "views/pages/payment/payment-result-service/payment-info";
+import RepoHidden from "views/pages/repository/repo-list/repo-hidden";
 const AllRoutes = () => {
   return (
     <Routes>
@@ -117,6 +118,10 @@ const AllRoutes = () => {
       <Route
         path="/repository"
         element={<MainLayout component={<RepoList />} />}
+      />
+      <Route
+        path="/repository/hidden"
+        element={<MainLayout component={<RepoHidden />} />}
       />
       <Route
         path="/repo-map/:id"
