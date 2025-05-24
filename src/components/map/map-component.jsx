@@ -1,253 +1,369 @@
 import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import { Button } from "antd";
+import mapboxgl from "mapbox-gl";
+
+// Thêm CSS cho Mapbox GL JS
+const mapboxCSS = `
+@import url('https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css');
+
+.mapboxgl-popup-content {
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.mapboxgl-popup-close-button {
+  font-size: 18px;
+}
+
+.custom-marker {
+  background-color: #3b82f6;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 3px solid white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.route-marker {
+  background-color: #4285F4;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid white;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+`;
+
 const MapComponent = ({ locations }) => {
   const mapRef = useRef(null);
+  const mapInstance = useRef(null);
   const [coordinates, setCoordinates] = useState([]);
   const [summary, setSummary] = useState({ distance: "", duration: "" });
-  const geocoderRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
   const markersRef = useRef([]);
-  const infoWindowsRef = useRef([]);
-  const directionsRendererRef = useRef(null);
-  const mapInstanceRef = useRef(null);
+  const currentPopup = useRef(null);
+
+  const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
 
   useEffect(() => {
-    if (!window.google) {
-      console.error("Google Maps PI chưa được tải");
-      return;
-    }
-
-    geocoderRef.current = new window.google.maps.Geocoder();
+    const styleElement = document.createElement("style");
+    styleElement.textContent = mapboxCSS;
+    document.head.appendChild(styleElement);
 
     return () => {
-      clearMapObjects();
+      if (document.head.contains(styleElement)) {
+        document.head.removeChild(styleElement);
+      }
     };
   }, []);
+
+  useEffect(() => {
+    if (!mapRef.current) return;
+
+    mapboxgl.accessToken = MAPBOX_TOKEN;
+
+    const map = new mapboxgl.Map({
+      container: mapRef.current,
+      style: "mapbox://styles/mapbox/streets-v12",
+      center: [106.6297, 10.8231],
+      zoom: 12,
+    });
+
+    map.addControl(new mapboxgl.NavigationControl());
+    map.addControl(new mapboxgl.FullscreenControl());
+
+    mapInstance.current = map;
+
+    // Thêm event listener để đóng popup khi click vào map
+    map.on("click", () => {
+      if (currentPopup.current) {
+        currentPopup.current.remove();
+        currentPopup.current = null;
+      }
+    });
+
+    return () => {
+      if (currentPopup.current) {
+        currentPopup.current.remove();
+      }
+      map.remove();
+    };
+  }, [MAPBOX_TOKEN]);
 
   const clearMapObjects = useCallback(() => {
-    if (markersRef.current.length) {
-      markersRef.current.forEach((marker) => marker.setMap(null));
-      markersRef.current = [];
+    markersRef.current.forEach((marker) => marker.remove());
+    markersRef.current = [];
+
+    if (currentPopup.current) {
+      currentPopup.current.remove();
+      currentPopup.current = null;
     }
 
-    if (infoWindowsRef.current.length) {
-      infoWindowsRef.current.forEach((infoWindow) => infoWindow.close());
-      infoWindowsRef.current = [];
-    }
-
-    if (directionsRendererRef.current) {
-      directionsRendererRef.current.setMap(null);
-      directionsRendererRef.current = null;
+    if (mapInstance.current) {
+      if (mapInstance.current.getSource("route")) {
+        mapInstance.current.removeLayer("route");
+        mapInstance.current.removeSource("route");
+      }
     }
   }, []);
 
-  useEffect(() => {
-    if (!window.google || !geocoderRef.current || !locations.length) return;
+  const geocodeLocations = useCallback(async () => {
+    if (!locations.length) return;
 
-    const geocodeLocations = async () => {
+    setIsLoading(true);
+    try {
+      const results = await Promise.all(
+        locations.map(async (loc) => {
+          try {
+            const response = await fetch(
+              `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+                loc.address
+              )}.json?access_token=${MAPBOX_TOKEN}&country=VN&limit=1`
+            );
+            const data = await response.json();
+
+            if (data.features && data.features.length > 0) {
+              const [lng, lat] = data.features[0].center;
+              return {
+                lat,
+                lng,
+                name: loc.title,
+                time: loc.time,
+                address: loc.address,
+              };
+            }
+            return null;
+          } catch (error) {
+            console.error(`Lỗi geocoding cho ${loc.address}:`, error);
+            return null;
+          }
+        })
+      );
+
+      const validCoordinates = results.filter(Boolean);
+      if (validCoordinates.length > 0) {
+        setCoordinates(validCoordinates);
+      } else {
+        console.error("Không có tọa độ hợp lệ nào được tìm thấy");
+      }
+    } catch (error) {
+      console.error("Lỗi khi geocoding:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [locations, MAPBOX_TOKEN]);
+
+  useEffect(() => {
+    geocodeLocations();
+  }, [geocodeLocations]);
+
+  const createRoute = useCallback(
+    async (coords) => {
+      if (coords.length < 2) return null;
+
       try {
-        const results = await Promise.all(
-          locations.map(
-            (loc) =>
-              new Promise((resolve) => {
-                geocoderRef.current.geocode(
-                  { address: loc.address },
-                  (res, status) => {
-                    if (status === "OK" && res && res[0]) {
-                      resolve({
-                        lat: res[0].geometry.location.lat(),
-                        lng: res[0].geometry.location.lng(),
-                        name: loc.title,
-                        time: loc.time,
-                      });
-                    } else {
-                      console.error(
-                        `Không thể chuyển đổi địa chỉ: ${loc.address}, Status: ${status}`
-                      );
-                      resolve(null);
-                    }
-                  }
-                );
-              })
-          )
+        const coordinatesString = coords
+          .map((coord) => `${coord.lng},${coord.lat}`)
+          .join(";");
+
+        const response = await fetch(
+          `https://api.mapbox.com/directions/v5/mapbox/driving/${coordinatesString}?geometries=geojson&access_token=${MAPBOX_TOKEN}&language=vi`
         );
 
-        const validCoordinates = results.filter(Boolean);
-        if (validCoordinates.length > 0) {
-          setCoordinates(validCoordinates);
-        } else {
-          console.error("Không có tọa độ hợp lệ nào được tìm thấy");
+        const data = await response.json();
+
+        if (data.routes && data.routes.length > 0) {
+          return data.routes[0];
         }
+        return null;
       } catch (error) {
-        console.error("Lỗi khi chuyển đổi địa chỉ:", error);
+        console.error("Lỗi tạo route:", error);
+        return null;
+      }
+    },
+    [MAPBOX_TOKEN]
+  );
+
+  const showPopup = useCallback((content, lngLat) => {
+    // Đóng popup hiện tại nếu có
+    if (currentPopup.current) {
+      currentPopup.current.remove();
+    }
+
+    // Tạo popup mới
+    const popup = new mapboxgl.Popup({
+      closeButton: true,
+      closeOnClick: false,
+      offset: 25,
+    })
+      .setLngLat(lngLat)
+      .setHTML(content)
+      .addTo(mapInstance.current);
+
+    currentPopup.current = popup;
+
+    // Xử lý khi popup bị đóng
+    popup.on("close", () => {
+      currentPopup.current = null;
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!mapInstance.current || coordinates.length === 0) return;
+
+    const displayMap = async () => {
+      clearMapObjects();
+
+      // Tạo markers cho các địa điểm
+      coordinates.forEach((loc, index) => {
+        const markerElement = document.createElement("div");
+        markerElement.className = "custom-marker";
+        markerElement.textContent = (index + 1).toString();
+
+        const marker = new mapboxgl.Marker(markerElement)
+          .setLngLat([loc.lng, loc.lat])
+          .addTo(mapInstance.current);
+
+        // Xử lý click vào marker
+        markerElement.addEventListener("click", (e) => {
+          e.stopPropagation();
+
+          const popupContent = `
+            <div style="padding: 8px; max-width: 200px;">
+              <h3 style="margin: 0 0 5px 0; font-size: 16px; color: #333;">${
+                index + 1
+              }. ${loc.name}</h3>
+              <p style="margin: 0; font-size: 14px; color: #666;">⏰ ${
+                loc.time
+              }</p>
+              <p style="margin: 5px 0 0 0; font-size: 12px; color: #888;">${
+                loc.address
+              }</p>
+            </div>
+          `;
+
+          showPopup(popupContent, [loc.lng, loc.lat]);
+        });
+
+        markersRef.current.push(marker);
+      });
+
+      // Tạo route nếu có nhiều hơn 1 điểm
+      if (coordinates.length > 1) {
+        const route = await createRoute(coordinates);
+
+        if (route) {
+          // Thêm route lên map
+          mapInstance.current.addSource("route", {
+            type: "geojson",
+            data: {
+              type: "Feature",
+              properties: {},
+              geometry: route.geometry,
+            },
+          });
+
+          mapInstance.current.addLayer({
+            id: "route",
+            type: "line",
+            source: "route",
+            layout: {
+              "line-join": "round",
+              "line-cap": "round",
+            },
+            paint: {
+              "line-color": "#3b82f6",
+              "line-width": 4,
+            },
+          });
+
+          const totalDistance = route.distance / 1000; // km
+          const totalDuration = route.duration / 60; // phút
+
+          setSummary({
+            distance: totalDistance.toFixed(2) + " km",
+            duration: Math.floor(totalDuration) + " phút",
+          });
+
+          // Thêm markers cho route segments
+          if (route.legs) {
+            route.legs.forEach((leg, index) => {
+              if (index < coordinates.length - 1) {
+                const start = coordinates[index];
+                const end = coordinates[index + 1];
+                const midpoint = {
+                  lng: (start.lng + end.lng) / 2,
+                  lat: (start.lat + end.lat) / 2,
+                };
+
+                const routeMarkerElement = document.createElement("div");
+                routeMarkerElement.className = "route-marker";
+
+                const routeMarker = new mapboxgl.Marker(routeMarkerElement)
+                  .setLngLat([midpoint.lng, midpoint.lat])
+                  .addTo(mapInstance.current);
+
+                // Xử lý click vào route marker
+                routeMarkerElement.addEventListener("click", (e) => {
+                  e.stopPropagation();
+
+                  const routePopupContent = `
+                    <div style="padding: 8px; min-width: 180px;">
+                      <h4 style="margin: 0 0 8px 0; font-size: 14px; color: #333;">
+                        📍 ${start.name} → ${end.name}
+                      </h4>
+                      <div style="background: #f5f5f5; padding: 8px; border-radius: 4px; margin-bottom: 8px;">
+                        <p style="margin: 0 0 4px 0; font-size: 13px;">
+                          <strong>🚗 Thời gian: ${Math.floor(
+                            leg.duration / 60
+                          )} phút</strong>
+                        </p>
+                        <p style="margin: 0; font-size: 13px;">
+                          <strong>📏 Khoảng cách: ${(
+                            leg.distance / 1000
+                          ).toFixed(1)} km</strong>
+                        </p>
+                      </div>
+                      <a href="https://www.google.com/maps/dir/?api=1&origin=${
+                        start.lat
+                      },${start.lng}&destination=${end.lat},${end.lng}" 
+                         target="_blank" rel="noopener noreferrer" 
+                         style="color: #1890ff; text-decoration: none; font-size: 12px;">
+                        🧭 Mở Google Maps để chỉ đường
+                      </a>
+                    </div>
+                  `;
+
+                  showPopup(routePopupContent, [midpoint.lng, midpoint.lat]);
+                });
+
+                markersRef.current.push(routeMarker);
+              }
+            });
+          }
+        }
+      }
+
+      // Fit bounds để hiển thị tất cả các điểm
+      if (coordinates.length > 0) {
+        const bounds = new mapboxgl.LngLatBounds();
+        coordinates.forEach((coord) => {
+          bounds.extend([coord.lng, coord.lat]);
+        });
+        mapInstance.current.fitBounds(bounds, { padding: 50 });
       }
     };
 
-    geocodeLocations();
-  }, [locations]);
-
-  useEffect(() => {
-    if (!window.google || coordinates.length === 0 || !mapRef.current) return;
-
-    try {
-      clearMapObjects();
-
-      const mapOptions = {
-        center: coordinates[0],
-        zoom: 15,
-        mapTypeControl: true,
-        fullscreenControl: true,
-        streetViewControl: true,
-        zoomControl: true,
-      };
-      const map = new window.google.maps.Map(mapRef.current, mapOptions);
-
-      mapInstanceRef.current = map;
-
-      const directionsService = new window.google.maps.DirectionsService();
-      const directionsRenderer = new window.google.maps.DirectionsRenderer({
-        suppressMarkers: true,
-        preserveViewport: false,
-      });
-      directionsRenderer.setMap(map);
-      directionsRendererRef.current = directionsRenderer;
-
-      let request;
-      if (coordinates.length > 2) {
-        const waypoints = coordinates.slice(1, -1).map((loc) => ({
-          location: { lat: loc.lat, lng: loc.lng },
-          stopover: true,
-        }));
-
-        request = {
-          origin: coordinates[0],
-          destination: coordinates[coordinates.length - 1],
-          waypoints,
-          travelMode: window.google.maps.TravelMode.DRIVING,
-          optimizeWaypoints: true,
-        };
-      } else if (coordinates.length === 2) {
-        request = {
-          origin: coordinates[0],
-          destination: coordinates[1],
-          travelMode: window.google.maps.TravelMode.DRIVING,
-        };
-      } else {
-        createMarkers(map);
-        return;
-      }
-
-      directionsService.route(request, (result, status) => {
-        if (status === "OK" && result.routes && result.routes[0]) {
-          directionsRenderer.setDirections(result);
-          const { distance, duration } = result.routes[0].legs.reduce(
-            (acc, leg) => {
-              acc.distance += leg.distance.value;
-              acc.duration += leg.duration.value;
-              return acc;
-            },
-            { distance: 0, duration: 0 }
-          );
-
-          setSummary({
-            distance: (distance / 1000).toFixed(2) + " km",
-            duration: Math.floor(duration / 60) + " phút",
-          });
-          const legs = result.routes[0].legs;
-          legs.forEach((leg, index) => {
-            // Hiển thị thông tin khoảng cách và thời gian giữa các điểm
-            const startLat = leg.start_location.lat();
-            const startLng = leg.start_location.lng();
-            const endLat = leg.end_location.lat();
-            const endLng = leg.end_location.lng();
-            const googleMapsLink = `https://www.google.com/maps/dir/?api=1&origin=${startLat},${startLng}&destination=${endLat},${endLng}`;
-            const midpoint = {
-              lat: (leg.start_location.lat() + leg.end_location.lat()) / 2,
-              lng: (leg.start_location.lng() + leg.end_location.lng()) / 2,
-            };
-
-            const infoWindow = new window.google.maps.InfoWindow({
-              content: `<div style="padding: 5px;">
-                <strong>🚗 ${leg.duration.text}</strong><br>
-                (${leg.distance.text})<br>
-                  <a href="${googleMapsLink}" target="_blank" rel="noopener noreferrer">
-                    🧭 Hướng dẫn đường đi
-                  </a>
-              </div>`,
-              pixelOffset: new window.google.maps.Size(0, -10),
-            });
-            infoWindowsRef.current.push(infoWindow);
-
-            const routeMarker = new window.google.maps.Marker({
-              position: midpoint,
-              map,
-              icon: {
-                path: window.google.maps.SymbolPath.CIRCLE,
-                scale: 7,
-                fillColor: "#4285F4",
-                fillOpacity: 1,
-                strokeColor: "#ffffff",
-                strokeWeight: 2,
-              },
-              clickable: true,
-              zIndex: 1,
-            });
-            markersRef.current.push(routeMarker);
-
-            routeMarker.addListener("click", () => {
-              infoWindowsRef.current.forEach((iw) => iw.close());
-              infoWindow.open(map, routeMarker);
-            });
-          });
-        } else {
-          console.error("Không thể hiển thị tuyến đường:", status);
-          createMarkers(map);
-        }
-      });
-
-      createMarkers(map);
-    } catch (error) {
-      console.error("Lỗi khi hiển thị bản đồ:", error);
-    }
-  }, [coordinates, clearMapObjects]);
-
-  // Tạo các markers cho các địa điểm
-  const createMarkers = useCallback(
-    (map) => {
-      if (!map || !coordinates.length) return;
-
-      coordinates.forEach((loc, index) => {
-        const marker = new window.google.maps.Marker({
-          position: { lat: loc.lat, lng: loc.lng },
-          map,
-          label: {
-            text: `${index + 1}`,
-            color: "#ffffff",
-            fontWeight: "bold",
-          },
-          title: `${loc.name} - Ở đây lúc ${loc.time}`,
-          animation: window.google.maps.Animation.DROP,
-          zIndex: 2,
-        });
-        markersRef.current.push(marker);
-
-        const infoWindow = new window.google.maps.InfoWindow({
-          content: `<div style="padding: 8px; max-width: 200px;">
-          <h3 style="margin: 0 0 5px 0; font-size: 16px;">${index + 1}. ${
-            loc.name
-          }</h3>
-          <p style="margin: 0; font-size: 14px;">⏱️${loc.time}</p>
-        </div>`,
-        });
-        infoWindowsRef.current.push(infoWindow);
-
-        marker.addListener("click", () => {
-          infoWindowsRef.current.forEach((iw) => iw.close());
-          infoWindow.open(map, marker);
-        });
-      });
-    },
-    [coordinates]
-  );
+    displayMap();
+  }, [coordinates, clearMapObjects, createRoute, showPopup]);
 
   const mapStyle = useMemo(
     () => ({
@@ -260,30 +376,65 @@ const MapComponent = ({ locations }) => {
   );
 
   const handleResetView = () => {
-    if (mapInstanceRef.current && coordinates.length) {
-      const bounds = new window.google.maps.LatLngBounds();
-      coordinates.forEach((loc) => {
-        bounds.extend(new window.google.maps.LatLng(loc.lat, loc.lng));
+    if (mapInstance.current && coordinates.length) {
+      // Đóng popup hiện tại
+      if (currentPopup.current) {
+        currentPopup.current.remove();
+        currentPopup.current = null;
+      }
+
+      const bounds = new mapboxgl.LngLatBounds();
+      coordinates.forEach((coord) => {
+        bounds.extend([coord.lng, coord.lat]);
       });
-      mapInstanceRef.current.fitBounds(bounds);
+      mapInstance.current.fitBounds(bounds, { padding: 50 });
     }
   };
 
-  const handleLocationClick = (loc) => {
-    if (mapInstanceRef.current) {
-      mapInstanceRef.current.panTo(loc);
-      mapInstanceRef.current.setZoom(15);
+  const handleLocationClick = (loc, index) => {
+    if (mapInstance.current) {
+      // Di chuyển camera đến vị trí
+      mapInstance.current.flyTo({
+        center: [loc.lng, loc.lat],
+        zoom: 15,
+        duration: 1000,
+      });
+
+      // Hiển thị popup sau khi animation hoàn thành
+      setTimeout(() => {
+        const popupContent = `
+          <div style="padding: 8px; max-width: 200px;">
+            <h3 style="margin: 0 0 5px 0; font-size: 16px; color: #333;">${
+              index + 1
+            }. ${loc.name}</h3>
+            <p style="margin: 0; font-size: 14px; color: #666;">⏰ ${
+              loc.time
+            }</p>
+            <p style="margin: 5px 0 0 0; font-size: 12px; color: #888;">${
+              loc.address
+            }</p>
+          </div>
+        `;
+
+        showPopup(popupContent, [loc.lng, loc.lat]);
+      }, 1000);
     }
   };
 
   return (
     <div>
-      {!window.google && (
+      {!MAPBOX_TOKEN || !MAPBOX_TOKEN.includes("pk.ey") ? (
         <div style={{ padding: "20px", textAlign: "center", color: "#ff4d4f" }}>
-          Google Maps API chưa được tải. Vui lòng kiểm tra kết nối internet và
-          API key.
+          Vui lòng cấu hình Mapbox Access Token để sử dụng bản đồ.
+        </div>
+      ) : null}
+
+      {isLoading && (
+        <div style={{ padding: "10px", textAlign: "center", color: "#1890ff" }}>
+          Đang tải dữ liệu địa điểm...
         </div>
       )}
+
       <div style={{ display: "flex" }}>
         <div ref={mapRef} style={mapStyle}></div>
         <div style={{ minWidth: "30%", padding: "16px" }}>
@@ -305,8 +456,20 @@ const MapComponent = ({ locations }) => {
             {coordinates.map((loc, index) => (
               <li
                 key={index}
-                style={{ cursor: "pointer", color: "blue" }}
-                onClick={() => handleLocationClick(loc)}
+                style={{
+                  cursor: "pointer",
+                  color: "blue",
+                  marginBottom: "5px",
+                  padding: "4px",
+                  borderRadius: "4px",
+                }}
+                onClick={() => handleLocationClick(loc, index)}
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = "#f0f0f0";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = "transparent";
+                }}
               >
                 {index + 1}. {loc.name}
               </li>
