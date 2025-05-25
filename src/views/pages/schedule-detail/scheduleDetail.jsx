@@ -33,6 +33,7 @@ const ScheduleDetail = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpenDes, setIsModalOpenDes] = useState(false);
   const [date, setDate] = useState(null);
+  const [destination, setDestination] = useState("");
   const [experience, setExperience] = useState(null);
   const [query, setQuery] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -53,6 +54,7 @@ const ScheduleDetail = () => {
               : "Hà Giang"
           } với lộ trình như sau: ${listServices}`
         );
+        setDestination(response.data.data.destination);
         setDate({
           start: new Date(response.data.data.startDate)
             .toISOString()
@@ -86,25 +88,41 @@ const ScheduleDetail = () => {
     setIsModalOpenDes(false);
   };
 
+  const getAiGen = async () => {
+    try {
+      const params = {
+        itinerary: query,
+        destination: destination,
+      };
+      const cached = await repoApi.getADemoRepo(id);
+      if (
+        cached.data.data &&
+        cached.data.data.experience &&
+        cached.data.data.experience !== ""
+      ) {
+        setExperience(cached.data.data.experience);
+        return;
+      }
+      const response = await aiApi.getDetailWithAI(params);
+      // console.log(response);
+      setExperience(response.data.data);
+
+      const saveInRepo = await repoApi.updatePlan(id, {
+        experience: response.data.data,
+      });
+      console.log(saveInRepo);
+    } catch (error) {
+      console.log(error);
+      setExperience("Lỗi khi lấy dữ liệu từ AI.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const showModal = () => {
     setIsModalOpen(true);
     setExperience(null);
     setLoading(true);
-    const getAiGen = async () => {
-      try {
-        const params = {
-          itinerary: query,
-        };
-        const response = await aiApi.getDetailWithAI(params);
-        console.log(response);
-        setExperience(response.data.data);
-      } catch (error) {
-        console.log(error);
-        setExperience("Lỗi khi lấy dữ liệu từ AI.");
-      } finally {
-        setLoading(false);
-      }
-    };
     getAiGen();
   };
 
@@ -227,8 +245,14 @@ const ScheduleDetail = () => {
       >
         CHI TIẾT LỘ TRÌNH DU LỊCH {repo && repo.name}
       </div>
-      <div style={{ display: "flex", width: "100%" }}>
-        <div style={{ width: "50%", marginTop: "24px", height: "80vh" }}>
+      <div
+        style={{
+          display: "flex",
+          width: "100%",
+          justifyContent: "space-around",
+        }}
+      >
+        <div style={{ width: "40%", marginTop: "24px", height: "80vh" }}>
           <Timeline mode="left" items={item} />
         </div>
         <div id="kt_docs_fullcalendar_drag" style={{ width: "50%" }}>
@@ -289,7 +313,7 @@ const ScheduleDetail = () => {
       <ToastContainer />
       <Modal
         title="Cẩm nang cho lộ trình"
-        width="50%"
+        width="70%"
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -300,7 +324,13 @@ const ScheduleDetail = () => {
           <div style={{ whiteSpace: "pre-line" }}>
             {experience ? (
               <>
-                <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    marginBottom: "24px",
+                  }}
+                >
                   <div
                     style={{ display: "flex", justifyContent: "space-around" }}
                   >
@@ -317,7 +347,7 @@ const ScheduleDetail = () => {
                     </Button>
                   </div>
                 </div>
-                <Markdown>{experience}</Markdown>
+                <Markdown>{experience.replace(/\\n/g, "\n")}</Markdown>
               </>
             ) : (
               <div>Không có dữ liệu cẩm nang.</div>

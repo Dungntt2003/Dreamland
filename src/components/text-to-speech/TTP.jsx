@@ -11,31 +11,67 @@ const TextToSpeech = ({ text }) => {
   const playAudio = async (audioSrc) => {
     return new Promise((resolve, reject) => {
       const audio = new Audio(audioSrc);
+      let hasResolved = false;
 
-      audio.onloadeddata = () => {
+      const cleanup = () => {
+        audio.oncanplaythrough = null;
+        audio.onerror = null;
+        audio.onended = null;
+      };
+
+      const handleSuccess = () => {
+        if (hasResolved) return;
+
         audio
           .play()
-          .then(() => resolve())
-          .catch((err) => reject(err));
+          .then(() => {
+            hasResolved = true;
+            cleanup();
+            resolve();
+          })
+          .catch((err) => {
+            if (!hasResolved) {
+              hasResolved = true;
+              cleanup();
+              console.error("Lỗi khi phát audio:", err);
+              reject(new Error("Không thể phát audio"));
+            }
+          });
       };
 
-      audio.onerror = () => {
-        reject(new Error("Không thể tải audio"));
+      const handleError = () => {
+        if (!hasResolved) {
+          hasResolved = true;
+          cleanup();
+          reject(new Error("Không thể tải audio"));
+        }
       };
+
+      audio.oncanplaythrough = handleSuccess;
+      audio.onerror = handleError;
 
       setTimeout(() => {
-        reject(new Error("Timeout khi tải audio"));
+        if (!hasResolved) {
+          hasResolved = true;
+          cleanup();
+          reject(new Error("Timeout khi tải audio"));
+        }
       }, 10000);
     });
   };
 
   const callFptTTS = async () => {
     if (audioUrl) {
+      setIsLoading(true);
       try {
         await playAudio(audioUrl);
+        message.success("Phát audio thành công!");
       } catch (err) {
         console.error("Lỗi khi phát audio:", err);
-        message.error("Không thể phát audio. Vui lòng thử lại.");
+        message.error("Không thể phát audio. Vui lòng tạo lại audio.");
+        setAudioUrl(null);
+      } finally {
+        setIsLoading(false);
       }
       return;
     }
@@ -68,13 +104,22 @@ const TextToSpeech = ({ text }) => {
       }
 
       const newAudioUrl = response.data.async;
+
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
       setAudioUrl(newAudioUrl);
 
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      await playAudio(newAudioUrl);
+      try {
+        await playAudio(newAudioUrl);
+        message.success("Tạo và phát audio thành công!");
+      } catch (playError) {
+        console.error("Không thể phát audio ngay lập tức:", playError);
+        message.info("Audio đã được tạo. Nhấn 'Phát lại audio' để nghe.");
+      }
     } catch (err) {
       console.error("Lỗi:", err);
+
+      setAudioUrl(null);
 
       if (err.code === "ECONNABORTED" || err.message.includes("timeout")) {
         message.error("Kết nối bị timeout. Vui lòng thử lại.");
@@ -87,8 +132,6 @@ const TextToSpeech = ({ text }) => {
         } else {
           message.error(`Lỗi server: ${status}`);
         }
-      } else if (err.message.includes("Không thể tải audio")) {
-        message.error("Không thể tải audio. Vui lòng thử lại.");
       } else {
         message.error("Có lỗi xảy ra khi tạo audio. Vui lòng thử lại.");
       }
@@ -106,7 +149,9 @@ const TextToSpeech = ({ text }) => {
       disabled={isLoading || !text}
     >
       {isLoading
-        ? "Đang tải audio..."
+        ? audioUrl
+          ? "Đang phát audio..."
+          : "Đang tạo audio..."
         : audioUrl
         ? "Phát lại audio"
         : "Tạo audio"}
