@@ -12,7 +12,7 @@ const Footer = () => {
     <div className="footer-container">
       <div className="footer-item-wrap">
         <div className="footer-item">
-          <img src={Logo} alt="logo" className="footer-logo" />
+          {/* <img src={Logo} alt="logo" className="footer-logo" /> */}
         </div>
         <div className="footer-item">{t("address")}</div>
         <div className="footer-item">{t("phone")}</div>

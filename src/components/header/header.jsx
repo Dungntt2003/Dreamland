@@ -1,6 +1,6 @@
 import "./header.scss";
 import Navbar from "react-bootstrap/Navbar";
-import Logo from "assets/image/logo.png";
+import Logo from "assets/image/logo_v2.png";
 import { Button, Select, Dropdown, Space } from "antd";
 import { DownOutlined, SmileOutlined } from "@ant-design/icons";
 import VN from "assets/image/vietnamese.png";
@@ -56,12 +56,10 @@ const Header = () => {
       ),
     },
   ];
-  // const handleChange = (value) => {
-  //   i18n.changeLanguage(value);
-  // };
-  const handleChoose = (value) => {
-    console.log(value);
+  const handleChange = (value) => {
+    i18n.changeLanguage(value);
   };
+
   return (
     <div className="header-wrap">
       <Navbar className="navbar">
@@ -74,7 +72,7 @@ const Header = () => {
               height="30"
               className="d-inline-block align-top"
             />
-            SmarTrip
+            Smart Trip
           </Navbar.Brand>
         </Link>
         <Navbar.Toggle />
@@ -89,7 +87,7 @@ const Header = () => {
             style={{
               minWidth: "120px",
             }}
-            // onChange={handleChange}
+            onChange={handleChange}
             options={[
               {
                 value: "vi",

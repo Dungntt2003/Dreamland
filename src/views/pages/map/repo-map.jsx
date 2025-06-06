@@ -55,12 +55,16 @@ const RepoMap = () => {
           const matchedServices = listServices.filter(
             (s) => p.children && p.children.trim().endsWith(s.name.trim())
           );
-          // console.log("matched services ", matchedServices);
-          return matchedServices.map((service) => ({
-            address: service.address,
-            time: p.label,
-            title: service.name,
-          }));
+          const firstMatch = matchedServices[0];
+          return firstMatch
+            ? [
+                {
+                  address: firstMatch.address,
+                  time: p.label,
+                  title: firstMatch.name,
+                },
+              ]
+            : [];
         })
         .flat()
         .filter((location) => location && location.address);
