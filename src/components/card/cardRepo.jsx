@@ -1,3 +1,4 @@
+import "./cardRepo.scss";
 import { Card } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,15 +10,19 @@ import {
   faShare,
   faTimeline,
   faUsers,
+  faEyeSlash,
 } from "@fortawesome/free-solid-svg-icons";
 import { Tooltip } from "react-tooltip";
 import { getAvaFromIndex } from "utils/getRandomAvaRepo";
 import formatDate from "utils/formatDate";
 import { toast, ToastContainer } from "react-toastify";
 import repoApi from "api/repoApi";
+
 const { Meta } = Card;
+
 const CardRepo = ({ item, index, loadRepos }) => {
   const navigate = useNavigate();
+
   const handleShare = async () => {
     if (navigator.share) {
       try {
@@ -46,6 +51,7 @@ const CardRepo = ({ item, index, loadRepos }) => {
         });
     }
   };
+
   const handleEdit = () => {
     navigate(`/schedule/${item.id}`);
   };
@@ -64,104 +70,113 @@ const CardRepo = ({ item, index, loadRepos }) => {
   };
 
   return (
-    <div style={{ width: "25%", padding: "8px" }}>
+    <div className="card-repo-container">
       <Card
         hoverable
-        style={{
-          margin: "0px 0 16px",
-          borderRadius: "15px",
-        }}
+        className="card-repo"
         cover={
-          <div style={{ position: "relative" }}>
+          <div className="card-repo-cover">
             <img
-              alt="example"
+              alt="Schedule Image"
               src={getAvaFromIndex(index)}
-              style={{ height: "170px", width: "100%" }}
+              className="card-repo-image"
             />
+
+            {/* Status Badge */}
             <div
-              style={{
-                position: "absolute",
-                top: "8px",
-                right: "70px",
-                width: "24px",
-                zIndex: 1,
-              }}
+              className={`card-repo-status-badge ${
+                item.isHidden ? "hidden" : "visible"
+              }`}
             >
+              {item.isHidden ? "Ẩn" : "Hiển thị"}
+            </div>
+
+            {/* Action Icons */}
+            <div className="card-repo-actions">
               <div
-                style={{
-                  display: "flex",
-                  color: "var(--primary-color)",
-                  fontSize: "18px",
-                }}
+                className="card-repo-action-icon share"
+                onClick={handleShare}
+                data-tooltip-id="tooltip-share"
+                data-tooltip-content="Copy link"
               >
-                <FontAwesomeIcon
-                  icon={faShare}
-                  onClick={handleShare}
-                  data-tooltip-id="tooltip-share"
-                  data-tooltip-content="Copy link"
-                />
-                <FontAwesomeIcon
-                  icon={faPen}
-                  onClick={handleEdit}
-                  style={{ marginLeft: "16px" }}
-                  data-tooltip-id="tooltip-edit"
-                  data-tooltip-content="Chỉnh sửa"
-                />
-                <FontAwesomeIcon
-                  icon={faEye}
-                  onClick={handleHidden}
-                  style={{ marginLeft: "16px", color: "red" }}
-                  data-tooltip-id="tooltip-hidden"
-                  data-tooltip-content={
-                    item.isHidden === true ? "Hiển thị" : "Ẩn lộ trình"
-                  }
-                />
+                <FontAwesomeIcon icon={faShare} />
+              </div>
+
+              <div
+                className="card-repo-action-icon edit"
+                onClick={handleEdit}
+                data-tooltip-id="tooltip-edit"
+                data-tooltip-content="Chỉnh sửa"
+              >
+                <FontAwesomeIcon icon={faPen} />
+              </div>
+
+              <div
+                className={`card-repo-action-icon ${
+                  item.isHidden ? "visible" : "hidden"
+                }`}
+                onClick={handleHidden}
+                data-tooltip-id="tooltip-hidden"
+                data-tooltip-content={
+                  item.isHidden ? "Hiển thị" : "Ẩn lộ trình"
+                }
+              >
+                <FontAwesomeIcon icon={item.isHidden ? faEye : faEyeSlash} />
               </div>
             </div>
           </div>
         }
       >
-        <Link to={`/schedule-detail/${item.id}`} className="link" key={item.id}>
+        <Link to={`/schedule-detail/${item.id}`} className="card-repo-link">
           <Meta
             title={item.name}
             description={
-              <div>
-                <div>
+              <div className="card-repo-description">
+                <div className="card-repo-info-item">
                   <FontAwesomeIcon
                     icon={faBookmark}
-                    style={{ marginRight: "12px" }}
+                    className="card-repo-info-icon"
                   />
-                  {item.description}
-                </div>
-                <div>
-                  <FontAwesomeIcon
-                    icon={faLocationPin}
-                    style={{ marginRight: "12px" }}
-                  />
-                  {item.destination ? item.destination : "Hà Nội"}
-                </div>
-                <div>
-                  <FontAwesomeIcon
-                    icon={faUsers}
-                    style={{ marginRight: "12px" }}
-                  />
-                  {item.numberPeople}
+                  <span className="card-repo-info-text">
+                    {item.description}
+                  </span>
                 </div>
 
-                <div>
+                <div className="card-repo-info-item">
+                  <FontAwesomeIcon
+                    icon={faLocationPin}
+                    className="card-repo-info-icon"
+                  />
+                  <span className="card-repo-info-text">
+                    {item.destination ? item.destination : "Hà Nội"}
+                  </span>
+                </div>
+
+                <div className="card-repo-info-item">
+                  <FontAwesomeIcon
+                    icon={faUsers}
+                    className="card-repo-info-icon"
+                  />
+                  <span className="card-repo-info-text">
+                    {item.numberPeople} người
+                  </span>
+                </div>
+
+                <div className="card-repo-info-item">
                   <FontAwesomeIcon
                     icon={faTimeline}
-                    style={{ marginRight: "12px" }}
+                    className="card-repo-info-icon"
                   />
-                  {formatDate(item.startDate) +
-                    " đến " +
-                    formatDate(item.endDate)}
+                  <span className="card-repo-info-text">
+                    {formatDate(item.startDate)} đến {formatDate(item.endDate)}
+                  </span>
                 </div>
               </div>
             }
           />
         </Link>
       </Card>
+
       <Tooltip id="tooltip-share" />
       <Tooltip id="tooltip-edit" />
       <Tooltip id="tooltip-hidden" />

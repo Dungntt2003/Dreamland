@@ -723,25 +723,10 @@ const ItemPaymentProcess = ({ type }) => {
           )}
           {current === 2 && (
             <>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  minWidth: "50%",
-                }}
-              >
-                <div>
-                  <div
-                    style={{
-                      padding: "16px 32px",
-                      backgroundColor: "var(--background-color)",
-                      borderRadius: "54px",
-                      border: "1px solid var(--primary-color)",
-                      marginBottom: "24px",
-                      minWidth: "600px",
-                    }}
-                  >
-                    <div style={{ fontSize: "20px", fontWeight: "bold" }}>
+              <div className="payment-confirmation-container">
+                <div className="payment-confirmation-wrapper">
+                  <div className="payment-confirmation-card">
+                    <div className="payment-confirmation-title">
                       {item.name}
                     </div>
                     <div className="confirm-payment-enter">
@@ -799,13 +784,8 @@ const ItemPaymentProcess = ({ type }) => {
                     )}
                     {type === "entertainment" && (
                       <div className="confirm-payment-enter">
-                        <span
-                          className="confirm-payment-label"
-                          style={{ color: "red" }}
-                        >
-                          Tổng cộng
-                        </span>
-                        <span style={{ fontSize: "20px", color: "red" }}>
+                        <span className="confirm-payment-label">Tổng cộng</span>
+                        <span className="confirm-payment-value confirm-payment-total">
                           {formatCurrency(
                             Math.round(
                               (countAdult + countChild) * parsePrice(item.price)
@@ -815,16 +795,18 @@ const ItemPaymentProcess = ({ type }) => {
                       </div>
                     )}
                   </div>
-                  <div
-                    style={{ display: "flex", justifyContent: "space-between" }}
-                  >
-                    <Button type="primary" onClick={prev} className="button">
+                  <div className="payment-buttons-container">
+                    <Button
+                      type="primary"
+                      onClick={prev}
+                      className="button secondary"
+                    >
                       Trở lại
                     </Button>
                     <Button
                       type="primary"
                       onClick={handlePay}
-                      className="button"
+                      className="button primary"
                       disabled={!isChecked}
                     >
                       {type === "entertainment" && "Thanh toán"}

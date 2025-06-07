@@ -1,3 +1,4 @@
+import "./scheduleDetail.scss";
 import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import repoApi from "api/repoApi";
@@ -252,10 +253,13 @@ const ScheduleDetail = () => {
           justifyContent: "space-around",
         }}
       >
-        <div style={{ width: "40%", marginTop: "24px", height: "80vh" }}>
+        <div
+          style={{ width: "35%", marginTop: "24px", height: "80vh" }}
+          className="timeline-container"
+        >
           <Timeline mode="left" items={item} />
         </div>
-        <div id="kt_docs_fullcalendar_drag" style={{ width: "50%" }}>
+        <div id="kt_docs_fullcalendar_drag" style={{ width: "60%" }}>
           <FullCalendar
             ref={calendarRef}
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -264,10 +268,7 @@ const ScheduleDetail = () => {
               center: "title",
               right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
             }}
-            // editable={true}
-            // droppable={true}
             initialView="timeGridDay"
-            // initialDate="2025-01-20"
             validRange={{
               start: date ? date.start : null,
               end: date ? date.end : null,
@@ -275,8 +276,6 @@ const ScheduleDetail = () => {
             events={events}
             slotMinTime="07:00:00"
             slotMaxTime="22:00:00"
-            // eventReceive={handleEventReceive}
-            // eventContent={renderEventContent}
             timeZone="Asia/Ho_Chi_Minh"
             locale="vi"
             height="80vh"
@@ -335,7 +334,6 @@ const ScheduleDetail = () => {
                     style={{ display: "flex", justifyContent: "space-around" }}
                   >
                     <TextToSpeech text={experience.slice(0, 200)} />
-                    {/* <TextToSpeechButton text={experience} /> */}
                     <VietnameseTextReader text={experience.slice(0, 300)} />
                   </div>
                   <div style={{ marginLeft: "16px" }}>

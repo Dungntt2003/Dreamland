@@ -1,82 +1,255 @@
 .fc {
-  font-family: Arial, sans-serif;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: "Inter", "Segoe UI", Arial, sans-serif;
+  background: linear-gradient(135deg, #ffeef8 0%, #f0f8ff 100%);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .fc-toolbar {
-  background-color: var(--primary-color);
-  color: #fff;
-  padding: 10px;
-  border-radius: 8px 8px 0 0;
+  background: linear-gradient(135deg, #e8d5ff 0%, #d4e6ff 100%);
+  color: #6b46c1;
+  padding: 20px;
+  border: none;
 }
 
 .fc-toolbar h2 {
-  font-size: 1.5rem;
-  font-weight: bold;
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin: 0;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
 }
 
 .fc-toolbar .fc-button {
-  background-color: #0056b3;
+  background: linear-gradient(135deg, #c084fc 0%, #a855f7 100%);
   border: none;
   color: white;
   font-size: 0.9rem;
-  border-radius: 4px;
-  padding: 5px 10px;
+  border-radius: 8px;
+  padding: 8px 16px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+  font-weight: 500;
 }
 
 .fc-toolbar .fc-button:hover {
-  background-color: #004085;
+  background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+}
+
+.fc-toolbar .fc-button:active {
+  transform: translateY(0);
 }
 
 .fc-view {
-  background: #ffffff;
-  border-radius: 0 0 8px 8px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
 }
 
 .fc-timegrid-slot {
-  //   background-color: #e9ecef;
-  //   color: #495057;
+  border-color: rgba(203, 213, 225, 0.4);
   font-size: 0.85rem;
+  color: #64748b;
 }
 
 .fc-event {
-  color: white;
+  color: green !important;
   border: none;
-  border-radius: 4px;
-  padding: 2px 5px;
+  border-radius: 8px;
+  padding: 4px 8px;
   cursor: pointer;
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  font-size: 0.85rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .fc-event:hover {
-  transform: scale(1.02);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.fc-event:nth-child(1) {
+  background: linear-gradient(135deg, #fbb6ce 0%, #f687b3 100%);
+}
+
+.fc-event:nth-child(2) {
+  background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
+}
+
+.fc-event:nth-child(3) {
+  background: linear-gradient(135deg, #7dd3fc 0%, #38bdf8 100%);
+}
+
+.fc-event:nth-child(4) {
+  background: linear-gradient(135deg, #86efac 0%, #4ade80 100%);
+}
+
+.fc-event:nth-child(5) {
+  background: linear-gradient(135deg, #fed7aa 0%, #fb923c 100%);
 }
 
 .fc-daygrid-day.fc-day-today {
-  background-color: #ffc107 !important;
-  border-radius: 4px;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important;
+  border-radius: 8px;
+  border: 2px solid #f59e0b;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
 }
 
 .fc-timegrid-axis-cushion {
-  padding: 5px;
+  padding: 8px;
   font-size: 0.8rem;
-  font-weight: bold;
+  font-weight: 600;
+  color: #6b7280;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 6px;
+  margin: 2px;
 }
 
 .fc-scroller {
   overflow-y: auto;
-  //   max-height: 60vh;
+  scrollbar-width: thin;
+  scrollbar-color: #e2e8f0 transparent;
+}
+
+.fc-scroller::-webkit-scrollbar {
+  width: 6px;
+}
+
+.fc-scroller::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.fc-scroller::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%);
+  border-radius: 10px;
 }
 
 .fc-button.fc-button-primary.fc-button-active {
-  background-color: #17a2b8;
+  background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+  box-shadow: 0 4px 12px rgba(6, 182, 212, 0.4);
 }
 
 .fc-v-event {
-  background-color: #55a48b !important;
+  background: linear-gradient(135deg, #a7f3d0 0%, #6ee7b7 100%) !important;
+}
+
+.fc-daygrid-day {
+  transition: all 0.2s ease;
+}
+
+.fc-daygrid-day:hover {
+  background-color: rgba(248, 250, 252, 0.8);
+}
+
+.fc-day-number {
+  color: #374151;
+  font-weight: 600;
+  padding: 4px;
+}
+
+.fc-col-header-cell {
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  color: #475569;
+  font-weight: 600;
+  padding: 12px 8px;
+  border-color: rgba(203, 213, 225, 0.5);
+}
+
+.fc-daygrid-day-number {
+  color: #4b5563;
+  font-weight: 600;
+  padding: 8px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fc-event {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@media (max-width: 768px) {
+  .fc-toolbar h2 {
+    font-size: 1.4rem;
+  }
+
+  .fc-toolbar .fc-button {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+  }
+}
+
+.external-event-item {
+  display: inline-block;
+  min-width: 120px;
+  max-width: 200px;
+}
+
+.external-event-item:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  border-width: 2px;
+}
+
+.external-event-item:hover .remove-btn {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(255, 77, 79, 0.4);
+}
+
+.external-event-item:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.remove-btn:hover {
+  background-color: #ff7875 !important;
+}
+
+.remove-btn:active {
+  transform: scale(0.9);
+}
+
+.event-content {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+@keyframes slideInScale {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.external-event-item {
+  animation: slideInScale 0.3s ease-out;
+}
+
+@media (max-width: 768px) {
+  .external-event-item {
+    min-width: 100px;
+    max-width: 150px;
+    margin: 4px;
+    padding: 6px 10px;
+  }
+
+  .event-content {
+    font-size: 13px;
+  }
 }

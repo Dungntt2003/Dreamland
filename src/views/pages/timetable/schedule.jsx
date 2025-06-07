@@ -146,7 +146,7 @@ const DraggableCalendar = () => {
         draggableInstanceRef.current.destroy();
       }
       draggableInstanceRef.current = new Draggable(externalEventsRef.current, {
-        itemSelector: ".fc-event",
+        itemSelector: ".external-event-item",
         eventData: function (eventEl) {
           return {
             title: eventEl.innerText.trim(),
@@ -191,7 +191,7 @@ const DraggableCalendar = () => {
       end: info.event.end || info.event.start,
       backgroundColor: "var(--secondary-color)",
       borderColor: "var(--secondary-color)",
-      textColor: "white",
+      textColor: "black",
     };
 
     setEvents((prevEvents) => {
@@ -336,24 +336,61 @@ const DraggableCalendar = () => {
 
   const renderEventContent = (eventInfo) => {
     return (
-      <div style={{ fontSize: "16px" }}>
+      <div
+        style={{
+          fontSize: "16px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
         <span>{eventInfo.event.title.replace(/^×\s*/, "")}</span>
         <button
           onClick={(e) => {
-            e.stopPropagation(); // Prevent triggering event click
+            e.stopPropagation();
             handleDeleteEvent(eventInfo.event.id);
           }}
           style={{
             marginLeft: "10px",
-            background: "red",
+            background: "linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%)",
             color: "white",
             border: "none",
             borderRadius: "50%",
-            padding: "0px 8px",
+            width: "22px",
+            height: "22px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
             cursor: "pointer",
+            fontSize: "12px",
+            fontWeight: "bold",
+            boxShadow: "0 2px 6px rgba(255, 107, 107, 0.3)",
+            transition: "all 0.2s ease",
+            opacity: "0.85",
+            flexShrink: 0,
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.transform = "scale(1.1)";
+            e.target.style.opacity = "1";
+            e.target.style.boxShadow = "0 4px 12px rgba(255, 107, 107, 0.5)";
+            e.target.style.background =
+              "linear-gradient(135deg, #ee5a52 0%, #dc2626 100%)";
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.transform = "scale(1)";
+            e.target.style.opacity = "0.85";
+            e.target.style.boxShadow = "0 2px 6px rgba(255, 107, 107, 0.3)";
+            e.target.style.background =
+              "linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%)";
+          }}
+          onMouseDown={(e) => {
+            e.target.style.transform = "scale(0.95)";
+          }}
+          onMouseUp={(e) => {
+            e.target.style.transform = "scale(1.1)";
           }}
         >
-          X
+          ×
         </button>
       </div>
     );
@@ -406,42 +443,100 @@ const DraggableCalendar = () => {
               overflowY: "auto",
             }}
           >
-            {externalEvents.map((event) => (
-              <div
-                key={event.id}
-                className="fc-event badge me-3 my-1"
-                style={{
-                  position: "relative",
-                  backgroundColor: "#74c476",
-                  padding: "6px 6px",
-                  color: "black",
-                }}
-              >
-                <span
-                  onClick={() =>
-                    handleRemoveExternalEvent(event.id, event.type)
-                  }
+            {externalEvents.map((event, index) => {
+              // Mảng màu pastel đẹp
+              const pastelColors = [
+                { bg: "#fff0f6", border: "#ffadd6", text: "#c41e3a" }, // Pink
+                { bg: "#e6fffb", border: "#87e8de", text: "#006d75" }, // Cyan
+                { bg: "#f6ffed", border: "#b7eb8f", text: "#389e0d" }, // Green
+                { bg: "#fff2e8", border: "#ffbb96", text: "#d4380d" }, // Orange
+                { bg: "#f0f5ff", border: "#adc6ff", text: "#1d39c4" }, // Blue
+                { bg: "#f9f0ff", border: "#d3adf7", text: "#722ed1" }, // Purple
+              ];
+
+              const colorScheme = pastelColors[index % pastelColors.length];
+
+              return (
+                <div
+                  key={event.id}
+                  className="external-event-item fc-event"
                   style={{
-                    position: "absolute",
-                    top: "-2px",
-                    right: "-4px",
+                    position: "relative",
+                    backgroundColor: colorScheme.bg,
+                    border: `2px solid ${colorScheme.border}`,
+                    borderRadius: "12px",
+                    padding: "12px 24px 12px 14px",
+                    margin: "8px",
+                    color: colorScheme.text,
+                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
+                    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                     cursor: "pointer",
-                    fontWeight: "bold",
-                    fontSize: "14px",
-                    color: "red",
+                    minWidth: "120px",
+                    maxWidth: "400px",
+                    display: "inline-block",
                   }}
                 >
-                  ×
-                </span>
+                  <span
+                    onClick={() =>
+                      handleRemoveExternalEvent(event.id, event.type)
+                    }
+                    className="remove-btn"
+                    style={{
+                      position: "absolute",
+                      top: "-8px",
+                      right: "-8px",
+                      width: "20px",
+                      height: "20px",
+                      borderRadius: "50%",
+                      backgroundColor: "#ff4d4f",
+                      color: "white",
+                      cursor: "pointer",
+                      fontWeight: "bold",
+                      fontSize: "14px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      boxShadow: "0 2px 6px rgba(255, 77, 79, 0.3)",
+                      transition: "all 0.2s ease",
+                      zIndex: 10,
+                      border: "2px solid white",
+                      lineHeight: "1",
+                    }}
+                  >
+                    ×
+                  </span>
+                  <div
+                    className="event-content"
+                    style={{
+                      fontSize: "14px",
+                      fontWeight: "500",
+                      lineHeight: "1.4",
+                      paddingRight: "8px",
+                      wordWrap: "break-word",
+                      overflowWrap: "break-word",
+                      maxWidth: "100%",
+                      display: "block",
+                    }}
+                  >
+                    {event.title}
+                  </div>
 
-                <div
-                  className="fc-event-main"
-                  style={{ fontSize: "14px", fontWeight: "200" }}
-                >
-                  {event.title}
+                  {/* Decorative dot */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "8px",
+                      left: "8px",
+                      width: "6px",
+                      height: "6px",
+                      borderRadius: "50%",
+                      backgroundColor: colorScheme.border,
+                      opacity: 0.6,
+                    }}
+                  />
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 

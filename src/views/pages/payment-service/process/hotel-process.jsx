@@ -1,4 +1,5 @@
 import "./enter-payment.scss";
+import "./payment-process.scss";
 import { Steps, Button, Form, Input, Checkbox, Dropdown, Table } from "antd";
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -26,6 +27,7 @@ import {
   handlePayment,
   handleCreatePayment,
 } from "components/payment/handlePayment";
+import removeDuplicateFromDescription from "utils/handleDuplicate";
 
 const steps = [
   {
@@ -390,7 +392,22 @@ const HotelPaymentProcess = ({ type }) => {
                             dataSource={[
                               {
                                 key: "1",
-                                description: rm.description,
+                                description: (
+                                  <>
+                                    {rm.description &&
+                                      removeDuplicateFromDescription(
+                                        rm.description
+                                      ).map((item, index) => {
+                                        return (
+                                          <div>
+                                            <span className="room-feature-text">
+                                              {item}
+                                            </span>
+                                          </div>
+                                        );
+                                      })}
+                                  </>
+                                ),
                                 people: handlePeopleInRoom(rm.description),
                                 price: formatCurrency(rm.price),
                                 roomData: rm,
@@ -672,25 +689,10 @@ const HotelPaymentProcess = ({ type }) => {
           )}
           {current === 2 && (
             <>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  minWidth: "50%",
-                }}
-              >
-                <div>
-                  <div
-                    style={{
-                      padding: "16px 32px",
-                      backgroundColor: "var(--background-color)",
-                      borderRadius: "54px",
-                      border: "1px solid var(--primary-color)",
-                      marginBottom: "24px",
-                      minWidth: "600px",
-                    }}
-                  >
-                    <div style={{ fontSize: "20px", fontWeight: "bold" }}>
+              <div className="payment-confirmation-container">
+                <div className="payment-confirmation-wrapper">
+                  <div className="payment-confirmation-card">
+                    <div className="payment-confirmation-title">
                       {item.name}
                     </div>
                     <div className="confirm-payment-enter">
@@ -727,13 +729,8 @@ const HotelPaymentProcess = ({ type }) => {
                     </div>
 
                     <div className="confirm-payment-enter">
-                      <span
-                        className="confirm-payment-label"
-                        style={{ color: "red" }}
-                      >
-                        Tổng cộng
-                      </span>
-                      <span style={{ fontSize: "20px", color: "red" }}>
+                      <span className="confirm-payment-label">Tổng cộng</span>
+                      <span className="confirm-payment-value confirm-payment-total">
                         {formatCurrency(
                           Math.round(
                             numberOfNights * roomData.price * 1.1 * room
@@ -742,16 +739,18 @@ const HotelPaymentProcess = ({ type }) => {
                       </span>
                     </div>
                   </div>
-                  <div
-                    style={{ display: "flex", justifyContent: "space-between" }}
-                  >
-                    <Button type="primary" onClick={prev} className="button">
+                  <div className="payment-buttons-container">
+                    <Button
+                      type="primary"
+                      onClick={prev}
+                      className="button secondary"
+                    >
                       Trở lại
                     </Button>
                     <Button
                       type="primary"
                       onClick={handlePay}
-                      className="button"
+                      className="button primary"
                     >
                       Thanh toán
                     </Button>

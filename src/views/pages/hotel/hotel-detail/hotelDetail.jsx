@@ -1,10 +1,9 @@
 import "../../sightseeing/sight-detail/sightDetail";
-import checkOpen from "utils/checkOpenTime";
-import { Rating } from "react-simple-star-rating";
+import "./hotelDetail.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect } from "react";
 import Heart from "react-heart";
-import { parseDes, parseList } from "utils/parseDescription";
+import { parseList } from "utils/parseDescription";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -12,16 +11,13 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import {
-  faClock,
   faPlaceOfWorship,
-  faPhone,
   faMoneyBill,
   faCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import { CaretRightOutlined } from "@ant-design/icons";
 import {
   Collapse,
-  Form,
   Input,
   Button,
   Pagination as AntPagination,
@@ -29,12 +25,11 @@ import {
   Modal,
   Rate,
 } from "antd";
-import GoogleMapComponent from "components/google-maps/googleMaps";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import hotelApi from "api/hotelApi";
 import MapboxMapWithAddress from "components/google-maps/mapbox";
 import formatCurrency from "utils/formatCurrency";
-const { TextArea } = Input;
+import removeDuplicateFromDescription from "utils/handleDuplicate";
 const { Meta } = Card;
 const { Panel } = Collapse;
 const HotelDetail = () => {
@@ -396,43 +391,46 @@ const HotelDetail = () => {
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
-        width="60%"
+        width="70%"
+        className="room-detail-modal"
       >
-        <div style={{ display: "flex" }}>
-          <div className="dish-img">
+        <div className="room-detail-container">
+          <div className="room-image-section">
             <img
               src={modelContent.image}
-              alt="imageScenery"
-              style={{ width: "400px" }}
+              alt="Room Image"
+              className="room-image"
             />
           </div>
-          <div
-            className="dish-content"
-            style={{ marginLeft: "36px", fontSize: "16px" }}
-          >
-            <p className="dish-description">
-              Mô tả:{" "}
-              {modelContent.description &&
-                parseList(modelContent.description).map((item) => {
-                  return (
-                    <div>
-                      <FontAwesomeIcon
-                        icon={faCheck}
-                        style={{
-                          fontSize: "20px",
-                          marginRight: "16px",
-                          color: "var(--primary-color)",
-                        }}
-                      />
 
-                      {item}
-                    </div>
-                  );
-                })}
-            </p>
-            <p className="dish-price">
-              Giá: {formatCurrency(modelContent.price)}
-            </p>
+          <div className="room-content-section">
+            <div className="room-description">
+              <div className="room-description-title">Mô tả phòng</div>
+
+              <div className="room-features-list">
+                {modelContent.description &&
+                  removeDuplicateFromDescription(modelContent.description).map(
+                    (item, index) => {
+                      return (
+                        <div key={index} className="room-feature-item">
+                          <FontAwesomeIcon
+                            icon={faCheck}
+                            className="room-feature-icon"
+                          />
+                          <span className="room-feature-text">{item}</span>
+                        </div>
+                      );
+                    }
+                  )}
+              </div>
+            </div>
+
+            <div className="room-price">
+              <span className="room-price-label">Giá phòng</span>
+              <div className="room-price-value">
+                {formatCurrency(modelContent.price)}
+              </div>
+            </div>
           </div>
         </div>
       </Modal>
