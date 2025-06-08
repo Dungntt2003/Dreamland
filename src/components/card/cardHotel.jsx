@@ -1,3 +1,4 @@
+import "./cardRepo.scss";
 import { Card, Rate } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
@@ -21,63 +22,49 @@ const CardHotel = ({ item, link, active }) => {
     setLike(!like);
   };
   return (
-    <div style={{ width: "25%", padding: "8px" }}>
+    <div className="card-repo-container">
       <Card
         hoverable
-        style={{
-          // width: 300,
-          margin: "0px 0 16px",
-          borderRadius: "15px",
-        }}
+        className="card-repo"
         cover={
-          <div style={{ position: "relative" }}>
+          <div className="card-repo-cover">
             <img
-              alt="example"
+              alt="hotel image"
               src={item.images[0] || DefaultHotel}
-              style={{ height: "170px", width: "100%" }}
+              className="card-repo-image"
             />
-            <div
-              style={{
-                position: "absolute",
-                top: "8px",
-                right: "8px",
-                width: "24px",
-                zIndex: 1,
-              }}
-            >
-              <Heart
-                isActive={like}
-                onClick={() => handleChange(item.id)}
-                animationScale={1.25}
-                style={{ marginBottom: "1rem" }}
-              />
+            <div className="card-repo-actions">
+              <div className="card-repo-action-icon">
+                <Heart
+                  isActive={like}
+                  onClick={() => handleChange(item.id)}
+                  animationScale={1.25}
+                />
+              </div>
             </div>
           </div>
         }
       >
-        <Link to={`/${link}/${item.id}`} className="link" key={item.id}>
+        <Link
+          to={`/${link}/${item.id}`}
+          className="card-repo-link"
+          key={item.id}
+        >
           <Meta
             title={item.name}
             description={
-              <div>
-                <div className="truncate-2-lines">
+              <div className="card-repo-description">
+                <div className="card-repo-info-item-address">
                   <FontAwesomeIcon
                     icon={faLocationDot}
-                    style={{ marginRight: "12px" }}
+                    className="card-repo-info-icon"
                   />
-                  {item.address}
+                  <span className="card-repo-info-text card-repo-info-address">
+                    {item.address}
+                  </span>
                 </div>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    margin: "8px 0",
-                  }}
-                >
+                <div className="card-repo-info-item">
                   <Rate disabled defaultValue={item.rate} />
-                  {/* <div
-                    style={{ color: "var(--text-color)", marginLeft: "12px" }}
-                  >{`${getRandomInt(3, 5)}/5`}</div> */}
                 </div>
               </div>
             }

@@ -163,7 +163,27 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+.card-repo-info-item-address {
+  display: flex;
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.5;
+  padding: 8px 0;
+  border-bottom: 1px solid #f1f5f9;
+  transition: all 0.2s ease;
+}
+.card-repo-info-address {
+  min-height: calc(1.4em * 2);
+  height: calc(1.4em * 2);
+}
 
+.card-repo-container-v2 {
+  width: 24%;
+}
+
+.card-repo-container-v3 {
+  width: 100%;
+}
 .card-repo-status-badge {
   position: absolute;
   top: 12px;

@@ -1,4 +1,4 @@
-import { Card, Rate, Button } from "antd";
+import { Card, Button } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot, faMoneyBill } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
@@ -13,56 +13,52 @@ const CardPaymentEnter = ({ item, link, repoId, checkPayment }) => {
   const handleViewOrder = () => {
     navigate(`/payment-info?repoId=${repoId}&serviceId=${item.id}`);
   };
-  // console.log("check payment", checkPayment);
   return (
-    <div style={{ width: "25%", padding: "8px" }}>
+    <div className="card-repo-container">
       <Card
         hoverable
-        style={{
-          margin: "0px 0 16px",
-        }}
+        className="card-repo"
         cover={
-          <div style={{ position: "relative" }}>
+          <div className="card-repo-cover">
             <img
-              alt="example"
+              alt="entertainment payment"
               src={item.images[0]}
-              style={{ height: "170px", width: "100%" }}
+              className="card-repo-image"
             />
           </div>
         }
       >
         <Meta
           title={
-            <Link to={`/${link}/${item.id}`} className="link" key={item.id}>
+            <Link
+              to={`/${link}/${item.id}`}
+              className="card-repo-link"
+              key={item.id}
+            >
               {item.name}
             </Link>
           }
           description={
-            <div>
-              <div>
+            <div className="card-repo-description">
+              <div className="card-repo-info-item">
                 <FontAwesomeIcon
                   icon={faMoneyBill}
-                  style={{ marginRight: "12px" }}
+                  className="card-repo-info-icon"
                 />
-                {item.price ? item.price : "100.000"}
+                <span className="card-repo-info-text">
+                  {item.price ? item.price : "100.000"}
+                </span>
               </div>
-              <div className="truncate-2-lines">
+              <div className="card-repo-info-item-address">
                 <FontAwesomeIcon
                   icon={faLocationDot}
-                  style={{ marginRight: "12px" }}
+                  className="card-repo-info-icon"
                 />
-                {item.address}
+                <span className="card-repo-info-text card-repo-info-address">
+                  {item.address}
+                </span>
               </div>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  margin: "8px 0",
-                }}
-              >
-                <Rate disabled defaultValue={item.rate} />
-
+              <div className="card-repo-info-item">
                 {checkPayment === true ? (
                   <>
                     <Button className="button" onClick={handleViewOrder}>

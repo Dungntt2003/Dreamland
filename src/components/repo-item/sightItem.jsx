@@ -27,87 +27,80 @@ const SightItem = ({
     setLike(!like);
   };
   return (
-    <Card
-      hoverable
-      style={{
-        width: 300,
-      }}
-      cover={
-        <div style={{ position: "relative" }}>
-          <img
-            alt="example"
-            src={item.images[0] ? item.images[0] : SightDefault}
-            style={{ height: "170px", width: "100%" }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              top: "8px",
-              right: "8px",
-              width: "24px",
-              zIndex: 1,
-            }}
-          >
-            <Heart
-              isActive={like}
-              onClick={() => handleChange(item.id)}
-              animationScale={1.25}
-              style={{ marginBottom: "1rem" }}
-            />
-          </div>
-        </div>
+    <div
+      className={
+        active === true ? "card-repo-container-v3" : "card-repo-container-v2"
       }
     >
-      <Link
-        to={`/sight-seeing-detail/${item.id}`}
-        className="link"
-        key={item.id}
-      >
-        <Meta
-          title={item.name}
-          description={
-            <div>
-              <div className="truncate-2-lines">
-                <FontAwesomeIcon
-                  icon={faLocationDot}
-                  style={{ marginRight: "12px" }}
+      <Card
+        hoverable
+        className="card-repo"
+        cover={
+          <div className="card-repo-cover">
+            <img
+              alt="sight item"
+              src={item.images[0] ? item.images[0] : SightDefault}
+              className="card-repo-image"
+            />
+            <div className="card-repo-actions">
+              <div className="card-repo-action-icon">
+                <Heart
+                  isActive={like}
+                  onClick={() => handleChange(item.id)}
+                  animationScale={1.25}
                 />
-                {item.address}
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  margin: "8px 0",
-                }}
-              >
-                <Rate disabled defaultValue={item.rate} />
               </div>
             </div>
-          }
-        />
-      </Link>
-      {checkSightExist(item.id) === false ? (
-        <Button
-          className="button"
-          style={{ width: "100%", marginTop: "16px" }}
-          onClick={() => handleAddRepo(item.id)}
+          </div>
+        }
+      >
+        <Link
+          to={`/sight-seeing-detail/${item.id}`}
+          className="card-repo-link"
+          key={item.id}
         >
-          THÊM VÀO LỘ TRÌNH
-        </Button>
-      ) : (
-        <Button
-          className="button-v2"
-          style={{
-            width: "100%",
-            marginTop: "16px",
-          }}
-          onClick={() => handleRemoveService(item.id)}
-        >
-          LOẠI KHỎI LỘ TRÌNH
-        </Button>
-      )}
-    </Card>
+          <Meta
+            title={item.name}
+            description={
+              <div className="card-repo-description">
+                <div className="card-repo-info-item-address">
+                  <FontAwesomeIcon
+                    icon={faLocationDot}
+                    className="card-repo-info-icon"
+                  />
+                  <span className="card-repo-info-text card-repo-info-address">
+                    {item.address}
+                  </span>
+                </div>
+                <div className="card-repo-info-item">
+                  <Rate disabled defaultValue={item.rate} />
+                </div>
+              </div>
+            }
+          />
+        </Link>
+        {checkSightExist(item.id) === false ? (
+          <Button
+            className="button"
+            style={{ width: "100%", marginTop: "16px" }}
+            onClick={() => handleAddRepo(item.id)}
+          >
+            THÊM VÀO LỘ TRÌNH
+          </Button>
+        ) : (
+          <Button
+            className="button-v2"
+            style={{
+              width: "100%",
+              marginTop: "16px",
+            }}
+            onClick={() => handleRemoveService(item.id)}
+          >
+            LOẠI KHỎI LỘ TRÌNH
+          </Button>
+        )}
+      </Card>
+    </div>
   );
 };
 

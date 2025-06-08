@@ -1,4 +1,4 @@
-import { Card, Rate, Button } from "antd";
+import { Card, Button } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
@@ -17,46 +17,42 @@ const CardPaymentRestaurant = ({ item, link, repoId, checkPayment }) => {
   };
 
   return (
-    <div style={{ width: "25%", padding: "8px" }}>
+    <div className="card-repo-container">
       <Card
         hoverable
-        style={{
-          margin: "0px 0 16px",
-        }}
+        className="card-repo"
         cover={
-          <div style={{ position: "relative" }}>
+          <div className="card-repo-cover">
             <img
-              alt="example"
+              alt="restauant payment"
               src={item.images[0] ? item.images[0] : RestaurantDefaultImg}
-              style={{ height: "170px", width: "100%" }}
+              className="card-repo-image"
             />
           </div>
         }
       >
         <Meta
           title={
-            <Link to={`/${link}/${item.id}`} className="link" key={item.id}>
+            <Link
+              to={`/${link}/${item.id}`}
+              className="card-repo-link"
+              key={item.id}
+            >
               {item.name}
             </Link>
           }
           description={
-            <div>
-              <div className="truncate-2-lines">
+            <div className="card-repo-description">
+              <div className="card-repo-info-item-address">
                 <FontAwesomeIcon
                   icon={faLocationDot}
-                  style={{ marginRight: "12px" }}
+                  className="card-repo-info-icon"
                 />
-                {item.address}
+                <span className="card-repo-info-text card-repo-info-address">
+                  {item.address}
+                </span>
               </div>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  margin: "8px 0",
-                }}
-              >
-                <Rate disabled defaultValue={item.rate} />
+              <div className="card-repo-info-item">
                 {checkPayment === true ? (
                   <>
                     <Button className="button" onClick={handleViewOrder}>
