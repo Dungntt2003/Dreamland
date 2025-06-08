@@ -47,7 +47,7 @@ const RepoHidden = () => {
 
   return (
     <div style={{ padding: "16px" }}>
-      <div className="header2">DANH SÁCH LỘ TRÌNH ĐÃ ẨN</div>
+      <div className="header2 register-header">DANH SÁCH LỘ TRÌNH ĐÃ ẨN</div>
 
       <div style={{ marginBottom: "16px" }}>
         <Button

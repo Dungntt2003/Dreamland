@@ -1,3 +1,4 @@
+import "./map-component.scss";
 import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import { Button } from "antd";
 import mapboxgl from "mapbox-gl";
@@ -456,46 +457,30 @@ const MapComponent = ({ locations }) => {
         </div>
       )}
 
-      <div style={{ display: "flex" }}>
-        <div ref={mapRef} style={mapStyle}></div>
-        <div style={{ minWidth: "30%", padding: "16px" }}>
-          <div>
+      <div className="journey-container">
+        <div className="map-section">
+          <div ref={mapRef} style={mapStyle}></div>
+        </div>
+        <div className="journey-sidebar">
+          <div className="journey-summary">
             <strong className="header2">Tóm tắt hành trình:</strong>
             <p>📏 Tổng quãng đường: {summary.distance}</p>
             <p>⏱️ Tổng thời gian di chuyển: {summary.duration}</p>
           </div>
-          <div style={{ marginBottom: "10px" }}>
-            <Button
-              onClick={handleResetView}
-              className="button"
-              style={{ padding: "8px", cursor: "pointer" }}
-            >
+          <div className="journey-reset-btn">
+            <Button onClick={handleResetView} className="button">
               Xem tổng quát
             </Button>
           </div>
-          <ul>
-            {coordinates.map((loc, index) => (
-              <li
-                key={index}
-                style={{
-                  cursor: "pointer",
-                  color: "blue",
-                  marginBottom: "5px",
-                  padding: "4px",
-                  borderRadius: "4px",
-                }}
-                onClick={() => handleLocationClick(loc, index)}
-                onMouseEnter={(e) => {
-                  e.target.style.backgroundColor = "#f0f0f0";
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.backgroundColor = "transparent";
-                }}
-              >
-                {index + 1}. {loc.name}
-              </li>
-            ))}
-          </ul>
+          <div className="journey-locations">
+            <ul>
+              {coordinates.map((loc, index) => (
+                <li key={index} onClick={() => handleLocationClick(loc, index)}>
+                  <span>{loc.name}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </div>

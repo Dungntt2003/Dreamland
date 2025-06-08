@@ -34,7 +34,7 @@ const RepoList = () => {
   };
   return (
     <div style={{ padding: "16px" }}>
-      <div className="header2">DANH SÁCH LỘ TRÌNH CỦA BẠN</div>
+      <div className="header2 register-header">DANH SÁCH LỘ TRÌNH CỦA BẠN</div>
       {repo.length === 0 && (
         <>
           <Button className="button" onClick={handleCreateRepo}>

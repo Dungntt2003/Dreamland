@@ -1,0 +1,256 @@
+$pastel-green-primary: #a8d5a8;
+$pastel-green-light: #c8e6c8;
+$pastel-green-lighter: #e8f5e8;
+$pastel-green-dark: #7cb97c;
+$pastel-green-darker: #5ca85c;
+$white: #ffffff;
+$text-dark: #2d4a2d;
+$text-medium: #4a6b4a;
+$text-light: #7a9a7a;
+$border-color: #b8d8b8;
+
+.journey-container {
+  display: flex;
+  height: 100vh;
+  background: $pastel-green-lighter;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid $border-color;
+}
+
+.map-section {
+  flex: 1;
+  position: relative;
+
+  > div {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px 0 0 20px;
+  }
+}
+
+// Sidebar Section
+.journey-sidebar {
+  min-width: 350px;
+  background: $white;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid $border-color;
+
+  @media (max-width: 768px) {
+    min-width: 300px;
+    padding: 20px;
+  }
+}
+
+.journey-summary {
+  margin-bottom: 24px;
+  padding: 20px;
+  background: linear-gradient(135deg, $pastel-green-lighter, $white);
+  border-radius: 16px;
+  border: 1px solid $border-color;
+
+  .header2 {
+    color: $text-dark;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  p {
+    margin: 8px 0;
+    color: $text-medium;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.journey-reset-btn {
+  margin-bottom: 20px;
+
+  .button {
+    background: $pastel-green-primary !important;
+    border: none !important;
+    color: $white !important;
+    font-weight: 600 !important;
+    padding: 12px 20px !important;
+    border-radius: 12px !important;
+    font-size: 14px !important;
+    transition: all 0.2s ease !important;
+    width: 100%;
+
+    &:hover {
+      background: $pastel-green-dark !important;
+      transform: translateY(-1px) !important;
+    }
+
+    &:active {
+      transform: translateY(0) !important;
+    }
+  }
+}
+
+// Locations List
+.journey-locations {
+  flex: 1;
+  overflow-y: auto;
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      background: $white;
+      border: 1px solid $border-color;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      color: $text-dark;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+
+      // Location number
+      &::before {
+        content: counter(location-counter);
+        counter-increment: location-counter;
+        background: $pastel-green-primary;
+        color: $white;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+
+      &:hover {
+        background: $pastel-green-lighter;
+        border-color: $pastel-green-primary;
+        transform: translateX(4px);
+
+        &::before {
+          background: $pastel-green-dark;
+        }
+      }
+
+      &:active {
+        transform: translateX(2px);
+      }
+
+      // Location name
+      span {
+        flex: 1;
+        line-height: 1.4;
+      }
+    }
+  }
+}
+
+.journey-locations ul {
+  counter-reset: location-counter;
+}
+
+@media (max-width: 768px) {
+  .journey-container {
+    flex-direction: column;
+    height: auto;
+    border-radius: 16px;
+  }
+
+  .map-section {
+    height: 400px;
+
+    > div {
+      border-radius: 16px 16px 0 0;
+    }
+  }
+
+  .journey-sidebar {
+    min-width: auto;
+    border-left: none;
+    border-top: 1px solid $border-color;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  .journey-summary {
+    padding: 16px;
+    margin-bottom: 20px;
+
+    .header2 {
+      font-size: 16px;
+    }
+
+    p {
+      font-size: 13px;
+    }
+  }
+
+  .journey-locations ul li {
+    padding: 12px;
+    font-size: 14px;
+
+    &::before {
+      width: 20px;
+      height: 20px;
+      font-size: 11px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .journey-sidebar {
+    padding: 16px;
+  }
+
+  .journey-summary {
+    padding: 12px;
+
+    .header2 {
+      font-size: 15px;
+      margin-bottom: 12px;
+    }
+  }
+
+  .journey-reset-btn .button {
+    padding: 10px 16px !important;
+    font-size: 13px !important;
+  }
+}
+
+// Scrollbar Styling
+.journey-locations::-webkit-scrollbar {
+  width: 6px;
+}
+
+.journey-locations::-webkit-scrollbar-track {
+  background: $pastel-green-lighter;
+  border-radius: 3px;
+}
+
+.journey-locations::-webkit-scrollbar-thumb {
+  background: $pastel-green-primary;
+  border-radius: 3px;
+
+  &:hover {
+    background: $pastel-green-dark;
+  }
+}

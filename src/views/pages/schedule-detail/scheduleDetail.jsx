@@ -241,7 +241,7 @@ const ScheduleDetail = () => {
         </div>
       </div>
       <div
-        className="header2"
+        className="header2 register-header"
         style={{ textAlign: "center", textTransform: "uppercase" }}
       >
         CHI TIẾT LỘ TRÌNH DU LỊCH {repo && repo.name}

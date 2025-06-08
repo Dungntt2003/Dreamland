@@ -18,7 +18,6 @@ import {
 import { CaretRightOutlined } from "@ant-design/icons";
 import {
   Collapse,
-  Input,
   Button,
   Pagination as AntPagination,
   Card,
@@ -34,7 +33,6 @@ const { Meta } = Card;
 const { Panel } = Collapse;
 const HotelDetail = () => {
   const { id } = useParams();
-  const [rating, setRating] = useState(0);
   const [hotel, setHotel] = useState({});
   const [active, setActive] = useState(false);
   const [main, setMain] = useState();
@@ -64,56 +62,41 @@ const HotelDetail = () => {
   const handleClickImg = (index, item) => {
     setMain(item);
   };
-  const panelStyle = {
-    marginBottom: 16,
-    background: "var(--background-color)",
-    borderRadius: "10px",
-    border: "none",
-    color: "var(--text-color)",
-  };
 
-  const handleRating = (rate) => {
-    setRating(rate);
-  };
-  const onFinish = (values) => {
-    console.log({
-      rating: rating,
-      comment: values.comment,
-    });
-  };
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
-  };
   const cardData = room.map((rm) => (
-    <Card
-      hoverable
-      style={{
-        width: 300,
-      }}
-      cover={<img alt="example" src={rm.image} style={{ height: "170px" }} />}
-    >
-      <Meta
-        title={rm.name}
-        description={
-          <div>
-            <div>
-              <FontAwesomeIcon
-                icon={faMoneyBill}
-                style={{ marginRight: "12px" }}
-              />
-              {formatCurrency(rm.price)}
-            </div>
-          </div>
+    <div className="card-repo-container-v2">
+      <Card
+        hoverable
+        className="card-repo"
+        cover={
+          <img alt="room item" src={rm.image} className="card-repo-image" />
         }
-      />
-      <Button
-        className="button"
-        style={{ width: "100%", marginTop: "16px" }}
-        onClick={() => showModal(rm)}
       >
-        XEM CHI TIẾT
-      </Button>
-    </Card>
+        <Meta
+          title={rm.name}
+          description={
+            <div className="card-repo-description">
+              <div className="card-repo-info-item">
+                <FontAwesomeIcon
+                  icon={faMoneyBill}
+                  className="card-repo-info-icon"
+                />
+                <span className="card-repo-info-text">
+                  {formatCurrency(rm.price)}
+                </span>
+              </div>
+            </div>
+          }
+        />
+        <Button
+          className="button"
+          style={{ width: "100%", marginTop: "16px" }}
+          onClick={() => showModal(rm)}
+        >
+          XEM CHI TIẾT
+        </Button>
+      </Card>
+    </div>
   ));
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -150,7 +133,6 @@ const HotelDetail = () => {
                 <Rate value={hotel.rate} disabled />
               </div>
               <div className="sight-detail-button-grp">
-                {/* <Button className="button">THÊM VÀO LỘ TRÌNH</Button> */}
                 <div style={{ width: "2rem", marginLeft: "48px" }}>
                   <Heart
                     isActive={active}
@@ -260,7 +242,6 @@ const HotelDetail = () => {
             <div className="sight-detail-box-item">
               <div className="header2 sight-dettail-header-mark">VỊ TRÍ</div>
               <div className="sight-detail-map">
-                {/* <GoogleMapComponent address={hotel.address} /> */}
                 <MapboxMapWithAddress address={hotel.address} />
               </div>
             </div>

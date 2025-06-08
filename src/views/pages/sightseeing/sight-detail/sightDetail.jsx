@@ -1,10 +1,9 @@
 import "./sightDetail.scss";
 import checkOpen from "utils/checkOpenTime";
-// import { Rating } from "react-simple-star-rating";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect } from "react";
 import Heart from "react-heart";
-import { parseDes, parseList } from "utils/parseDescription";
+import { parseDes } from "utils/parseDescription";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -13,20 +12,16 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { faClock, faPlaceOfWorship } from "@fortawesome/free-solid-svg-icons";
 import { CaretRightOutlined } from "@ant-design/icons";
-import { Collapse, Form, Input, Button, Rate } from "antd";
-import GoogleMapComponent from "components/google-maps/googleMaps";
+import { Collapse, Rate } from "antd";
 import { useParams } from "react-router-dom";
 import sightApi from "api/sightApi";
 import splitTextIntoParagraphs from "utils/splitParaChunk";
 import MapboxMapWithAddress from "components/google-maps/mapbox";
-const { TextArea } = Input;
 const SightDetail = () => {
   const { id } = useParams();
-  const [rating, setRating] = useState(0);
   const [sight, setSight] = useState({});
   const [active, setActive] = useState(false);
   const [main, setMain] = useState();
-  const desc = ["Rất tệ", "Tệ", "Bình thường", "Tốt", "Rất tốt"];
   useEffect(() => {
     const getDetail = async () => {
       try {
@@ -43,26 +38,6 @@ const SightDetail = () => {
   }, [id]);
   const handleClickImg = (index, item) => {
     setMain(item);
-  };
-  const panelStyle = {
-    marginBottom: 16,
-    background: "var(--background-color)",
-    borderRadius: "10px",
-    border: "none",
-    color: "var(--text-color)",
-  };
-
-  const handleRating = (rate) => {
-    setRating(rate);
-  };
-  const onFinish = (values) => {
-    console.log({
-      rating: rating,
-      comment: values.comment,
-    });
-  };
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
   };
 
   return (
@@ -89,7 +64,6 @@ const SightDetail = () => {
               <Rate disabled value={sight.rate} />
             </div>
             <div className="sight-detail-button-grp">
-              {/* <Button className="button">THÊM VÀO LỘ TRÌNH</Button> */}
               <div style={{ width: "2rem", marginLeft: "48px" }}>
                 <Heart
                   isActive={active}

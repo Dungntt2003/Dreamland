@@ -80,3 +80,398 @@
   border-radius: 20px;
   border: 1px solid #e0e0e0;
 }
+
+// Pastel Green Color Palette
+$pastel-green-primary: #a8d5a8;
+$pastel-green-light: #c8e6c8;
+$pastel-green-lighter: #e8f5e8;
+$pastel-green-dark: #7cb97c;
+$pastel-green-darker: #5ca85c;
+$white: #ffffff;
+$text-dark: #2d4a2d;
+$text-medium: #4a6b4a;
+$text-light: #7a9a7a;
+$border-color: #b8d8b8;
+$red-accent: #e74c3c;
+
+// Main Container
+.booking-container {
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+  background: $pastel-green-lighter;
+  min-height: 100vh;
+}
+
+.booking-wrapper {
+  background: $white;
+  border-radius: 24px;
+  padding: 40px;
+  max-width: 1000px;
+  width: 100%;
+  border: 1px solid $border-color;
+}
+
+// Header Section
+.booking-header {
+  text-align: center;
+  margin-bottom: 32px;
+
+  .venue-name {
+    font-size: 32px;
+    font-weight: 700;
+    color: $text-dark;
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+
+  .venue-phone {
+    font-size: 18px;
+    color: $red-accent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 600;
+
+    .anticon {
+      font-size: 16px;
+    }
+  }
+}
+
+// Info Tags Section
+.booking-info-tags {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 32px;
+
+  .info-tags-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    max-width: 800px;
+  }
+}
+
+.enter-payment-info {
+  background: linear-gradient(
+    135deg,
+    $pastel-green-lighter,
+    $pastel-green-light
+  );
+  color: $text-dark;
+  padding: 10px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid $pastel-green-primary;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: linear-gradient(
+      135deg,
+      $pastel-green-light,
+      $pastel-green-primary
+    );
+    transform: translateY(-1px);
+  }
+}
+
+// Main Content Section
+.booking-content {
+  background: $pastel-green-lighter;
+  margin: 0 -16px;
+  border-radius: 20px;
+  padding: 32px;
+
+  .content-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: $text-dark;
+    margin-bottom: 24px;
+    text-align: left;
+  }
+
+  .booking-form-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 32px;
+    align-items: flex-start;
+  }
+}
+
+// Date Selection
+.date-selection {
+  flex: 0 0 330px;
+
+  .section-title {
+    font-weight: 700;
+    color: $text-dark;
+    margin-bottom: 12px;
+    font-size: 16px;
+  }
+
+  .calendar-wrapper {
+    background: $white;
+    border: 1px solid $border-color;
+    border-radius: 16px;
+    padding: 16px;
+
+    .ant-picker-calendar {
+      background: transparent;
+      border: none;
+
+      .ant-picker-calendar-date {
+        border-radius: 8px;
+        transition: all 0.2s ease;
+
+        &:hover {
+          background: $pastel-green-lighter;
+        }
+      }
+
+      .ant-picker-calendar-date-selected {
+        background: $pastel-green-primary;
+
+        .ant-picker-calendar-date-value {
+          color: $white;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+}
+
+// Quantity Selection
+.quantity-selection {
+  flex: 1;
+
+  .section-title {
+    font-weight: 700;
+    color: $text-dark;
+    margin-bottom: 20px;
+    font-size: 16px;
+  }
+
+  .quantity-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid $border-color;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .quantity-label {
+      font-size: 15px;
+      color: $text-dark;
+      font-weight: 500;
+    }
+
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+  }
+}
+
+// Counter Buttons
+.payment-enter-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: $white;
+  border: 1px solid $border-color;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: $text-medium;
+  font-weight: 600;
+
+  &:hover {
+    background: $pastel-green-lighter;
+    border-color: $pastel-green-primary;
+    color: $pastel-green-dark;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  // For the number display
+  &:nth-child(2) {
+    background: $pastel-green-primary;
+    color: $white;
+    font-weight: 700;
+    cursor: default;
+
+    &:hover {
+      background: $pastel-green-primary;
+      border-color: $pastel-green-primary;
+      color: $white;
+    }
+  }
+}
+
+// Time Selection (for restaurant)
+.time-selection {
+  flex: 0 0 200px;
+
+  .section-title {
+    font-weight: 700;
+    color: $text-dark;
+    margin-bottom: 12px;
+    font-size: 16px;
+  }
+
+  .ant-picker {
+    width: 100%;
+    height: 44px;
+    border: 1px solid $border-color;
+    border-radius: 12px;
+
+    &:hover {
+      border-color: $pastel-green-primary;
+    }
+
+    &.ant-picker-focused {
+      border-color: $pastel-green-dark;
+      box-shadow: 0 0 0 2px rgba(168, 213, 168, 0.2);
+    }
+  }
+}
+
+// Total Price Section
+.total-section {
+  flex: 0 0 200px;
+
+  .total-price {
+    background: $white;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid $border-color;
+    text-align: center;
+
+    .total-label {
+      font-size: 16px;
+      color: $text-medium;
+      margin-bottom: 8px;
+    }
+
+    .total-amount {
+      font-size: 24px;
+      font-weight: 700;
+      color: $pastel-green-dark;
+    }
+  }
+}
+
+// Continue Button
+.booking-actions {
+  text-align: right;
+  margin-top: 32px;
+
+  .button {
+    background: linear-gradient(
+      135deg,
+      $pastel-green-primary,
+      $pastel-green-dark
+    ) !important;
+    border: none !important;
+    color: $white !important;
+    font-weight: 600 !important;
+    padding: 14px 32px !important;
+    height: auto !important;
+    border-radius: 12px !important;
+    font-size: 16px !important;
+    transition: all 0.2s ease !important;
+
+    &:hover {
+      background: linear-gradient(
+        135deg,
+        $pastel-green-dark,
+        $pastel-green-darker
+      ) !important;
+      transform: translateY(-2px) !important;
+    }
+
+    &:active {
+      transform: translateY(0) !important;
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .booking-wrapper {
+    padding: 24px;
+    border-radius: 16px;
+  }
+
+  .booking-header .venue-name {
+    font-size: 28px;
+  }
+
+  .booking-content {
+    padding: 24px;
+    margin: 0 -8px;
+
+    .booking-form-row {
+      flex-direction: column;
+      gap: 24px;
+    }
+  }
+
+  .date-selection,
+  .time-selection,
+  .total-section {
+    flex: none;
+  }
+
+  .booking-info-tags .info-tags-wrapper {
+    .enter-payment-info {
+      font-size: 12px;
+      padding: 8px 12px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .booking-container {
+    padding: 20px 15px;
+  }
+
+  .booking-wrapper {
+    padding: 20px;
+  }
+
+  .booking-header .venue-name {
+    font-size: 24px;
+  }
+
+  .booking-content {
+    padding: 20px;
+  }
+
+  .quantity-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .booking-actions {
+    text-align: center;
+
+    .button {
+      width: 100%;
+    }
+  }
+}

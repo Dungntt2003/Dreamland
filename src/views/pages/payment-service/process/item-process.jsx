@@ -241,212 +241,150 @@ const ItemPaymentProcess = ({ type }) => {
           }}
         >
           {current === 0 && (
-            <>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
-                <div>
-                  <div
-                    style={{
-                      textAlign: "center",
-                      fontSize: "30px",
-                      color: "var(--primary-color)",
-                    }}
-                  >
-                    {item.name}
-                  </div>
+            <div className="booking-container">
+              <div className="booking-wrapper">
+                <div className="booking-header">
+                  <div className="venue-name">{item.name}</div>
                   {type === "restaurant" && (
-                    <div
-                      style={{
-                        textAlign: "center",
-                        fontSize: "20px",
-                        color: "red",
-                      }}
-                    >
+                    <div className="venue-phone">
                       <FontAwesomeIcon icon={faPhone} />
                       {item.phone}
                     </div>
                   )}
-                  <div style={{ display: "flex", justifyContent: "center" }}>
-                    <div style={{ display: "flex" }}>
-                      {type === "entertainment" && (
-                        <>
-                          <div className="enter-payment-info">
-                            Không hoàn hủy
-                          </div>
-                          <div className="enter-payment-info">
-                            Xác nhận tức thời
-                          </div>
-                          <div className="enter-payment-info">
-                            Hiệu lực vào ngày đã chọn
-                          </div>
-                          <div className="enter-payment-info">
-                            Vào cổng bằng vé điện tử
-                          </div>
-                        </>
-                      )}
-                      {type === "restaurant" && (
-                        <>
-                          <div className="enter-payment-info">
-                            Đặt bàn trước để nhanh chóng có chỗ ngồi
-                          </div>
-                          <div className="enter-payment-info">
-                            Đặt bàn qua web
-                          </div>
-                          <div className="enter-payment-info">Gọi ngay SĐT</div>
-                        </>
-                      )}
-                    </div>
+                </div>
+
+                <div className="booking-info-tags">
+                  <div className="info-tags-wrapper">
+                    {type === "entertainment" && (
+                      <>
+                        <div className="enter-payment-info">Không hoàn hủy</div>
+                        <div className="enter-payment-info">
+                          Xác nhận tức thời
+                        </div>
+                        <div className="enter-payment-info">
+                          Hiệu lực vào ngày đã chọn
+                        </div>
+                        <div className="enter-payment-info">
+                          Vào cổng bằng vé điện tử
+                        </div>
+                      </>
+                    )}
+                    {type === "restaurant" && (
+                      <>
+                        <div className="enter-payment-info">
+                          Đặt bàn trước để nhanh chóng có chỗ ngồi
+                        </div>
+                        <div className="enter-payment-info">
+                          Đặt bàn qua web
+                        </div>
+                        <div className="enter-payment-info">Gọi ngay SĐT</div>
+                      </>
+                    )}
                   </div>
-                  <div
-                    style={{
-                      background: "var(--background-color)",
-                      margin: "16px",
-                      borderRadius: "10px",
-                      padding: "4px",
-                    }}
-                  >
-                    <div
-                      style={{
-                        margin: "16px 0",
-                        fontSize: "20px",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      Chọn ngày và số lượng
+                </div>
+
+                <div className="booking-content">
+                  <div className="content-title">Chọn ngày và số lượng</div>
+
+                  <div className="booking-form-row">
+                    <div className="date-selection">
+                      <div className="section-title">
+                        Vui lòng chọn ngày sử dụng
+                      </div>
+                      <div className="calendar-wrapper">
+                        <Calendar
+                          fullscreen={false}
+                          value={dayjs(date, "DD/MM/YYYY")}
+                          onPanelChange={() => {}}
+                        />
+                      </div>
                     </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-around",
-                      }}
-                    >
-                      <div style={{ width: "30%" }}>
-                        <div style={{ fontWeight: "bold" }}>
-                          Vui lòng chọn ngày sử dụng
-                        </div>
-                        <div
-                          style={{
-                            width: "90%",
-                            border: "1px solid #ccc",
-                            borderRadius: "10px",
-                            padding: "6px 12px",
-                          }}
-                        >
-                          <Calendar
-                            fullscreen={false}
-                            // defaultValue={parseTimeString(enter.label)}
-                            value={dayjs(date, "DD/MM/YYYY")}
-                            // headerRender={() => null}
-                            onPanelChange={() => {}}
-                          />
+
+                    <div className="quantity-selection">
+                      <div className="section-title">Chọn số lượng</div>
+
+                      <div className="quantity-row">
+                        <span className="quantity-label">
+                          Người lớn {type === "entertainment" && item.price}
+                        </span>
+                        <div className="quantity-controls">
+                          <span
+                            className="payment-enter-btn"
+                            onClick={handleDecrease}
+                          >
+                            <FontAwesomeIcon icon={faMinus} />
+                          </span>
+                          <span className="payment-enter-btn">
+                            {countAdult}
+                          </span>
+                          <span
+                            className="payment-enter-btn"
+                            onClick={handleIncrease}
+                          >
+                            <FontAwesomeIcon icon={faPlus} />
+                          </span>
                         </div>
                       </div>
-                      <div>
-                        <div style={{ fontWeight: "bold" }}>Chọn số lượng</div>
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-around",
-                            margin: "16px 0",
-                          }}
-                        >
-                          <span>
-                            Người lớn {type === "entertainment" && item.price}
+
+                      <div className="quantity-row">
+                        <span className="quantity-label">
+                          Trẻ em {type === "entertainment" && item.price}
+                        </span>
+                        <div className="quantity-controls">
+                          <span
+                            className="payment-enter-btn"
+                            onClick={handleMinus}
+                          >
+                            <FontAwesomeIcon icon={faMinus} />
                           </span>
-                          <div>
-                            <span className="payment-enter-btn">
-                              <FontAwesomeIcon
-                                icon={faMinus}
-                                onClick={handleDecrease}
-                              />
-                            </span>
-                            <span className="payment-enter-btn">
-                              {countAdult}
-                            </span>
-                            <span className="payment-enter-btn">
-                              <FontAwesomeIcon
-                                icon={faPlus}
-                                onClick={handleIncrease}
-                              />
-                            </span>
-                          </div>
-                        </div>
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-around",
-                          }}
-                        >
-                          <span>
-                            Trẻ em {type === "entertainment" && item.price}
+                          <span className="payment-enter-btn">
+                            {countChild}
                           </span>
-                          <div>
-                            <span className="payment-enter-btn">
-                              <FontAwesomeIcon
-                                icon={faMinus}
-                                onClick={handleMinus}
-                              />
-                            </span>
-                            <span className="payment-enter-btn">
-                              {countChild}
-                            </span>
-                            <span className="payment-enter-btn">
-                              <FontAwesomeIcon
-                                icon={faPlus}
-                                onClick={handlePlus}
-                              />
-                            </span>
-                          </div>
+                          <span
+                            className="payment-enter-btn"
+                            onClick={handlePlus}
+                          >
+                            <FontAwesomeIcon icon={faPlus} />
+                          </span>
                         </div>
                       </div>
-                      {type === "restaurant" && (
-                        <>
-                          <div>
-                            <div
-                              style={{
-                                fontWeight: "bold",
-                                marginBottom: "16px",
-                              }}
-                            >
-                              Chọn thời gian
-                            </div>
-                            <TimePicker
-                              value={dayjs(startTime, formatTime)}
-                              format={formatTime}
-                            />
-                          </div>
-                        </>
-                      )}
-                      <div style={{ width: "20%" }}>
-                        {type === "entertainment" && (
-                          <>
-                            Tổng tiền:
+                    </div>
+
+                    {type === "restaurant" && (
+                      <div className="time-selection">
+                        <div className="section-title">Chọn thời gian</div>
+                        <TimePicker
+                          value={dayjs(startTime, formatTime)}
+                          format={formatTime}
+                        />
+                      </div>
+                    )}
+
+                    {type === "entertainment" && (
+                      <div className="total-section">
+                        <div className="total-price">
+                          <div className="total-label">Tổng tiền:</div>
+                          <div className="total-amount">
                             {formatCurrency(
                               Math.round(
                                 (countAdult + countChild) *
                                   parsePrice(item.price)
                               )
                             )}
-                          </>
-                        )}
+                          </div>
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
-                  <Button
-                    onClick={next}
-                    type="primary"
-                    className="button"
-                    style={{ float: "right" }}
-                  >
+                </div>
+
+                <div className="booking-actions">
+                  <Button onClick={next} type="primary" className="button">
                     Tiếp tục
                   </Button>
                 </div>
               </div>
-            </>
+            </div>
           )}
           {current === 1 && (
             <>

@@ -54,7 +54,7 @@ const PersonalInfo = () => {
     if (user.ava) {
       setFileList([
         {
-          uid: "-1", // Đặt UID tùy ý
+          uid: "-1",
           name: "avatar.png",
           status: "done",
           url: `http://localhost:8000/uploads/${user.ava}`,
