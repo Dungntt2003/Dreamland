@@ -207,7 +207,7 @@
   color: #ffff00;
   font-size: 12px;
 }
-@media (max-width: 768px) {
+@media (max-width: 850px) {
   .travel-grid {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: repeat(3, 200px);

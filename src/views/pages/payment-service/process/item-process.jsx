@@ -387,35 +387,17 @@ const ItemPaymentProcess = ({ type }) => {
             </div>
           )}
           {current === 1 && (
-            <>
-              <div>
-                <div
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <div
-                    style={{ width: "60%", height: "100%", overflowY: "auto" }}
-                  >
-                    <div
-                      style={{
-                        fontSize: "30px",
-                        color: "var(--primary-color)",
-                      }}
-                    >
-                      Điền thông tin
-                    </div>
+            <div className="step2-container">
+              <div className="step2-main-wrapper">
+                <div className="step2-content">
+                  <div className="step2-form-section">
+                    <div className="step2-title">Điền thông tin</div>
+
                     <div>
-                      <div className="payment-info-title">
+                      <div className="step2-section-title">
                         Thông tin đơn hàng
                       </div>
-                      <div
-                        style={{
-                          margin: "16px 0",
-                          display: "flex",
-                          padding: "8px",
-                          border: "1px solid #ccc",
-                          borderRadius: "10px",
-                        }}
-                      >
+                      <div className="step2-order-card">
                         <img
                           src={
                             item.images[0]
@@ -423,29 +405,29 @@ const ItemPaymentProcess = ({ type }) => {
                               : RestaurantDefaultImg
                           }
                           alt="anh enter"
-                          style={{
-                            width: "200px",
-                            borderRadius: "10px",
-                            margin: "0 16px",
-                          }}
+                          className="step2-order-image"
                         />
-                        <div>
-                          <div>{item.name}</div>
+                        <div className="step2-order-details">
+                          <div className="step2-order-name">{item.name}</div>
                           {type === "restaurant" && (
-                            <div>SDT: {item.phone}</div>
+                            <div className="step2-order-info">
+                              SDT: {item.phone}
+                            </div>
                           )}
                           {type === "entertainment" && (
-                            <div>Giá: {item.price}</div>
+                            <div className="step2-order-info">
+                              Giá: {item.price}
+                            </div>
                           )}
                         </div>
                       </div>
                     </div>
 
                     <div>
-                      <div className="payment-info-title">
+                      <div className="step2-section-title">
                         Thông tin liên lạc
                       </div>
-                      <p style={{ fontSize: "14px", color: "#333" }}>
+                      <p className="step2-contact-description">
                         Chúng tôi sẽ thông báo mọi thay đổi về đơn hàng cho bạn
                       </p>
                       <div>
@@ -458,10 +440,7 @@ const ItemPaymentProcess = ({ type }) => {
                           wrapperCol={{
                             span: 16,
                           }}
-                          style={{
-                            minWidth: 600,
-                            margin: "16px 0",
-                          }}
+                          className="step2-form"
                           initialValues={{
                             name: user.name,
                             email: user.email,
@@ -521,20 +500,22 @@ const ItemPaymentProcess = ({ type }) => {
                               <TextArea
                                 rows={4}
                                 placeholder="Yêu cầu đặc biệt (dị ứng, vị trí bàn)"
+                                className="step2-textarea"
                               />
                             </Form.Item>
                           )}
                         </Form>
                       </div>
                     </div>
-                    <div>
-                      <div>
+
+                    <div className="step2-checkbox-group">
+                      <div className="step2-checkbox">
                         <Checkbox>
                           Tôi muốn là người đầu tiên nhận các ưu đãi độc quyền
                           qua email và tin nhắn
                         </Checkbox>
                       </div>
-                      <p>
+                      <p className="step2-checkbox">
                         <Checkbox
                           onChange={(e) => setIsChecked(e.target.checked)}
                         >
@@ -542,95 +523,50 @@ const ItemPaymentProcess = ({ type }) => {
                           Chính sách quyền riêng tư của SmartTrip
                         </Checkbox>
                       </p>
+
                       {type === "restaurant" && (
-                        <p
-                          style={{
-                            padding: "4px 8px",
-                            background: "#fcf3de",
-                            border: "1px solid red",
-                            borderRadius: "10px",
-                            width: "fit-content",
-                            fontSize: "14px",
-                          }}
-                        >
+                        <p className="step2-warning-box">
                           Bạn có thể đặt bàn nhanh chóng hơn khi gọi đặt bàn{" "}
-                          <span style={{ fontWeight: "bold" }}>
+                          <span className="step2-phone-highlight">
                             {item.phone}
                           </span>
                         </p>
                       )}
-                      <p
-                        style={{
-                          padding: "4px 8px",
-                          background: "#fcf3de",
-                          border: "1px solid red",
-                          borderRadius: "10px",
-                          width: "fit-content",
-                          fontSize: "14px",
-                        }}
-                      >
+
+                      <p className="step2-warning-box">
                         Vui lòng điền thông tin chính xác. Một khi đã gửi thông
                         tin, bạn sẽ không thay đổi được.
                       </p>
                     </div>
                   </div>
-                  <div
-                    style={{
-                      width: "40%",
-                      padding: "54px",
-                      position: "sticky",
-                      height: "fit-content",
-                      top: "600",
-                    }}
-                  >
-                    <div style={{ fontWeight: "bold", fontSize: "20px" }}>
-                      {item.name}
-                    </div>
-                    <hr />
-                    <div style={{ color: "#7e7c79", fontSize: "14px" }}>
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <div>Ngày:</div>
-                        <div>{date}</div>
+
+                  <div className="step2-summary-section">
+                    <div className="step2-summary-title">{item.name}</div>
+                    <hr className="step2-divider" />
+                    <div className="step2-summary-details">
+                      <div className="step2-summary-row">
+                        <div className="step2-summary-label">Ngày:</div>
+                        <div className="step2-summary-value">{date}</div>
                       </div>
                       {type === "restaurant" && (
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <div>Giờ:</div>
-                          <div>{startTime}</div>
+                        <div className="step2-summary-row">
+                          <div className="step2-summary-label">Giờ:</div>
+                          <div className="step2-summary-value">{startTime}</div>
                         </div>
                       )}
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <div>Đơn vị:</div>
-                        <div>
+                      <div className="step2-summary-row">
+                        <div className="step2-summary-label">Đơn vị:</div>
+                        <div className="step2-summary-value">
                           Người lớn * {countAdult} <br />
                           Trẻ em * {countChild}
                         </div>
                       </div>
                     </div>
-                    <hr />
+                    <hr className="step2-divider" />
                     {type === "entertainment" && (
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <div>Tổng cộng: </div>
-                        <div style={{ color: "red" }}>
+                      <div className="step2-total-row">
+                        <div className="step2-total-label">Tổng cộng: </div>
+                        <div className="step2-total-amount">
                           {formatCurrency(
                             Math.round(
                               (countAdult + countChild) * parsePrice(item.price)
@@ -641,23 +577,26 @@ const ItemPaymentProcess = ({ type }) => {
                     )}
                   </div>
                 </div>
-                <div
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <Button type="primary" onClick={prev} className="button">
-                    Trở lại
-                  </Button>
-                  <Button
-                    type="primary"
-                    onClick={handleGetDataForm}
-                    className="button"
-                    disabled={!isChecked}
-                  >
-                    Tiếp
-                  </Button>
+
+                <div className="step2-button-group">
+                  <div className="booking-actions">
+                    <Button type="primary" onClick={prev} className="button">
+                      Trở lại
+                    </Button>
+                  </div>
+                  <div className="booking-actions">
+                    <Button
+                      type="primary"
+                      onClick={handleGetDataForm}
+                      className="step2-button step2-next-button"
+                      disabled={!isChecked}
+                    >
+                      Tiếp
+                    </Button>
+                  </div>
                 </div>
               </div>
-            </>
+            </div>
           )}
           {current === 2 && (
             <>
@@ -734,22 +673,22 @@ const ItemPaymentProcess = ({ type }) => {
                     )}
                   </div>
                   <div className="payment-buttons-container">
-                    <Button
-                      type="primary"
-                      onClick={prev}
-                      className="button secondary"
-                    >
-                      Trở lại
-                    </Button>
-                    <Button
-                      type="primary"
-                      onClick={handlePay}
-                      className="button primary"
-                      disabled={!isChecked}
-                    >
-                      {type === "entertainment" && "Thanh toán"}
-                      {type === "restaurant" && "Đặt bàn"}
-                    </Button>
+                    <div className="booking-actions">
+                      <Button type="primary" onClick={prev} className="button">
+                        Trở lại
+                      </Button>
+                    </div>
+                    <div className="booking-actions">
+                      <Button
+                        type="primary"
+                        onClick={handlePay}
+                        className="button"
+                        disabled={!isChecked}
+                      >
+                        {type === "entertainment" && "Thanh toán"}
+                        {type === "restaurant" && "Đặt bàn"}
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
