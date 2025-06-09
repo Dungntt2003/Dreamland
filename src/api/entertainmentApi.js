@@ -1,13 +1,13 @@
-import axiosClient from "./axiosClient";
+import axiosGeneral from "./axiosGeneral";
 
 const entertainmentApi = {
   getListEntertaiments: () => {
     const url = "/entertainments";
-    return axiosClient.get(url);
+    return axiosGeneral.get(url);
   },
   getEntertainmentDetail: (id) => {
     const url = `/entertainments/${id}`;
-    return axiosClient.get(url);
+    return axiosGeneral.get(url);
   },
 };
 

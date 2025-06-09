@@ -1,13 +1,13 @@
-import axiosClient from "./axiosClient";
+import axiosGeneral from "./axiosGeneral";
 
 const hotelApi = {
   getListHotels: () => {
     const url = "/hotels";
-    return axiosClient.get(url);
+    return axiosGeneral.get(url);
   },
   getDetailHotel: (id) => {
     const url = `/hotels/${id}`;
-    return axiosClient.get(url);
+    return axiosGeneral.get(url);
   },
 };
 

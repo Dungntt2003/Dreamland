@@ -46,7 +46,7 @@ const Header = () => {
       key: "4",
       label: (
         <Link
-          to={`/personal-info/${id}`}
+          to={`/login`}
           className="link"
           style={{ color: "red" }}
           onClick={handleLogout}
@@ -77,10 +77,6 @@ const Header = () => {
         </Link>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
-          {/* <Navbar.Text className="set-margin white-color">
-            <FontAwesomeIcon icon={faPhone} style={{ marginRight: "4px" }} />
-            {t("hotline")}: 09352192002
-          </Navbar.Text> */}
           <Select
             defaultValue="vi"
             className="button-register set-margin"
@@ -144,45 +140,35 @@ const Header = () => {
           )}
         </Navbar.Collapse>
       </Navbar>
-      {role === "user" ? (
-        <>
-          <div className="subHeader-container">
-            <div className="subHeader-item">
-              <Link className="link" to={"/repository"}>
-                Lộ trình
-              </Link>
-            </div>
-            <div className="subHeader-item">
-              <Link className="link" to={"/sight"}>
-                Địa điểm tham quan
-              </Link>
-            </div>
-            <div className="subHeader-item">
-              <Link className="link" to={"/entertainment"}>
-                Địa điểm vui chơi
-              </Link>
-            </div>
-            <div className="subHeader-item">
-              <Link className="link" to={"/restaurant"}>
-                Địa điểm ẩm thực
-              </Link>
-            </div>
-            <div className="subHeader-item">
-              <Link className="link" to="/hotel">
-                Địa điểm nghỉ dưỡng
-              </Link>
-            </div>
-            {/* <div className="subHeader-item">
-              <Link className="link">Đặc sản</Link>
-            </div>
-            <div className="subHeader-item">
-              <Link className="link">Giới thiệu</Link>
-            </div> */}
+      <div className="subHeader-container">
+        {role === "user" && (
+          <div className="subHeader-item">
+            <Link className="link" to={"/repository"}>
+              Lộ trình
+            </Link>
           </div>
-        </>
-      ) : (
-        <></>
-      )}
+        )}
+        <div className="subHeader-item">
+          <Link className="link" to={"/sight"}>
+            Địa điểm tham quan
+          </Link>
+        </div>
+        <div className="subHeader-item">
+          <Link className="link" to={"/entertainment"}>
+            Địa điểm vui chơi
+          </Link>
+        </div>
+        <div className="subHeader-item">
+          <Link className="link" to={"/restaurant"}>
+            Địa điểm ẩm thực
+          </Link>
+        </div>
+        <div className="subHeader-item">
+          <Link className="link" to="/hotel">
+            Địa điểm nghỉ dưỡng
+          </Link>
+        </div>
+      </div>
     </div>
   );
 };

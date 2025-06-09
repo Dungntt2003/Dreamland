@@ -1,12 +1,10 @@
-import { Route, Routes } from "react-router-dom";
+import { useAuth } from "context/authContext";
+import { Route, Routes, Navigate, useLocation } from "react-router-dom";
 import Register from "views/pages/register/register";
 import Login from "views/pages/login/login";
 import MainLayout from "components/layout/main-layout";
 import Homepage from "views/pages/homepage/homepage";
-import ProtectedRoute from "./protectedRoute";
 import NotFound from "views/pages/404/notFound";
-import AdminPage from "views/pages/admin-page/adminPage";
-import PrivateRoute from "./privateRoute";
 import LandingPage from "views/pages/landing-page/landingPage";
 import PersonalInfo from "views/pages/personal-info/personalInfo";
 import CreateTrip from "views/pages/trip/create-trip/createTrip";
@@ -36,46 +34,49 @@ import HotelPaymentProcess from "views/pages/payment-service/process/hotel-proce
 import PaymentResultRestaurant from "views/pages/result/order-restaurant";
 import PaymentInfo from "views/pages/payment/payment-result-service/payment-info";
 import RepoHidden from "views/pages/repository/repo-list/repo-hidden";
+
+const PrivateRoute = ({ children }) => {
+  const { isAuthenticated } = useAuth();
+  const location = useLocation();
+
+  if (!isAuthenticated) {
+    alert("Bạn cần đăng nhập để truy cập trang này");
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  return children;
+};
+
+const PublicRoute = ({ children }) => {
+  const { isAuthenticated } = useAuth();
+  if (isAuthenticated) {
+    return <Navigate to="/homepage" replace />;
+  }
+  return children;
+};
+
 const AllRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<LandingPage />} />
       <Route
         path="/register"
         element={
-          <PrivateRoute>
+          <PublicRoute>
             <MainLayout component={<Register />} />
-          </PrivateRoute>
+          </PublicRoute>
         }
       />
       <Route
         path="/login"
         element={
-          <PrivateRoute>
+          <PublicRoute>
             <MainLayout component={<Login />} />
-          </PrivateRoute>
+          </PublicRoute>
         }
       />
-      <Route path="/notFound" element={<NotFound />} />
       <Route
-        path="/personal-info/:id"
-        element={<MainLayout component={<PersonalInfo />} />}
-      />
-      <Route
-        path="/create-trip-step1/:id"
-        element={<MainLayout component={<Step1 />} />}
-      />
-      <Route
-        path="/create-trip"
-        element={<MainLayout component={<CreateTrip />} />}
-      />
-      <Route
-        path="/schedule/:id"
-        element={<MainLayout component={<DraggableCalendar />} />}
-      />
-      <Route
-        path="/schedule-detail/:id"
-        element={<MainLayout component={<ScheduleDetail />} />}
+        path="/homepage"
+        element={<MainLayout component={<Homepage />} />}
       />
       <Route
         path="/sight-seeing-detail/:id"
@@ -103,76 +104,171 @@ const AllRoutes = () => {
         element={<MainLayout component={<RestaurantList />} />}
       />
       <Route path="/hotel" element={<MainLayout component={<HotelList />} />} />
+
+      <Route
+        path="/personal-info/:id"
+        element={
+          <PrivateRoute>
+            <MainLayout component={<PersonalInfo />} />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/create-trip-step1/:id"
+        element={
+          <PrivateRoute>
+            <MainLayout component={<Step1 />} />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/create-trip"
+        element={
+          <PrivateRoute>
+            <MainLayout component={<CreateTrip />} />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/schedule/:id"
+        element={
+          <PrivateRoute>
+            <MainLayout component={<DraggableCalendar />} />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/schedule-detail/:id"
+        element={
+          <PrivateRoute>
+            <MainLayout component={<ScheduleDetail />} />
+          </PrivateRoute>
+        }
+      />
       <Route
         path="/favorite"
-        element={<MainLayout component={<LikedService />} />}
+        element={
+          <PrivateRoute>
+            <MainLayout component={<LikedService />} />
+          </PrivateRoute>
+        }
       />
       <Route
         path="/schedule-edit/:id"
-        element={<MainLayout component={<ScheduleEdit />} />}
+        element={
+          <PrivateRoute>
+            <MainLayout component={<ScheduleEdit />} />
+          </PrivateRoute>
+        }
       />
       <Route
         path="/api/v1/payment/vnpay-return"
-        element={<MainLayout component={<PaymentResult />} />}
+        element={
+          <PrivateRoute>
+            <MainLayout component={<PaymentResult />} />
+          </PrivateRoute>
+        }
       />
       <Route
         path="/repository"
-        element={<MainLayout component={<RepoList />} />}
+        element={
+          <PrivateRoute>
+            <MainLayout component={<RepoList />} />
+          </PrivateRoute>
+        }
       />
       <Route
         path="/repository/hidden"
-        element={<MainLayout component={<RepoHidden />} />}
+        element={
+          <PrivateRoute>
+            <MainLayout component={<RepoHidden />} />
+          </PrivateRoute>
+        }
       />
       <Route
         path="/repo-map/:id"
-        element={<MainLayout component={<RepoMap />} />}
+        element={
+          <PrivateRoute>
+            <MainLayout component={<RepoMap />} />
+          </PrivateRoute>
+        }
       />
       <Route
         path="/vnpay"
-        element={<MainLayout component={<VNPayPayment />} />}
+        element={
+          <PrivateRoute>
+            <MainLayout component={<VNPayPayment />} />
+          </PrivateRoute>
+        }
       />
       <Route
         path="/payment-info"
-        element={<MainLayout component={<PaymentInfo />} />}
+        element={
+          <PrivateRoute>
+            <MainLayout component={<PaymentInfo />} />
+          </PrivateRoute>
+        }
       />
       <Route
         path="/payment-enter"
-        element={<MainLayout component={<EnterProcess />} />}
+        element={
+          <PrivateRoute>
+            <MainLayout component={<EnterProcess />} />
+          </PrivateRoute>
+        }
       />
       <Route
         path="/payment-restaurant"
-        element={<MainLayout component={<RestaurantProcess />} />}
+        element={
+          <PrivateRoute>
+            <MainLayout component={<RestaurantProcess />} />
+          </PrivateRoute>
+        }
       />
       <Route
         path="/order-restaurant"
-        element={<MainLayout component={<PaymentResultRestaurant />} />}
+        element={
+          <PrivateRoute>
+            <MainLayout component={<PaymentResultRestaurant />} />
+          </PrivateRoute>
+        }
       />
       <Route
         path="/payment-hotel"
-        element={<MainLayout component={<HotelPaymentProcess />} />}
+        element={
+          <PrivateRoute>
+            <MainLayout component={<HotelPaymentProcess />} />
+          </PrivateRoute>
+        }
       />
       <Route
         path="/payment-service/:id"
-        element={<MainLayout component={<PaymentService />} />}
+        element={
+          <PrivateRoute>
+            <MainLayout component={<PaymentService />} />
+          </PrivateRoute>
+        }
       />
       <Route
         path="/voice-text"
-        element={<MainLayout component={<VoiceText />} />}
+        element={
+          <PrivateRoute>
+            <MainLayout component={<VoiceText />} />
+          </PrivateRoute>
+        }
       />
-      <Route path="/chat-ai" element={<MainLayout component={<AIGen />} />} />
-      <Route element={<ProtectedRoute requiredRole="user" />}>
-        <Route
-          path="/homepage"
-          element={<MainLayout component={<Homepage />} />}
-        />
-      </Route>
+      <Route
+        path="/chat-ai"
+        element={
+          <PrivateRoute>
+            <MainLayout component={<AIGen />} />
+          </PrivateRoute>
+        }
+      />
 
-      <Route element={<ProtectedRoute requiredRole="restaurant_admin" />}>
-        <Route
-          path="/admin-page"
-          element={<MainLayout component={<AdminPage />} />}
-        />
-      </Route>
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/notFound" element={<NotFound />} />
+      <Route path="*" element={<Navigate to="/notFound" replace />} />
     </Routes>
   );
 };
