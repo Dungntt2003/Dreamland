@@ -24,9 +24,7 @@ const LandingPage = () => {
           style={{ width: "50%", display: "flex", alignItems: "center" }}
         >
           <div className="landing-wrap">
-            <h2 className="landing-header">
-              Chào mừng đến với Dalat Dreamland
-            </h2>
+            <h2 className="landing-header">Chào mừng đến với Smart Trip</h2>
             <div className="landing-des">
               <div className="landing-item">
                 <FontAwesomeIcon icon={faCheck} className="landing-icon" />
@@ -46,13 +44,11 @@ const LandingPage = () => {
               </div>
               <div className="landing-item">
                 <FontAwesomeIcon icon={faCheck} className="landing-icon" />
-                Viết blog lưu giữ kỉ niệm đẹp khi đi du lịch tại Đà Lạt
+                Chia sẻ ngay cho bạn bè, người thân
               </div>
             </div>
             <Link to="/register">
-              <Button className="button landing-btn">
-                BẮT ĐẦU KHÁM PHÁ NGAY
-              </Button>
+              <Button className="button">BẮT ĐẦU KHÁM PHÁ NGAY</Button>
             </Link>
           </div>
         </div>
