@@ -12,7 +12,6 @@ const ListDisplay = ({ listServices, CardComponent, link }) => {
   const [filteredData, setFilteredData] = useState([]);
   const [provinces, setProvinces] = useState([]);
   const [search, setSearch] = useState(false);
-  const [star, setStar] = useState(0);
   const [checked, setChecked] = useState(false);
   const [filter, setFilter] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState("All");

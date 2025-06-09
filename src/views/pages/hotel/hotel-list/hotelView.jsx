@@ -2,7 +2,7 @@ import "../../sightseeing/sight-view/sightView";
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
-import { Card, Pagination as AntPagination, Input, FloatButton } from "antd";
+import { Input, FloatButton } from "antd";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -10,7 +10,6 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import hotelApi from "api/hotelApi";
 import demoRepoApi from "api/demoRepoApi";
-import { ToastContainer, toast } from "react-toastify";
 import HotelItem from "components/repo-item/hotelItem";
 import { checkMatchService } from "components/fun-api/like";
 import likeApi from "api/likeApi";
@@ -256,7 +255,6 @@ const HotelView = ({ data, count, handleUpdateCount, destinationArr }) => {
           }}
         />
       </Link>
-      <ToastContainer />
     </div>
   );
 };

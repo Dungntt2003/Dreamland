@@ -7,13 +7,12 @@ import ExportToDOCX from "utils/exportToDOCX";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPen,
-  faPrint,
   faMap,
   faBook,
   faMoneyBill,
   faTimeline,
 } from "@fortawesome/free-solid-svg-icons";
-import { toast, ToastContainer } from "react-toastify";
+import toast, { Toaster } from "react-hot-toast";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -186,16 +185,7 @@ const ScheduleDetail = () => {
       }
     } else {
       navigator.clipboard.writeText(link).then(() => {
-        toast.info("Link đã được copy vào clipboard", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast("Link đã được copy vào clipboard");
       });
     }
   };
@@ -309,7 +299,7 @@ const ScheduleDetail = () => {
           icon={<FontAwesomeIcon icon={faMoneyBill} />}
         />
       </FloatButton.Group>
-      <ToastContainer />
+      <Toaster />
       <Modal
         title="Cẩm nang cho lộ trình"
         width="70%"

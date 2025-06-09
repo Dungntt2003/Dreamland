@@ -1,6 +1,6 @@
 import "./schedule.scss";
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Tour, FloatButton } from "antd";
+import { Button, Tour } from "antd";
 import { useParams, useNavigate } from "react-router-dom";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -8,7 +8,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin, { Draggable } from "@fullcalendar/interaction";
 import demoRepoApi from "api/demoRepoApi";
 import repoApi from "api/repoApi";
-import { ToastContainer, toast } from "react-toastify";
+import toast, { Toaster } from "react-hot-toast";
 import entertainmentApi from "api/entertainmentApi";
 import sightApi from "api/sightApi";
 import restaurantApi from "api/restaurantApi";
@@ -223,16 +223,7 @@ const DraggableCalendar = () => {
       data: eventData,
     };
     localStorage.setItem("schedule", JSON.stringify(jsonData));
-    toast.success("Lưu lộ trình thành công", {
-      position: "top-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
+    toast.success("Lưu lộ trình tạm thời");
   };
 
   const handleFinish = () => {
@@ -287,31 +278,13 @@ const DraggableCalendar = () => {
         });
 
         console.log(response);
-        toast.success("Tạo lộ trình thành công", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.success("Lưu lộ trình thành công");
         setTimeout(() => {
           navigate(`/schedule-detail/${id}`);
         }, 2000);
       } catch (error) {
         console.log(error);
-        toast.error(error.response.data.message, {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.error(error.response.data.message);
       }
     };
     updateRepoWithPlan();
@@ -575,7 +548,7 @@ const DraggableCalendar = () => {
           />
         </div>
       </div>
-      <ToastContainer />
+      <Toaster />
       <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
     </div>
   );

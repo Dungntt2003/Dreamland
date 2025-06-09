@@ -15,7 +15,7 @@ import publicApi from "api/publicApi";
 import { PlusOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import loginApi from "api/loginApi";
-import { ToastContainer, toast } from "react-toastify";
+import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import RegisterIng from "assets/image/register-img.jpg";
 
@@ -69,31 +69,13 @@ const Register = () => {
     const register = async () => {
       try {
         const response = await loginApi.register(formData);
-        toast.success(response.data.message, {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.success(response.data.message);
         setTimeout(() => {
           navigate("/login");
         }, 2000);
       } catch (error) {
         console.log(error);
-        toast.error(error.response.data.error, {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.error(error.response.data.error);
       }
     };
     register();
@@ -336,18 +318,6 @@ const Register = () => {
               </Form.Item>
             </div>
 
-            {/* <Form.Item
-              name="business_register"
-              valuePropName="checked"
-              onChange={handleCheck}
-              wrapperCol={{
-                offset: 8,
-                span: 16,
-              }}
-            >
-              <Checkbox>Đăng ký kinh doanh</Checkbox>
-            </Form.Item> */}
-
             {check === true && (
               <>
                 <Form.Item
@@ -486,7 +456,7 @@ const Register = () => {
             </Form.Item>
           </Form>
         </div>
-        <ToastContainer />
+        <Toaster />
       </div>
       <div className="register-img">
         <img

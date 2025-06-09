@@ -2,11 +2,11 @@ import "./header.scss";
 import Navbar from "react-bootstrap/Navbar";
 import Logo from "assets/image/logo_v2.png";
 import { Button, Select, Dropdown, Space } from "antd";
-import { DownOutlined, SmileOutlined } from "@ant-design/icons";
+import { DownOutlined } from "@ant-design/icons";
 import VN from "assets/image/vietnamese.png";
 import EN from "assets/image/english.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPhone, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "context/authContext";
@@ -112,7 +112,7 @@ const Header = () => {
                   items,
                 }}
               >
-                <a
+                <div
                   onClick={(e) => e.preventDefault()}
                   className="link"
                   style={{ margin: "0 16px", color: "var(--white-color)" }}
@@ -121,7 +121,7 @@ const Header = () => {
                     Xin chào <FontAwesomeIcon icon={faUser} />
                     <DownOutlined />
                   </Space>
-                </a>
+                </div>
               </Dropdown>
             </>
           ) : (

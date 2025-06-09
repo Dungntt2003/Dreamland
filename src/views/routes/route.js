@@ -36,8 +36,23 @@ import PaymentInfo from "views/pages/payment/payment-result-service/payment-info
 import RepoHidden from "views/pages/repository/repo-list/repo-hidden";
 
 const PrivateRoute = ({ children }) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
   const location = useLocation();
+
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <div>Đang kiểm tra xác thực...</div>
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     alert("Bạn cần đăng nhập để truy cập trang này");

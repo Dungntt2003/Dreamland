@@ -2,7 +2,7 @@ import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input, Flex } from "antd";
 import { Link } from "react-router-dom";
 import loginApi from "api/loginApi";
-import { ToastContainer, toast } from "react-toastify";
+import toast, { Toaster } from "react-hot-toast";
 import { useAuth } from "context/authContext";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -11,7 +11,7 @@ import CoverImage from "assets/image/cover-img.jpeg";
 const Login = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { login, role } = useAuth();
+  const { login } = useAuth();
 
   const onFinish = (values) => {
     const params = {
@@ -23,30 +23,13 @@ const Login = () => {
         const response = await loginApi.login(params);
         localStorage.setItem("token", response.data.token);
         login(response.data.token);
-        toast.success(response.data.message, {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        if (role === "user") navigate("/homepage");
-        else if (role === "restaurant_admin") navigate("/admin-page");
+        toast.success(response.data.message);
+        setTimeout(() => {
+          navigate("/homepage");
+        }, 2000);
       } catch (error) {
         console.log(error);
-        toast.error(error.response.data.error, {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.error(error.response.data.error);
       }
     };
     Login();
@@ -137,7 +120,7 @@ const Login = () => {
               </Form.Item>
             </Form>
           </div>
-          <ToastContainer />
+          <Toaster />
         </div>
       </div>
     </div>

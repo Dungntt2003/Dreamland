@@ -55,12 +55,6 @@ export default function VietnameseTextReader({ text }) {
           </Button>
         )}
       </div>
-
-      {/* {errorMessage && (
-        <div className="mt-4 p-3 bg-red-100 text-red-700 rounded-lg">
-          {errorMessage}
-        </div>
-      )} */}
     </div>
   );
 }

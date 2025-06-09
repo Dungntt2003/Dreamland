@@ -2,7 +2,10 @@ import { Card, Rate, Button } from "antd";
 import Meta from "antd/es/card/Meta";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
+import {
+  faLocationDot,
+  faRulerHorizontal,
+} from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import Heart from "react-heart";
 import { handleLike } from "components/fun-api/like";
@@ -15,6 +18,7 @@ const RestaurantItem = ({
   handleAddRepo,
   active,
   handleRemoveService,
+  isNear = false,
 }) => {
   const { id } = useAuth();
   const [like, setLike] = useState(active);
@@ -73,6 +77,17 @@ const RestaurantItem = ({
                     {item.address}
                   </span>
                 </div>
+                {isNear === true && (
+                  <div className="card-repo-info-item">
+                    <FontAwesomeIcon
+                      icon={faRulerHorizontal}
+                      className="card-repo-info-icon"
+                    />
+                    <span className="card-repo-info-text">
+                      Khoảng cách: {item.distance} km
+                    </span>
+                  </div>
+                )}
                 <div className="card-repo-info-item">
                   <Rate disabled defaultValue={item.rate} />
                 </div>

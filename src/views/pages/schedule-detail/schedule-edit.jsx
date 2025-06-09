@@ -1,13 +1,13 @@
 import "./schedule-edit.scss";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Button, Form, Input, DatePicker, InputNumber, Select } from "antd";
+import { Button, Form, Input, DatePicker, InputNumber } from "antd";
 import dayjs from "dayjs";
 import { useForm } from "antd/es/form/Form";
 import repoApi from "api/repoApi";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
-import { ToastContainer, toast } from "react-toastify";
+import toast, { Toaster } from "react-hot-toast";
 import EditRepo from "assets/image/edit-repo.png";
 
 dayjs.extend(isSameOrAfter);
@@ -81,31 +81,13 @@ const ScheduleEdit = () => {
         const response = await repoApi.updatePlan(id, params);
 
         console.log(response);
-        toast.success("Cập nhật mô tả thành công", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.success("Cập nhật mô tả thành công");
         setTimeout(() => {
           navigate(`/schedule/${id}`);
         }, 2000);
       } catch (error) {
         console.log(error);
-        toast.error(error.response.data.message, {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.error(error.response.data.message);
       }
     };
     updateRepoWithPlan();
@@ -242,7 +224,7 @@ const ScheduleEdit = () => {
           </div>
         </div>
       </div>
-      <ToastContainer />
+      <Toaster />
     </div>
   );
 };

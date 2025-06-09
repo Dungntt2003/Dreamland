@@ -20,21 +20,18 @@ import {
 import { CaretRightOutlined } from "@ant-design/icons";
 import {
   Collapse,
-  Form,
-  Input,
   Button,
   Pagination as AntPagination,
   Card,
   Modal,
   Rate,
 } from "antd";
-import GoogleMapComponent from "components/google-maps/googleMaps";
 import { useParams, Link } from "react-router-dom";
 import restaurantApi from "api/restaurantApi";
 import formatCurrency from "utils/formatCurrency";
 import MapboxMapWithAddress from "components/google-maps/mapbox";
 import Markdown from "react-markdown";
-const { TextArea } = Input;
+
 const { Meta } = Card;
 
 const RestaurantDetail = () => {
@@ -69,26 +66,7 @@ const RestaurantDetail = () => {
   const handleClickImg = (index, item) => {
     setMain(item);
   };
-  const panelStyle = {
-    marginBottom: 16,
-    background: "var(--background-color)",
-    borderRadius: "10px",
-    border: "none",
-    color: "var(--text-color)",
-  };
 
-  const handleRating = (rate) => {
-    setRating(rate);
-  };
-  const onFinish = (values) => {
-    console.log({
-      rating: rating,
-      comment: values.comment,
-    });
-  };
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
-  };
   const cardData = menu.map((dish) => (
     <Card
       hoverable

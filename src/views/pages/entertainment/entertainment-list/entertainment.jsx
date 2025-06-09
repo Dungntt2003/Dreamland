@@ -10,7 +10,6 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import entertainmentApi from "api/entertainmentApi";
 import demoRepoApi from "api/demoRepoApi";
-import { ToastContainer, toast } from "react-toastify";
 import EntertainmentItem from "components/repo-item/entertainmentItem";
 import { checkMatchService } from "components/fun-api/like";
 import likeApi from "api/likeApi";
@@ -263,7 +262,6 @@ const Entertainment = ({ data, count, handleUpdateCount, destinationArr }) => {
           }}
         />
       </Link>
-      <ToastContainer />
     </div>
   );
 };

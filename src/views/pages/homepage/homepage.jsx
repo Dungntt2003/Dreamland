@@ -1,5 +1,5 @@
 import "./homepage.scss";
-import { Carousel, Button, Select } from "antd";
+import { Button, Select } from "antd";
 import { useEffect, useState } from "react";
 import Home1 from "assets/image/home1.jpg";
 import Home2 from "assets/image/home2.jpg";
@@ -8,7 +8,7 @@ import Home5 from "assets/image/home5.jpg";
 import Home6 from "assets/image/home6.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import publicApi from "api/publicApi";
 import iconSight from "assets/image/iconSight.jpeg";
 import iconEnter from "assets/image/iconEnter.jpeg";
@@ -53,15 +53,7 @@ const Homepage = () => {
     getSight();
   }, []);
   const dataImg = [Home1, Home2, Home3, Home5, Home6];
-  const itemImg = dataImg.map((item) => {
-    return (
-      <div key={item}>
-        <h3 style={contentStyle}>
-          <img src={item} alt="item" />
-        </h3>
-      </div>
-    );
-  });
+
   const options = provinces.map((item) => {
     return { value: item.name, label: item.name };
   });

@@ -15,7 +15,7 @@ import {
 import { Tooltip } from "react-tooltip";
 import { getAvaFromIndex } from "utils/getRandomAvaRepo";
 import formatDate from "utils/formatDate";
-import { toast, ToastContainer } from "react-toastify";
+import toast, { Toaster } from "react-hot-toast";
 import repoApi from "api/repoApi";
 
 const { Meta } = Card;
@@ -38,16 +38,7 @@ const CardRepo = ({ item, index, loadRepos }) => {
       navigator.clipboard
         .writeText(`http://localhost:3000/schedule-detail/${item.id}`)
         .then(() => {
-          toast.info("Link đã được copy vào clipboard", {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
+          toast("Link đã được copy vào clipboard");
         });
     }
   };
@@ -180,7 +171,7 @@ const CardRepo = ({ item, index, loadRepos }) => {
       <Tooltip id="tooltip-share" />
       <Tooltip id="tooltip-edit" />
       <Tooltip id="tooltip-hidden" />
-      <ToastContainer />
+      <Toaster />
     </div>
   );
 };

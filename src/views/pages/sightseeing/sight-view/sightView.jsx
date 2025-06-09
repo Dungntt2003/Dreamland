@@ -10,7 +10,6 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import sightApi from "api/sightApi";
 import demoRepoApi from "api/demoRepoApi";
-import { ToastContainer, toast } from "react-toastify";
 import SightItem from "components/repo-item/sightItem";
 import { checkMatchService } from "components/fun-api/like";
 import likeApi from "api/likeApi";
@@ -250,7 +249,8 @@ const SightView = ({ data, count, handleUpdateCount, destinationArr }) => {
                     handleAddRepo,
                     checkMatchService,
                     likedServices,
-                    handleRemoveService
+                    handleRemoveService,
+                    true
                   )}
                 />
               </>
@@ -294,7 +294,6 @@ const SightView = ({ data, count, handleUpdateCount, destinationArr }) => {
           }}
         />
       </Link>
-      <ToastContainer />
       <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
     </div>
   );

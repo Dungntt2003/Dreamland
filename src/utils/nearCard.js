@@ -16,7 +16,8 @@ const getNearCard = (
   handleAddRepo,
   checkMatchService,
   likedServices,
-  handleRemoveService
+  handleRemoveService,
+  isNear = false
 ) => {
   return nearServices.map((item) => {
     const Component = componentMap[item.type];
@@ -30,6 +31,7 @@ const getNearCard = (
         handleAddRepo={handleAddRepo}
         active={checkMatchService(likedServices, item.id, item.type)}
         handleRemoveService={handleRemoveService}
+        isNear={isNear}
       />
     );
   });

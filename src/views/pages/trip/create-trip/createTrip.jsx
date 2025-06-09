@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import repoApi from "api/repoApi";
 import { useAuth } from "context/authContext";
-import { ToastContainer, toast } from "react-toastify";
+import toast, { Toaster } from "react-hot-toast";
 import publicApi from "api/publicApi";
 import RepoPrepare from "assets/image/repo-prepare.png";
 const CreateTrip = () => {
@@ -52,30 +52,12 @@ const CreateTrip = () => {
       try {
         const response = await repoApi.createARepo(params);
         console.log(response);
-        toast.success("Chuẩn bị dữ liệu cho tạo lộ trình", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.success("Chuẩn bị dữ liệu cho tạo lộ trình");
         setTimeout(() => {
           navigate(`/create-trip-step1/${response.data.data.id}`);
         }, 2000);
       } catch (error) {
-        toast.error("Đã xảy ra lỗi, vui lòng thử lại", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.error("Đã xảy ra lỗi, vui lòng thử lại");
       }
     };
     addNewRepo();
@@ -244,7 +226,7 @@ const CreateTrip = () => {
           />
         </div>
       </div>
-      <ToastContainer />
+      <Toaster />
     </div>
   );
 };

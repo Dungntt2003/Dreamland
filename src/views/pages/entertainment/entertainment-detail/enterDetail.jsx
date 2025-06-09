@@ -3,7 +3,7 @@ import checkOpen from "utils/checkOpenTime";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect } from "react";
 import Heart from "react-heart";
-import { parseDes, parseList } from "utils/parseDescription";
+import { parseDes } from "utils/parseDescription";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -16,12 +16,10 @@ import {
   faMoneyBill,
 } from "@fortawesome/free-solid-svg-icons";
 import { CaretRightOutlined } from "@ant-design/icons";
-import { Collapse, Form, Input, Button, Rate } from "antd";
-import GoogleMapComponent from "components/google-maps/googleMaps";
+import { Collapse, Input, Rate } from "antd";
 import MapboxMapWithAddress from "components/google-maps/mapbox";
 import { useParams } from "react-router-dom";
 import entertainmentApi from "api/entertainmentApi";
-const { TextArea } = Input;
 const EnterDetail = () => {
   const { id } = useParams();
   const [rating, setRating] = useState(0);
@@ -57,26 +55,6 @@ const EnterDetail = () => {
       childPrice ? childPrice : adultPrice
     }`;
     return result;
-  };
-  const panelStyle = {
-    marginBottom: 16,
-    background: "var(--background-color)",
-    borderRadius: "10px",
-    border: "none",
-    color: "var(--text-color)",
-  };
-
-  const handleRating = (rate) => {
-    setRating(rate);
-  };
-  const onFinish = (values) => {
-    console.log({
-      rating: rating,
-      comment: values.comment,
-    });
-  };
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
   };
 
   return (
