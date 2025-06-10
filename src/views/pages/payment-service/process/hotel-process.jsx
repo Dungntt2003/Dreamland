@@ -257,12 +257,14 @@ const HotelPaymentProcess = ({ type }) => {
       title: "",
       key: "action",
       render: (_, record) => (
-        <Button
-          className="button"
-          onClick={() => handleSelectRoom(record.roomData)}
-        >
-          Chọn
-        </Button>
+        <div className="booking-actions">
+          <Button
+            className="button"
+            onClick={() => handleSelectRoom(record.roomData)}
+          >
+            Chọn
+          </Button>
+        </div>
       ),
     },
   ];
@@ -409,7 +411,13 @@ const HotelPaymentProcess = ({ type }) => {
                                   </>
                                 ),
                                 people: handlePeopleInRoom(rm.description),
-                                price: formatCurrency(rm.price),
+                                price: (
+                                  <span
+                                    style={{ color: "red", fontWeight: "bold" }}
+                                  >
+                                    {formatCurrency(rm.price)}
+                                  </span>
+                                ),
                                 roomData: rm,
                               },
                             ]}
@@ -672,17 +680,20 @@ const HotelPaymentProcess = ({ type }) => {
                 <div
                   style={{ display: "flex", justifyContent: "space-between" }}
                 >
-                  <Button type="primary" onClick={prev} className="button">
-                    Trở lại
-                  </Button>
-                  <Button
-                    type="primary"
-                    onClick={handleGetDataForm}
-                    className="button"
-                    // disabled={!isChecked}
-                  >
-                    Tiếp
-                  </Button>
+                  <div className="booking-actions">
+                    <Button type="primary" onClick={prev} className="button">
+                      Trở lại
+                    </Button>
+                  </div>
+                  <div className="booking-actions">
+                    <Button
+                      type="primary"
+                      onClick={handleGetDataForm}
+                      className="button"
+                    >
+                      Tiếp
+                    </Button>
+                  </div>
                 </div>
               </div>
             </>
@@ -740,20 +751,24 @@ const HotelPaymentProcess = ({ type }) => {
                     </div>
                   </div>
                   <div className="payment-buttons-container">
-                    <Button
-                      type="primary"
-                      onClick={prev}
-                      className="button secondary"
-                    >
-                      Trở lại
-                    </Button>
-                    <Button
-                      type="primary"
-                      onClick={handlePay}
-                      className="button primary"
-                    >
-                      Thanh toán
-                    </Button>
+                    <div className="booking-actions">
+                      <Button
+                        type="primary"
+                        onClick={prev}
+                        className="button secondary"
+                      >
+                        Trở lại
+                      </Button>
+                    </div>
+                    <div className="booking-actions">
+                      <Button
+                        type="primary"
+                        onClick={handlePay}
+                        className="button primary"
+                      >
+                        Thanh toán
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>

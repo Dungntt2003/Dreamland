@@ -146,7 +146,7 @@ const ListDisplay = ({ listServices, CardComponent, link }) => {
             options={[
               {
                 value: "All",
-                label: "Tất cả",
+                label: "Tất cả thành phố",
               },
               ...options,
             ]}
@@ -162,7 +162,7 @@ const ListDisplay = ({ listServices, CardComponent, link }) => {
             options={[
               {
                 value: 0,
-                label: "Tất cả",
+                label: "Mặc định",
               },
               {
                 value: 1,

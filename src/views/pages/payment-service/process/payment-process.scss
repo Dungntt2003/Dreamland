@@ -12,6 +12,518 @@
   --shadow-medium: rgba(168, 213, 186, 0.3);
 }
 
+.hotel-payment-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: linear-gradient(
+    135deg,
+    var(--white) 0%,
+    var(--pastel-green-light) 100%
+  );
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.hotel-payment-bar:hover {
+  background: linear-gradient(
+    135deg,
+    var(--pastel-green-light) 0%,
+    var(--pastel-green-secondary) 100%
+  );
+  border-color: var(--pastel-green-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow-light);
+}
+
+.hotel-payment-bar span {
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.hotel-payment-icon {
+  color: var(--pastel-green-accent);
+  font-size: 18px;
+  min-width: 18px;
+  transition: all 0.3s ease;
+}
+
+.hotel-payment-bar:hover .hotel-payment-icon {
+  color: var(--text-secondary);
+  transform: scale(1.1);
+}
+
+.room-feature-text {
+  color: var(--text-primary);
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 4px;
+  display: inline-block;
+  padding: 2px 8px;
+  background: var(--pastel-green-light);
+  border-radius: 6px;
+  margin-right: 6px;
+  margin-bottom: 6px;
+  border: 1px solid var(--pastel-green-secondary);
+  transition: all 0.2s ease;
+}
+
+.room-feature-text:hover {
+  background: var(--pastel-green-secondary);
+  transform: translateY(-1px);
+}
+
+.hotel-payment-container {
+  background: var(--white);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px var(--shadow-light);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.hotel-payment-header {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: linear-gradient(
+    135deg,
+    var(--white) 0%,
+    var(--pastel-green-light) 100%
+  );
+  border: 2px solid var(--border-color);
+  border-radius: 16px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 16px var(--shadow-light);
+}
+
+.room-card {
+  display: flex;
+  margin: 20px 0;
+  width: 100%;
+  align-items: flex-start;
+  background: var(--white);
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid var(--pastel-green-secondary);
+  box-shadow: 0 4px 12px var(--shadow-light);
+  transition: all 0.3s ease;
+}
+
+.room-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px var(--shadow-medium);
+  border-color: var(--pastel-green-primary);
+}
+
+.room-image {
+  width: 200px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid var(--pastel-green-secondary);
+  transition: all 0.3s ease;
+}
+
+.room-image:hover {
+  border-color: var(--pastel-green-primary);
+  transform: scale(1.02);
+}
+
+.ant-table {
+  background: transparent !important;
+}
+
+.ant-table-thead > tr > th {
+  background: var(--pastel-green-light) !important;
+  border-bottom: 2px solid var(--pastel-green-primary) !important;
+  color: var(--text-primary) !important;
+  font-weight: 600 !important;
+}
+
+.ant-table-tbody > tr > td {
+  border-bottom: 1px solid var(--pastel-green-secondary) !important;
+  color: var(--text-primary) !important;
+}
+
+.ant-table-tbody > tr:hover > td {
+  background: var(--pastel-green-light) !important;
+}
+
+.price-text {
+  color: var(--pastel-green-accent);
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.ant-dropdown-menu {
+  background: var(--white) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 16px var(--shadow-medium) !important;
+}
+
+.ant-dropdown-menu-item {
+  color: var(--text-primary) !important;
+}
+
+.ant-dropdown-menu-item:hover {
+  background: var(--pastel-green-light) !important;
+}
+
+@media (max-width: 768px) {
+  .hotel-payment-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .hotel-payment-bar {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .room-card {
+    flex-direction: column;
+  }
+
+  .room-image {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hotel-payment-container {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.room-card {
+  animation: fadeInUp 0.6s ease-out;
+  animation-delay: 0.2s;
+  animation-fill-mode: both;
+}
+
+.payment-hotel-step2 {
+  background: linear-gradient(
+    135deg,
+    var(--white) 0%,
+    var(--pastel-green-light) 100%
+  );
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 12px 32px var(--shadow-light);
+  margin: 20px auto;
+  max-width: 1400px;
+  border: 2px solid var(--border-color);
+  position: relative;
+  overflow: hidden;
+}
+
+.payment-hotel-step2::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--pastel-green-accent),
+    var(--pastel-green-primary),
+    var(--pastel-green-dark)
+  );
+}
+
+.payment-hotel-step2-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 24px 0 12px 0;
+  padding: 12px 0;
+  border-bottom: 3px solid var(--pastel-green-primary);
+  position: relative;
+  background: linear-gradient(135deg, var(--pastel-green-light), transparent);
+  padding-left: 16px;
+  border-radius: 8px 8px 0 0;
+}
+
+.payment-hotel-step2-title::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 60%;
+  background: var(--pastel-green-accent);
+  border-radius: 2px;
+}
+
+.payment-hotel-step2-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 16px 20px;
+  margin: 12px 0;
+  background: var(--white);
+  border: 2px solid var(--pastel-green-secondary);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px var(--shadow-light);
+}
+
+.payment-hotel-step2-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px var(--shadow-medium);
+  border-color: var(--pastel-green-primary);
+}
+
+.payment-hotel-step2-item div:first-child {
+  color: var(--text-primary);
+  font-weight: 500;
+  flex: 1;
+}
+
+.payment-hotel-step2-item div:last-child {
+  color: var(--pastel-green-accent);
+  font-weight: 700;
+  font-size: 16px;
+  text-align: right;
+}
+
+.payment-hotel-step2-box {
+  background: var(--white);
+  padding: 16px;
+  border-radius: 12px;
+  border: 2px solid var(--pastel-green-secondary);
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px var(--shadow-light);
+  min-width: 120px;
+}
+
+.payment-hotel-step2-box:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px var(--shadow-medium);
+  border-color: var(--pastel-green-primary);
+  background: var(--pastel-green-light);
+}
+
+.ant-form {
+  background: var(--white);
+  padding: 24px;
+  border-radius: 16px;
+  border: 2px solid var(--pastel-green-secondary);
+  box-shadow: 0 6px 20px var(--shadow-light);
+}
+
+.ant-form-item-label > label {
+  color: var(--text-primary) !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+}
+
+.ant-input {
+  border-radius: 8px !important;
+  padding: 10px 12px !important;
+  transition: all 0.3s ease !important;
+  background: var(--white) !important;
+}
+
+.ant-input:hover {
+  border-color: var(--pastel-green-primary) !important;
+  box-shadow: 0 2px 8px var(--shadow-light) !important;
+}
+
+.ant-input:focus {
+  border-color: var(--pastel-green-accent) !important;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1) !important;
+}
+
+.ant-input-prefix {
+  color: var(--pastel-green-accent) !important;
+  margin-right: 8px !important;
+}
+
+.ant-checkbox-wrapper {
+  color: var(--text-primary) !important;
+  font-weight: 500 !important;
+  margin: 8px 0 !important;
+  padding: 12px 16px !important;
+  background: var(--white) !important;
+  border: 1px solid var(--pastel-green-secondary) !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
+}
+
+.ant-checkbox-wrapper:hover {
+  background: var(--pastel-green-light) !important;
+  border-color: var(--pastel-green-primary) !important;
+  transform: translateX(4px) !important;
+}
+
+.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: var(--pastel-green-accent) !important;
+  border-color: var(--pastel-green-accent) !important;
+}
+
+.ant-checkbox:hover .ant-checkbox-inner {
+  border-color: var(--pastel-green-accent) !important;
+}
+
+.ant-form-item-explain-error {
+  color: var(--error-color) !important;
+  font-weight: 500 !important;
+}
+
+.ant-form-item-has-error .ant-input {
+  border-color: var(--error-color) !important;
+}
+
+.payment-hotel-step2 img {
+  border-radius: 12px;
+  border: 3px solid var(--pastel-green-secondary);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px var(--shadow-light);
+}
+
+.payment-hotel-step2 img:hover {
+  transform: scale(1.02);
+  border-color: var(--pastel-green-primary);
+  box-shadow: 0 8px 24px var(--shadow-medium);
+}
+
+.payment-hotel-step2 h1,
+.payment-hotel-step2 h2,
+.payment-hotel-step2 h3 {
+  color: var(--text-primary);
+}
+
+.payment-hotel-step2 p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.payment-hotel-step2 p[style*="color: red"] {
+  background: linear-gradient(135deg, #ffebee, #fce4ec);
+  padding: 16px;
+  border-radius: 8px;
+  border-left: 4px solid var(--error-color);
+  color: #c62828 !important;
+  font-weight: 500;
+}
+
+.payment-hotel-step2 > div:first-child {
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.payment-hotel-step2 > div:first-child div:first-child {
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+@media (max-width: 1024px) {
+  .payment-hotel-step2 {
+    padding: 24px;
+  }
+
+  .payment-hotel-step2 > div:nth-child(2) {
+    flex-direction: column !important;
+  }
+
+  .payment-hotel-step2 > div:nth-child(2) > div {
+    width: 100% !important;
+    margin-bottom: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .payment-hotel-step2 {
+    padding: 16px;
+    margin: 10px;
+  }
+
+  .payment-hotel-step2-title {
+    font-size: 18px;
+  }
+
+  .ant-form {
+    padding: 16px;
+  }
+
+  .payment-hotel-step2-item {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .payment-hotel-step2-box {
+    min-width: auto;
+    margin: 8px 0;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.payment-hotel-step2 {
+  animation: slideInUp 0.6s ease-out;
+}
+
+.payment-hotel-step2-item,
+.payment-hotel-step2-box {
+  animation: slideInUp 0.6s ease-out;
+  animation-fill-mode: both;
+}
+
+.payment-hotel-step2-item:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.payment-hotel-step2-item:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.payment-hotel-step2-item:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.payment-hotel-step2-item:has(div[style*='fontSize: "18px"']) {
+  background: linear-gradient(
+    135deg,
+    var(--pastel-green-light),
+    var(--pastel-green-secondary)
+  );
+  border: 3px solid var(--pastel-green-accent);
+  transform: scale(1.02);
+}
+
+.payment-hotel-step2-item:has(div[style*='fontSize: "18px"']):hover {
+  transform: scale(1.04) translateY(-2px);
+}
+
 .payment-confirmation-container {
   display: flex;
   justify-content: center;
