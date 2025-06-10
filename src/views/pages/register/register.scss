@@ -19,5 +19,36 @@
 }
 
 .register-img {
+  display: block;
   width: 40%;
+}
+.login-cover-image {
+  width: 80%;
+  height: 70vh;
+  display: block;
+}
+
+@media (max-width: 480px) {
+  .register-container {
+    width: 100%;
+  }
+  .register-img {
+    display: none;
+  }
+  .register-remember {
+    margin-left: -50px;
+  }
+  .register-item-btn {
+    margin-left: -35%;
+    width: 100%;
+  }
+  .login-cover-image {
+    display: none;
+  }
+  .login-container .ant-form {
+    width: 100% !important;
+  }
+  .login-item-special {
+    flex-wrap: wrap !important;
+  }
 }

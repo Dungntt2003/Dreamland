@@ -156,9 +156,7 @@ const HotelView = ({ data, count, handleUpdateCount, destinationArr }) => {
           placeholder="Nhập tên khách sạn bạn muốn tìm"
           value={searchTerm}
           onChange={handleSearch}
-          style={{
-            width: "50%",
-          }}
+          className="create-trip-step1-input"
         />
       </div>
       {search === false ? (

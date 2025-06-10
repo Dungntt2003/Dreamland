@@ -331,16 +331,7 @@ const HotelPaymentProcess = ({ type }) => {
           {current === 0 && (
             <>
               <div style={{ padding: "8px" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-around",
-                    alignItems: "center",
-                    border: "1px solid #ccc",
-                    borderRadius: "12px",
-                    padding: "12px 16px",
-                  }}
-                >
+                <div className="hotel-payment-bar-container">
                   <div className="hotel-payment-bar">
                     <FontAwesomeIcon
                       icon={faLocationDot}
@@ -371,20 +362,12 @@ const HotelPaymentProcess = ({ type }) => {
                   {item.room &&
                     item.room.map((rm) => {
                       return (
-                        <div
-                          key={rm.id}
-                          style={{
-                            display: "flex",
-                            margin: "16px 0",
-                            width: "100%",
-                            alignItems: "center",
-                          }}
-                        >
+                        <div key={rm.id} className="payment-hotel-room-item">
                           <div>
                             <img
                               src={rm.image}
                               alt="room"
-                              style={{ width: "200px" }}
+                              className="payment-hotel-room-image"
                             />
                           </div>
                           <Table

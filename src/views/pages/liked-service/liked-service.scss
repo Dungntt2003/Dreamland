@@ -1,0 +1,24 @@
+.liked-service-container {
+  display: flex;
+}
+.liked-service-menu {
+  width: 20%;
+  position: sticky;
+  top: 0;
+  overflow-y: auto;
+  border-right: 1px solid #eee;
+}
+.liked-service-list {
+  width: 80%;
+}
+@media (max-width: 480px) {
+  .liked-service-container {
+    flex-direction: column;
+  }
+  .liked-service-menu {
+    width: 100%;
+  }
+  .liked-service-list {
+    width: 100%;
+  }
+}

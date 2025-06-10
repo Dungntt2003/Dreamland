@@ -11,6 +11,24 @@
   --shadow-light: rgba(168, 213, 186, 0.2);
   --shadow-medium: rgba(168, 213, 186, 0.3);
 }
+.hotel-payment-bar-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 12px 16px;
+}
+
+.payment-hotel-room-item {
+  display: flex;
+  margin: 16px 0;
+  width: 100%;
+  align-items: center;
+}
+.payment-hotel-room-image {
+  width: 200px;
+}
 
 .hotel-payment-bar {
   display: flex;
@@ -66,11 +84,11 @@
   margin-bottom: 4px;
   display: inline-block;
   padding: 2px 8px;
-  background: var(--pastel-green-light);
+  // background: var(--pastel-green-light);
   border-radius: 6px;
   margin-right: 6px;
   margin-bottom: 6px;
-  border: 1px solid var(--pastel-green-secondary);
+  // border: 1px solid var(--pastel-green-secondary);
   transition: all 0.2s ease;
 }
 
@@ -325,42 +343,6 @@
   background: var(--pastel-green-light);
 }
 
-.ant-form {
-  background: var(--white);
-  padding: 24px;
-  border-radius: 16px;
-  border: 2px solid var(--pastel-green-secondary);
-  box-shadow: 0 6px 20px var(--shadow-light);
-}
-
-.ant-form-item-label > label {
-  color: var(--text-primary) !important;
-  font-weight: 600 !important;
-  font-size: 14px !important;
-}
-
-.ant-input {
-  border-radius: 8px !important;
-  padding: 10px 12px !important;
-  transition: all 0.3s ease !important;
-  background: var(--white) !important;
-}
-
-.ant-input:hover {
-  border-color: var(--pastel-green-primary) !important;
-  box-shadow: 0 2px 8px var(--shadow-light) !important;
-}
-
-.ant-input:focus {
-  border-color: var(--pastel-green-accent) !important;
-  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1) !important;
-}
-
-.ant-input-prefix {
-  color: var(--pastel-green-accent) !important;
-  margin-right: 8px !important;
-}
-
 .ant-checkbox-wrapper {
   color: var(--text-primary) !important;
   font-weight: 500 !important;
@@ -536,6 +518,41 @@
   );
   min-height: 100vh;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  .ant-form {
+    background: var(--white);
+    padding: 24px;
+    border-radius: 16px;
+    border: 2px solid var(--pastel-green-secondary);
+    box-shadow: 0 6px 20px var(--shadow-light);
+  }
+
+  .ant-form-item-label > label {
+    color: var(--text-primary) !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+  }
+
+  .ant-input {
+    border-radius: 8px !important;
+    padding: 10px 12px !important;
+    transition: all 0.3s ease !important;
+    background: var(--white) !important;
+  }
+
+  .ant-input:hover {
+    border-color: var(--pastel-green-primary) !important;
+    box-shadow: 0 2px 8px var(--shadow-light) !important;
+  }
+
+  .ant-input:focus {
+    border-color: var(--pastel-green-accent) !important;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1) !important;
+  }
+
+  .ant-input-prefix {
+    color: var(--pastel-green-accent) !important;
+    margin-right: 8px !important;
+  }
 }
 
 .payment-confirmation-wrapper {
@@ -746,4 +763,55 @@
 .button:focus {
   outline: 3px solid var(--pastel-green-secondary);
   outline-offset: 2px;
+}
+
+@media (max-width: 480px) {
+  .hotel-payment-bar-container {
+    flex-wrap: wrap;
+  }
+  .payment-hotel-room-item {
+    flex-wrap: wrap;
+  }
+  .payment-hotel-room-image {
+    width: 100%;
+    margin: 16px 0;
+  }
+  .ant-table-wrapper .ant-table {
+    display: block;
+  }
+
+  .ant-table-wrapper .ant-table table {
+    display: block;
+  }
+
+  .ant-table-wrapper .ant-table thead {
+    display: none;
+  }
+
+  .ant-table-wrapper .ant-table tbody {
+    display: block;
+  }
+
+  .ant-table-wrapper .ant-table tbody tr {
+    display: block;
+    margin-bottom: 1rem;
+    border: 1px solid #f0f0f0;
+    padding: 0.5rem;
+  }
+
+  .ant-table-wrapper .ant-table tbody td {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 8px 0;
+    border: none;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .ant-table-wrapper .ant-table tbody td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    flex: 1;
+    padding-right: 1rem;
+  }
 }

@@ -199,7 +199,7 @@ const ScheduleDetail = () => {
           alignItems: "center",
         }}
       >
-        <div>
+        <div className="schedule-detail-group-btn">
           <Select
             style={{
               width: "200px",
@@ -221,10 +221,6 @@ const ScheduleDetail = () => {
             <FontAwesomeIcon icon={faPen} />
             Chỉnh sửa
           </Button>
-          {/* <Button className="button" onClick={handleExport}>
-            <FontAwesomeIcon icon={faPrint} />
-            In
-          </Button> */}
           <Button className="button" onClick={handleReturnHomepage}>
             Trở về trang chủ
           </Button>
@@ -242,14 +238,12 @@ const ScheduleDetail = () => {
           width: "100%",
           justifyContent: "space-around",
         }}
+        className="schedule-detail-container"
       >
-        <div
-          style={{ width: "35%", marginTop: "24px", height: "80vh" }}
-          className="timeline-container"
-        >
+        <div className="timeline-container">
           <Timeline mode="left" items={item} />
         </div>
-        <div id="kt_docs_fullcalendar_drag" style={{ width: "60%" }}>
+        <div id="kt_docs_fullcalendar_drag">
           <FullCalendar
             ref={calendarRef}
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -303,6 +297,7 @@ const ScheduleDetail = () => {
       <Modal
         title="Cẩm nang cho lộ trình"
         width="70%"
+        className="schedule-detail-experience"
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -319,9 +314,11 @@ const ScheduleDetail = () => {
                     justifyContent: "flex-end",
                     marginBottom: "24px",
                   }}
+                  className="schedule-detail-experience-header"
                 >
                   <div
                     style={{ display: "flex", justifyContent: "space-around" }}
+                    className="text-to-speech-container"
                   >
                     <TextToSpeech text={experience.slice(0, 200)} />
                     <VietnameseTextReader text={experience.slice(0, 300)} />
@@ -346,6 +343,7 @@ const ScheduleDetail = () => {
       <Modal
         title="Mô tả lộ trình"
         width="50%"
+        className="schedule-detail-description"
         open={isModalOpenDes}
         onOk={handleOkDes}
         onCancel={handleCancelDes}

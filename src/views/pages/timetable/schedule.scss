@@ -253,3 +253,56 @@
     font-size: 13px;
   }
 }
+
+.schedule-btn-group {
+  display: flex;
+  justify-content: space-between;
+}
+.schedule-btn-group-v2 {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 0 16px 0;
+}
+.schedule-container-detail {
+  display: flex;
+  height: 100vh;
+}
+
+.schedule-list-services {
+  width: 45%;
+  margin-left: 24px;
+}
+.schedule-container-detail #kt_docs_fullcalendar_drag {
+  width: 70%;
+}
+.shedule-fullcalendar {
+  height: 80%;
+}
+@media (max-width: 480px) {
+  .schedule-btn-group {
+    flex-direction: column;
+  }
+  .schedule-btn {
+    margin: 8px 0;
+  }
+  .schedule-btn-group-v2 {
+    flex-direction: column;
+  }
+  .schedule-container-detail {
+    flex-direction: column;
+  }
+  .schedule-list-services {
+    width: 100%;
+  }
+  .schedule-container-detail #kt_docs_fullcalendar_drag {
+    width: 100%;
+    height: 1000px;
+  }
+  .schedule-container-detail
+    .fc
+    .fc-media-screen
+    .fc-direction-ltr
+    .fc-theme-standard {
+    width: 100% !important;
+  }
+}

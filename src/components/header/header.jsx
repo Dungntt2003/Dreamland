@@ -140,7 +140,18 @@ const Header = () => {
           )}
         </Navbar.Collapse>
       </Navbar>
-      <div className="subHeader-container">
+
+      <input type="checkbox" id="mobile-menu-toggle" className="menu-toggle" />
+
+      <label htmlFor="mobile-menu-toggle" className="menu-icon">
+        &#9776;
+      </label>
+
+      <div className="subHeader-container mobile-menu">
+        <label htmlFor="mobile-menu-toggle" className="close-icon">
+          ✕
+        </label>
+
         {role === "user" && (
           <div className="subHeader-item">
             <Link className="link" to={"/repository"}>
@@ -164,7 +175,7 @@ const Header = () => {
           </Link>
         </div>
         <div className="subHeader-item">
-          <Link className="link" to="/hotel">
+          <Link className="link" to={"/hotel"}>
             Địa điểm nghỉ dưỡng
           </Link>
         </div>

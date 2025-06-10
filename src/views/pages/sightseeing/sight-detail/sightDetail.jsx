@@ -105,7 +105,7 @@ const SightDetail = () => {
                         <img
                           src={item}
                           alt="imageScenery"
-                          style={{ width: "200px", height: "120px" }}
+                          className="sight-detail-img-slider-item"
                           onClick={() => handleClickImg(index, item)}
                         />
                       </SwiperSlide>

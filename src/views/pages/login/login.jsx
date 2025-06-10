@@ -36,13 +36,9 @@ const Login = () => {
   };
 
   return (
-    <div className="register-wrap-container">
+    <div className="register-wrap-container login-container">
       <div style={{ display: "flex", width: "100%" }}>
-        <img
-          src={CoverImage}
-          alt="cover image"
-          style={{ width: "80%", height: "70vh" }}
-        />
+        <img src={CoverImage} alt="cover image" className="login-cover-image" />
         <div
           className="register-container"
           style={{ width: "100%", marginTop: "0" }}
@@ -94,7 +90,11 @@ const Login = () => {
                 />
               </Form.Item>
               <Form.Item>
-                <Flex justify="space-between" align="center">
+                <Flex
+                  justify="space-between"
+                  align="center"
+                  className="login-item-special"
+                >
                   <Form.Item name="remember" valuePropName="checked" noStyle>
                     <Checkbox>{t("remember_me")}</Checkbox>
                   </Form.Item>

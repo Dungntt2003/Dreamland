@@ -427,6 +427,7 @@ const Register = () => {
             <Form.Item
               name="remember"
               valuePropName="checked"
+              className="register-remember"
               wrapperCol={{
                 offset: 8,
                 span: 16,
@@ -436,6 +437,7 @@ const Register = () => {
             </Form.Item>
 
             <Form.Item
+              className="register-item-btn"
               wrapperCol={{
                 offset: 8,
                 span: 16,

@@ -159,9 +159,7 @@ const Entertainment = ({ data, count, handleUpdateCount, destinationArr }) => {
           placeholder="Nhập tên địa điểm bạn muốn tìm"
           value={searchTerm}
           onChange={handleSearch}
-          style={{
-            width: "50%",
-          }}
+          className="create-trip-step1-input"
         />
       </div>
       {search === false ? (

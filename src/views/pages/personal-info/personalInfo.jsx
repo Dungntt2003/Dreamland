@@ -189,9 +189,7 @@ const PersonalInfo = () => {
               wrapperCol={{
                 span: 16,
               }}
-              style={{
-                minWidth: 600,
-              }}
+              className="personal-form"
               onFinish={onFinish}
               initialValues={{
                 name: user.name,
@@ -253,7 +251,11 @@ const PersonalInfo = () => {
                   span: 16,
                 }}
               >
-                <Button type="primary" htmlType="submit" className="button">
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  className="button personal-info-btn"
+                >
                   Cập nhật thông tin
                 </Button>
               </Form.Item>

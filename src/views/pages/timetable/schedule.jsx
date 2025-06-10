@@ -371,42 +371,40 @@ const DraggableCalendar = () => {
 
   return (
     <div style={{ padding: "16px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <Button className="button" onClick={() => setOpen(true)}>
+      <div className="schedule-btn-group">
+        <Button className="button schedule-btn" onClick={() => setOpen(true)}>
           HƯỚNG DẪN
         </Button>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            margin: "0 0 16px 0",
-          }}
-        >
+        <div className="schedule-btn-group-v2">
           <div>
             <Button
-              className="button"
+              className="button schedule-btn"
               onClick={handleReturn}
               style={{ marginRight: "20px" }}
             >
               Thêm dịch vụ khác
             </Button>
             <Button
-              className="button"
+              className="button schedule-btn"
               style={{ marginRight: "20px" }}
               onClick={handleSave}
               ref={ref2}
             >
               Lưu tạm thời
             </Button>
-            <Button className="button" onClick={handleFinish} ref={ref3}>
+            <Button
+              className="button schedule-btn"
+              onClick={handleFinish}
+              ref={ref3}
+            >
               Hoàn thành
             </Button>
           </div>
         </div>
       </div>
-      <div style={{ display: "flex", height: "100vh" }}>
+      <div className="schedule-container-detail">
         {/* Draggable Events Section */}
-        <div style={{ width: "45%", marginLeft: "24px" }} ref={ref1}>
+        <div className="schedule-list-services" ref={ref1}>
           <div style={{ fontSize: "30px", margin: "54px 0 24px" }}>DỊCH VỤ</div>
           <div
             id="external-events-list"
@@ -513,7 +511,7 @@ const DraggableCalendar = () => {
           </div>
         </div>
 
-        <div id="kt_docs_fullcalendar_drag" style={{ width: "70%" }}>
+        <div id="kt_docs_fullcalendar_drag">
           <FullCalendar
             ref={calendarRef}
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -544,6 +542,7 @@ const DraggableCalendar = () => {
             eventContent={renderEventContent}
             locale="vi"
             timeZone="local"
+            className="shedule-fullcalendar"
             height="80%"
           />
         </div>

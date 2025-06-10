@@ -271,3 +271,15 @@
   max-width: 500px;
   width: 80%;
 }
+
+@media (max-width: 480px) {
+  .home-list-wrap {
+    flex-wrap: wrap;
+  }
+  .home-list-item {
+    width: 40%;
+  }
+  .home-content-title {
+    font-size: 18px;
+  }
+}

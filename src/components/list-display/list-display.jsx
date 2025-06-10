@@ -117,14 +117,7 @@ const ListDisplay = ({ listServices, CardComponent, link }) => {
 
   return (
     <div style={{ padding: "16px" }}>
-      <div
-        style={{
-          display: "flex",
-          margin: "16px 0",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
+      <div className="list-play-search">
         <div style={{ width: "40%" }}>
           <Input
             placeholder="Nhập tên địa điểm"
@@ -185,7 +178,6 @@ const ListDisplay = ({ listServices, CardComponent, link }) => {
             style={{
               display: "flex",
               flexWrap: "wrap",
-              // justifyContent: "space-between",
             }}
           >
             {currentItems.map((item) => (

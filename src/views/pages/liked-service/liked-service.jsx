@@ -1,3 +1,4 @@
+import "./liked-service.scss";
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Menu } from "antd";
@@ -36,21 +37,15 @@ const LikedService = () => {
     setCurrent(e.key);
   };
   return (
-    <div style={{ display: "flex" }}>
+    <div className="liked-service-container">
       <Menu
-        style={{
-          width: "20%",
-          position: "sticky",
-          top: 0,
-          overflowY: "auto",
-          borderRight: "1px solid #eee",
-        }}
+        className="liked-service-menu"
         onClick={onClick}
         selectedKeys={[current]}
         mode="vertical"
         items={items}
       />
-      <div style={{ width: "80%" }}>
+      <div className="liked-service-list">
         <LikedItem current={current} />
       </div>
     </div>

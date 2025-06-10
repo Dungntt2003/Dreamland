@@ -11,3 +11,17 @@
 .demo-repo-icon {
   color: var(--primary-color);
 }
+.create-trip-step1-btn {
+  float: right;
+}
+.create-trip-step1-input {
+  width: 50%;
+}
+@media (max-width: 480px) {
+  .create-trip-step1-btn {
+    float: none;
+  }
+  .create-trip-step1-input {
+    width: 100%;
+  }
+}

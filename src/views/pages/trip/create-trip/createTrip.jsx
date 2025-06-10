@@ -93,7 +93,7 @@ const CreateTrip = () => {
           justifyContent: "space-around",
         }}
       >
-        <div style={{ width: "50%" }}>
+        <div className="create-trip-container">
           <div className="header2 register-header">
             THÔNG TIN CƠ BẢN CỦA LỘ TRÌNH
           </div>
@@ -211,7 +211,11 @@ const CreateTrip = () => {
                   span: 16,
                 }}
               >
-                <Button type="primary" htmlType="submit" className="button">
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  className="button create-trip-btn"
+                >
                   Tiếp tục
                 </Button>
               </Form.Item>
@@ -222,6 +226,7 @@ const CreateTrip = () => {
           <img
             src={RepoPrepare}
             alt="repo-prepare"
+            className="repo-prepare-image"
             style={{ width: "100%", borderRadius: "20px" }}
           />
         </div>

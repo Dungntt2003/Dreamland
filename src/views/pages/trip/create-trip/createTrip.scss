@@ -1,0 +1,17 @@
+.repo-prepare-image {
+  display: block;
+}
+.create-trip-container {
+  width: 50%;
+}
+@media (max-width: 480px) {
+  .repo-prepare-image {
+    display: none;
+  }
+  .create-trip-container {
+    width: 100%;
+  }
+  .create-trip-btn {
+    margin-left: -30%;
+  }
+}

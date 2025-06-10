@@ -143,3 +143,20 @@ body {
   fill: rgb(155, 6, 6) !important;
   transition: fill 0.1s;
 }
+.list-play-search {
+  display: flex;
+  margin: 16px 0;
+  justify-content: space-between;
+  align-items: center;
+}
+@media (max-width: 480px) {
+  .list-play-search {
+    display: none !important;
+  }
+  .card-repo-container {
+    width: 100%;
+  }
+  .home-display-service {
+    padding: 16px;
+  }
+}

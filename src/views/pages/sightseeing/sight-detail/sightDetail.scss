@@ -294,3 +294,32 @@
   border-color: #c8e6c9;
   box-shadow: 0 6px 20px rgba(129, 199, 132, 0.15);
 }
+.sight-detail-img-slider-item {
+  width: 200px;
+  height: 120px;
+}
+
+@media (max-width: 480px) {
+  .sight-detail-container {
+    flex-wrap: wrap;
+  }
+  .sight-detail-banner {
+    width: 100%;
+    position: relative;
+    top: 0;
+    left: 0;
+  }
+  .sight-detail-menu {
+    width: 100%;
+  }
+  .sight-detail-img-slider-item {
+    width: 100px;
+    height: 150px;
+  }
+  .card-repo-container-v2 {
+    width: 100%;
+  }
+  .room-detail-modal {
+    width: 100% !important;
+  }
+}

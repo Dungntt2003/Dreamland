@@ -174,8 +174,7 @@ const SightView = ({ data, count, handleUpdateCount, destinationArr }) => {
   return (
     <div>
       <Button
-        className="button"
-        style={{ float: "right" }}
+        className="button create-trip-step1-btn"
         onClick={() => setOpen(true)}
       >
         HƯỚNG DẪN
@@ -188,9 +187,7 @@ const SightView = ({ data, count, handleUpdateCount, destinationArr }) => {
           placeholder="Nhập tên địa điểm bạn muốn tìm"
           value={searchTerm}
           onChange={handleSearch}
-          style={{
-            width: "50%",
-          }}
+          className="create-trip-step1-input"
         />
       </div>
       {search === false ? (

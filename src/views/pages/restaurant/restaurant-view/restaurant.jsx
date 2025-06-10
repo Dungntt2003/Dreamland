@@ -159,9 +159,7 @@ const Restaurant = ({ data, count, handleUpdateCount, destinationArr }) => {
           placeholder="Nhập tên nhà hàng bạn muốn tìm"
           value={searchTerm}
           onChange={handleSearch}
-          style={{
-            width: "50%",
-          }}
+          className="create-trip-step1-input"
         />
       </div>
       {search === false ? (
