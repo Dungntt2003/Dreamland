@@ -17,6 +17,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import ReactMarkdown from "react-markdown";
 import reverseFormat from "utils/reverseFormatRepo";
 import aiApi from "api/aiApi";
 import Markdown from "react-markdown";
@@ -332,7 +333,7 @@ const ScheduleDetail = () => {
                     </Button>
                   </div>
                 </div>
-                <Markdown>{experience.replace(/\\n/g, "\n")}</Markdown>
+                <ReactMarkdown>{experience}</ReactMarkdown>
               </>
             ) : (
               <div>Không có dữ liệu cẩm nang.</div>

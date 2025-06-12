@@ -1,6 +1,6 @@
 import "./schedule.scss";
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Tour } from "antd";
+import { Button, Tour, Modal } from "antd";
 import { useParams, useNavigate } from "react-router-dom";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -14,7 +14,12 @@ import sightApi from "api/sightApi";
 import restaurantApi from "api/restaurantApi";
 import { v4 as uuidv4 } from "uuid";
 import convertToEvent from "utils/convertEvent";
+import { getAllServices, mapEventToServices } from "utils/getEventService";
+import CostCalculator from "components/cost-calculate/cost";
 const DraggableCalendar = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [services, setServices] = useState([]);
+  const [eventServices, setEventServices] = useState([]);
   const ref1 = useRef(null);
   const ref2 = useRef(null);
   const ref3 = useRef(null);
@@ -46,6 +51,9 @@ const DraggableCalendar = () => {
   const [date, setDate] = useState(null);
   const [events, setEvents] = useState([]);
   const [externalEvents, setExternalEvents] = useState([]);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [numberOfNights, setNumberOfNights] = useState(0);
 
   const getKeyForService = (item) => {
     switch (item) {
@@ -61,6 +69,9 @@ const DraggableCalendar = () => {
         return "";
     }
   };
+  useEffect(() => {
+    getAllServices().then(setServices);
+  }, []);
 
   const getNameFromItem = (item) => {
     // console.log(item);
@@ -94,6 +105,8 @@ const DraggableCalendar = () => {
             .toISOString()
             .split("T")[0],
         });
+        setStartDate(response.data.data.startDate);
+        setEndDate(response.data.data.endDate);
         const storedData = localStorage.getItem("schedule");
         if (storedData) {
           const parsedData = JSON.parse(storedData);
@@ -307,6 +320,12 @@ const DraggableCalendar = () => {
     removeFromRepo();
   };
 
+  const handleDeteleAll = () => {
+    setEvents([]);
+    localStorage.removeItem("schedule");
+    calendarRef.current.getApi().removeAllEvents();
+  };
+
   const renderEventContent = (eventInfo) => {
     return (
       <div
@@ -369,6 +388,34 @@ const DraggableCalendar = () => {
     );
   };
 
+  const showModal = () => {
+    const allEvents = calendarRef.current.getApi().getEvents();
+
+    const eventData = allEvents.map((event) => ({
+      title: event.title.replace(/^×\s*/, ""),
+      id: event.id,
+      start: event.start,
+      end: event.end ? event.end : event.start,
+    }));
+    const eventServices = mapEventToServices(eventData, services);
+    console.log(eventServices);
+    setEventServices(eventServices);
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    const timeDiff = end - start;
+    const numberOfNights = timeDiff / (1000 * 60 * 60 * 24);
+
+    setNumberOfNights(numberOfNights);
+    setIsModalOpen(true);
+  };
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <div style={{ padding: "16px" }}>
       <div className="schedule-btn-group">
@@ -383,6 +430,23 @@ const DraggableCalendar = () => {
               style={{ marginRight: "20px" }}
             >
               Thêm dịch vụ khác
+            </Button>
+            <Button
+              className="button schedule-btn schedule-btn-money"
+              onClick={showModal}
+            >
+              Chi phí dự tính
+            </Button>
+            <Button className="button schedule-btn schedule-btn-rcm">
+              Gợi ý lộ trình
+            </Button>
+          </div>
+          <div>
+            <Button
+              className="button schedule-btn schedule-btn-delete-all"
+              onClick={handleDeteleAll}
+            >
+              Xóa toàn bộ lịch
             </Button>
             <Button
               className="button schedule-btn"
@@ -549,6 +613,24 @@ const DraggableCalendar = () => {
       </div>
       <Toaster />
       <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
+      <Modal
+        title="Chi phí dự tính cho lộ trình"
+        closable={{ "aria-label": "Custom Close Button" }}
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        className="cost-modal-schedule"
+      >
+        <p style={{ color: "red" }}>
+          Lưu ý: Tất cả các tính toán chỉ là dự tính, mang tính chất tham khảo
+        </p>
+        <div>
+          <CostCalculator
+            eventData={eventServices}
+            numberOfNights={numberOfNights}
+          />
+        </div>
+      </Modal>
     </div>
   );
 };
