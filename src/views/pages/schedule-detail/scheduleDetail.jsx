@@ -11,6 +11,7 @@ import {
   faBook,
   faMoneyBill,
   faTimeline,
+  faMoneyCheckDollar,
 } from "@fortawesome/free-solid-svg-icons";
 import toast, { Toaster } from "react-hot-toast";
 import FullCalendar from "@fullcalendar/react";
@@ -24,20 +25,28 @@ import Markdown from "react-markdown";
 import TextToSpeech from "components/text-to-speech/TTP";
 import VietnameseTextReader from "components/text-to-speech/ttv";
 import generateItineraryDescription from "utils/genDescription";
+import { getAllServices, mapEventToServices } from "utils/getEventService";
+import CostCalculator from "components/cost-calculate/cost";
 const ScheduleDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const calendarRef = useRef(null);
+  const [services, setServices] = useState([]);
+  const [eventServices, setEventServices] = useState([]);
   const [repo, setRepo] = useState(null);
   const [events, setEvents] = useState([]);
   const [item, setItem] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpenDes, setIsModalOpenDes] = useState(false);
+  const [isModalOpenCost, setIsModalOpenCost] = useState(false);
   const [date, setDate] = useState(null);
   const [destination, setDestination] = useState("");
   const [experience, setExperience] = useState(null);
   const [query, setQuery] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [numberOfNights, setNumberOfNights] = useState(0);
   useEffect(() => {
     const getFullRepo = async () => {
       try {
@@ -55,6 +64,8 @@ const ScheduleDetail = () => {
               : "Hà Giang"
           } với lộ trình như sau: ${listServices}`
         );
+        setStartDate(response.data.data.startDate);
+        setEndDate(response.data.data.endDate);
         setDestination(response.data.data.destination);
         setDate({
           start: new Date(response.data.data.startDate)
@@ -78,8 +89,32 @@ const ScheduleDetail = () => {
     getFullRepo();
   }, [id]);
 
+  useEffect(() => {
+    getAllServices().then(setServices);
+  }, []);
+
   const showModalDes = () => {
     setIsModalOpenDes(true);
+  };
+  const showModalCost = () => {
+    const allEvents = calendarRef.current.getApi().getEvents();
+
+    const eventData = allEvents.map((event) => ({
+      title: event.title.replace(/^×\s*/, ""),
+      id: event.id,
+      start: event.start,
+      end: event.end ? event.end : event.start,
+    }));
+    const eventServices = mapEventToServices(eventData, services);
+    setEventServices(eventServices);
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    const timeDiff = end - start;
+    const numberOfNights = timeDiff / (1000 * 60 * 60 * 24);
+
+    setNumberOfNights(numberOfNights);
+    setIsModalOpenCost(true);
   };
 
   const handleOkDes = () => {
@@ -133,6 +168,14 @@ const ScheduleDetail = () => {
 
   const handleCancel = () => {
     setIsModalOpen(false);
+  };
+
+  const handleOkCost = () => {
+    setIsModalOpenCost(false);
+  };
+
+  const handleCancelCost = () => {
+    setIsModalOpenCost(false);
   };
 
   const handleExportEx = (data) => {
@@ -289,6 +332,12 @@ const ScheduleDetail = () => {
         />
         <FloatButton
           type="primary"
+          onClick={showModalCost}
+          tooltip="Tính toán chi phí"
+          icon={<FontAwesomeIcon icon={faMoneyCheckDollar} />}
+        />
+        <FloatButton
+          type="primary"
           onClick={handlePayment}
           tooltip="Thanh toán dịch vụ"
           icon={<FontAwesomeIcon icon={faMoneyBill} />}
@@ -358,6 +407,24 @@ const ScheduleDetail = () => {
           </Button>
         </div>
         <Markdown>{generateItineraryDescription(item)}</Markdown>
+      </Modal>
+      <Modal
+        title="Mô tả lộ trình"
+        width="70%"
+        className="schedule-detail-description"
+        open={isModalOpenCost}
+        onOk={handleOkCost}
+        onCancel={handleCancelCost}
+      >
+        <p style={{ color: "red" }}>
+          Lưu ý: Tất cả các tính toán chỉ là dự tính, mang tính chất tham khảo
+        </p>
+        <div>
+          <CostCalculator
+            eventData={eventServices}
+            numberOfNights={numberOfNights}
+          />
+        </div>
       </Modal>
     </div>
   );
