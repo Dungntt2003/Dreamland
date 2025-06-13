@@ -14,17 +14,22 @@ const ListPayment = ({
         }}
       >
         {listServices &&
-          listServices.map((item) => (
-            <CardComponent
-              item={item}
-              key={item.id}
-              link={link}
-              repoId={repoId}
-              checkPayment={servicePayment.some(
-                (payment) => payment.service_id === item.id
-              )}
-            />
-          ))}
+          listServices
+            .filter(
+              (item, index, self) =>
+                index === self.findIndex((s) => s.name === item.name)
+            )
+            .map((item) => (
+              <CardComponent
+                item={item}
+                key={item.id}
+                link={link}
+                repoId={repoId}
+                checkPayment={servicePayment.some(
+                  (payment) => payment.service_id === item.id
+                )}
+              />
+            ))}
       </div>
     </div>
   );

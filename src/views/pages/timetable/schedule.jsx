@@ -16,6 +16,8 @@ import { v4 as uuidv4 } from "uuid";
 import convertToEvent from "utils/convertEvent";
 import { getAllServices, mapEventToServices } from "utils/getEventService";
 import CostCalculator from "components/cost-calculate/cost";
+import TravelScheduler from "utils/optimize";
+import updateList from "utils/updateActivity";
 const DraggableCalendar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [services, setServices] = useState([]);
@@ -416,6 +418,35 @@ const DraggableCalendar = () => {
     setIsModalOpen(false);
   };
 
+  const handleOptimize = () => {
+    const eventServices = mapEventToServices(externalEvents, services);
+    const updateEvents = updateList(eventServices);
+    console.log(updateEvents);
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    const timeDiff = end - start;
+    const numberOfNights = timeDiff / (1000 * 60 * 60 * 24);
+    try {
+      const scheduler = new TravelScheduler();
+
+      const optimizedSchedule = scheduler.optimizeWithSimulatedAnnealing(
+        updateEvents,
+        numberOfNights + 1,
+        5
+      );
+
+      const calendarEvents = scheduler.convertToFullCalendarFormat(
+        optimizedSchedule,
+        start
+      );
+      console.log(calendarEvents);
+      setEvents(calendarEvents);
+    } catch (error) {
+      console.error("Lỗi khi tạo lịch trình:", error);
+    }
+  };
+
   return (
     <div style={{ padding: "16px" }}>
       <div className="schedule-btn-group">
@@ -437,7 +468,10 @@ const DraggableCalendar = () => {
             >
               Chi phí dự tính
             </Button>
-            <Button className="button schedule-btn schedule-btn-rcm">
+            <Button
+              className="button schedule-btn schedule-btn-rcm"
+              onClick={handleOptimize}
+            >
               Gợi ý lộ trình
             </Button>
           </div>
