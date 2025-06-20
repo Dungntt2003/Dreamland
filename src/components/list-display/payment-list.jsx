@@ -4,6 +4,7 @@ const ListPayment = ({
   link,
   repoId,
   servicePayment,
+  date = "",
 }) => {
   return (
     <div style={{ padding: "16px" }}>
@@ -25,6 +26,7 @@ const ListPayment = ({
                 key={item.id}
                 link={link}
                 repoId={repoId}
+                date={date}
                 checkPayment={servicePayment.some(
                   (payment) => payment.service_id === item.id
                 )}

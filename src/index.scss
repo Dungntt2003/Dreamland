@@ -160,3 +160,14 @@ body {
     padding: 16px;
   }
 }
+.icon-success {
+  color: #22c55e;
+  margin-left: 12px;
+  font-size: 18px;
+  vertical-align: middle;
+  transition: transform 0.2s ease;
+}
+
+.icon-success:hover {
+  transform: scale(1.2);
+}

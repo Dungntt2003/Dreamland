@@ -11,6 +11,7 @@ import {
   faTimeline,
   faUsers,
   faEyeSlash,
+  faCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import { Tooltip } from "react-tooltip";
 import { getAvaFromIndex } from "utils/getRandomAvaRepo";
@@ -29,14 +30,16 @@ const CardRepo = ({ item, index, loadRepos }) => {
         await navigator.share({
           title: "Check this out!",
           text: "Here's a cool link for you:",
-          url: `http://localhost:3000/schedule-detail/${item.id}`,
+          url: `${process.env.REACT_APP_BASE_URL}/schedule-detail/${item.id}`,
         });
       } catch (error) {
         console.error("Error sharing", error);
       }
     } else {
       navigator.clipboard
-        .writeText(`http://localhost:3000/schedule-detail/${item.id}`)
+        .writeText(
+          `${process.env.REACT_APP_BASE_URL}/schedule-detail/${item.id}`
+        )
         .then(() => {
           toast("Link đã được copy vào clipboard");
         });
@@ -120,7 +123,15 @@ const CardRepo = ({ item, index, loadRepos }) => {
       >
         <Link to={`/schedule-detail/${item.id}`} className="card-repo-link">
           <Meta
-            title={item.name}
+            title={
+              <div>
+                {item.name}
+
+                {new Date(item.endDate) < new Date() && (
+                  <FontAwesomeIcon icon={faCheck} className="icon-success" />
+                )}
+              </div>
+            }
             description={
               <div className="card-repo-description">
                 <div className="card-repo-info-item">

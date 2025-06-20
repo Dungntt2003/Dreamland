@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import HotelDefaultImg from "assets/image/hotel-default.jpg";
 const { Meta } = Card;
 
-const CardPaymentHotel = ({ item, link, repoId, checkPayment }) => {
+const CardPaymentHotel = ({ item, link, repoId, checkPayment, date }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -60,9 +60,11 @@ const CardPaymentHotel = ({ item, link, repoId, checkPayment }) => {
                   </>
                 ) : (
                   <>
-                    <Button className="button" onClick={handleClick}>
-                      Đặt vé
-                    </Button>
+                    {new Date(date) >= new Date() && (
+                      <Button className="button" onClick={handleClick}>
+                        Đặt vé
+                      </Button>
+                    )}
                   </>
                 )}
               </div>

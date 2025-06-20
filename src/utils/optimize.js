@@ -47,18 +47,95 @@ class TravelScheduler {
 
     if (service.type === "hotel") {
       return isNoonRest
-        ? `${prefixes[service.type]}${service.name}`
+        ? `Nghỉ trưa tại ${service.name}`
         : `${prefixes[service.type]}${service.name}`;
     }
 
     return `${prefixes[service.type] || ""}${service.name}`;
   }
 
+  createVirtualHotel(services) {
+    if (services.length === 0) {
+      return {
+        id: "virtual-hotel",
+        name: "Địa điểm tạm thời",
+        type: "hotel",
+        lat: 21.0285,
+        lng: 105.8542,
+      };
+    }
+
+    const validServices = services.filter((s) => s.lat && s.lng);
+    if (validServices.length === 0) {
+      return {
+        id: "virtual-hotel",
+        name: "Địa điểm tạm thời",
+        type: "hotel",
+        lat: 21.0285,
+        lng: 105.8542,
+      };
+    }
+
+    const avgLat =
+      validServices.reduce((sum, s) => sum + s.lat, 0) / validServices.length;
+    const avgLng =
+      validServices.reduce((sum, s) => sum + s.lng, 0) / validServices.length;
+
+    return {
+      id: "virtual-hotel",
+      name: "Điểm nghỉ ngơi",
+      type: "hotel",
+      lat: avgLat,
+      lng: avgLng,
+    };
+  }
+
   optimizeSchedule(services, numberOfDays = 3) {
+    if (!Array.isArray(services) || services.length === 0) {
+      console.warn("Services array is empty, creating empty schedule");
+      return Array.from({ length: numberOfDays }, (_, i) => ({
+        day: i + 1,
+        events: [],
+      }));
+    }
+
+    const validServices = services.filter(
+      (s) =>
+        s &&
+        s.lat !== undefined &&
+        s.lng !== undefined &&
+        s.lat !== null &&
+        s.lng !== null
+    );
+
+    if (validServices.length === 0) {
+      console.warn("No valid services with coordinates found");
+      return Array.from({ length: numberOfDays }, (_, i) => ({
+        day: i + 1,
+        events: [],
+      }));
+    }
+
     const schedule = [];
-    const hotel = services.find((s) => s.type === "hotel");
-    const otherServices = services.filter((s) => s.type !== "hotel");
+    let hotel = validServices.find((s) => s.type === "hotel");
+
+    if (!hotel) {
+      hotel = this.createVirtualHotel(validServices);
+      console.log("Created virtual hotel:", hotel);
+    }
+
+    const otherServices = validServices.filter((s) => s.type !== "hotel");
     const globalUsedServices = new Set();
+
+    if (otherServices.length === 0) {
+      for (let day = 0; day < numberOfDays; day++) {
+        schedule.push({
+          day: day + 1,
+          events: this.createMinimalDaySchedule(hotel, day, numberOfDays),
+        });
+      }
+      return schedule;
+    }
 
     const servicesPerDay = this.distributeServicesAcrossDays(
       otherServices,
@@ -99,6 +176,36 @@ class TravelScheduler {
     return schedule;
   }
 
+  createMinimalDaySchedule(hotel, dayIndex, totalDays) {
+    const isLastDay = dayIndex === totalDays - 1;
+    const events = [];
+    events.push({
+      id: `${hotel.id}-12-day${dayIndex}`,
+      title: this.formatServiceTitle(hotel, true),
+      start: this.formatTime(12),
+      end: this.formatTime(13),
+      extendedProps: {
+        service: hotel,
+        type: "hotel",
+      },
+    });
+
+    if (!isLastDay) {
+      events.push({
+        id: `${hotel.id}-21-day${dayIndex}`,
+        title: this.formatServiceTitle(hotel, false),
+        start: this.formatTime(21),
+        end: this.formatTime(32),
+        extendedProps: {
+          service: hotel,
+          type: "hotel",
+        },
+      });
+    }
+
+    return events;
+  }
+
   distributeServicesAcrossDays(services, numberOfDays) {
     const servicesPerDay = Array.from({ length: numberOfDays }, () => []);
     const servicesByType = {
@@ -127,6 +234,14 @@ class TravelScheduler {
   ) {
     const dayEvents = [];
     const isLastDay = dayIndex === totalDays - 1;
+
+    if (!hotel || !hotel.lat || !hotel.lng) {
+      console.error(
+        "Hotel missing coordinates in scheduleSingleDayWithAllServices:",
+        hotel
+      );
+      return dayEvents;
+    }
 
     const flexibleTimeFramework = this.createFlexibleTimeFramework(
       dayServices,
@@ -157,7 +272,27 @@ class TravelScheduler {
       );
 
       if (availableServices.length > 0) {
-        const sortedServices = availableServices.sort((a, b) => {
+        const validServices = availableServices.filter(
+          (s) => s.lat !== undefined && s.lng !== undefined
+        );
+
+        if (validServices.length === 0) {
+          console.warn(
+            "No valid services with coordinates found for slot:",
+            slot
+          );
+          return;
+        }
+
+        if (!currentLocation || !currentLocation.lat || !currentLocation.lng) {
+          console.error(
+            "currentLocation missing coordinates:",
+            currentLocation
+          );
+          currentLocation = hotel;
+        }
+
+        const sortedServices = validServices.sort((a, b) => {
           const distA = this.calculateDistance(
             currentLocation.lat,
             currentLocation.lng,
@@ -201,22 +336,27 @@ class TravelScheduler {
   }
 
   createFlexibleTimeFramework(dayServices, isLastDay = false) {
-    const sightEntertainmentCount = dayServices.filter(
+    const sightEntertainmentServices = dayServices.filter(
       (s) => s.type === "sight" || s.type === "entertainment"
-    ).length;
-    const restaurantCount = dayServices.filter(
+    );
+    const restaurantServices = dayServices.filter(
       (s) => s.type === "restaurant"
-    ).length;
+    );
+
+    const sightEntertainmentCount = sightEntertainmentServices.length;
+    const restaurantCount = restaurantServices.length;
 
     const framework = [];
 
-    const morningSlots = Math.min(sightEntertainmentCount, 2);
-    for (let i = 0; i < morningSlots; i++) {
-      framework.push({
-        time: 8 + i * 2,
-        type: ["sight", "entertainment"],
-        duration: 2,
-      });
+    if (sightEntertainmentCount > 0) {
+      const morningSlots = Math.min(sightEntertainmentCount, 2);
+      for (let i = 0; i < morningSlots; i++) {
+        framework.push({
+          time: 8 + i * 2,
+          type: ["sight", "entertainment"],
+          duration: 2,
+        });
+      }
     }
 
     if (restaurantCount > 0) {
@@ -233,20 +373,23 @@ class TravelScheduler {
       duration: 1,
     });
 
-    const remainingSightEntertainment = sightEntertainmentCount - morningSlots;
-    const afternoonSlots = Math.min(remainingSightEntertainment, 2);
-    for (let i = 0; i < afternoonSlots; i++) {
-      framework.push({
-        time: 14 + i * 2,
-        type: ["sight", "entertainment"],
-        duration: 2,
-      });
+    if (sightEntertainmentCount > 0) {
+      const remainingSightEntertainment =
+        sightEntertainmentCount - Math.min(sightEntertainmentCount, 2);
+      const afternoonSlots = Math.min(remainingSightEntertainment, 2);
+      for (let i = 0; i < afternoonSlots; i++) {
+        framework.push({
+          time: 14 + i * 2,
+          type: ["sight", "entertainment"],
+          duration: 2,
+        });
+      }
     }
 
     if (
       restaurantCount > 1 ||
       (restaurantCount === 1 &&
-        framework.find((f) => f.type.includes("restaurant")))
+        !framework.find((f) => f.type.includes("restaurant")))
     ) {
       framework.push({
         time: 19,
@@ -276,14 +419,13 @@ class TravelScheduler {
 
         if (possibleTimes.length > 0) {
           const bestTime = possibleTimes[0];
+          const duration = this.getServiceDuration(service.type);
 
           day.events.push({
             id: `${service.id}-${bestTime}-day${dayIndex}`,
             title: this.formatServiceTitle(service),
             start: this.formatTime(bestTime),
-            end: this.formatTime(
-              bestTime + (service.type === "restaurant" ? 1 : 2)
-            ),
+            end: this.formatTime(bestTime + duration),
             extendedProps: {
               service: service,
               type: service.type,
@@ -303,6 +445,20 @@ class TravelScheduler {
     });
   }
 
+  getServiceDuration(serviceType) {
+    switch (serviceType) {
+      case "restaurant":
+        return 1;
+      case "sight":
+      case "entertainment":
+        return 2;
+      case "hotel":
+        return 1;
+      default:
+        return 2;
+    }
+  }
+
   findAvailableSlots(dayEvents, serviceType) {
     const occupiedTimes = dayEvents
       .map((event) => {
@@ -313,11 +469,12 @@ class TravelScheduler {
       .sort((a, b) => a.start - b.start);
 
     const availableSlots = [];
-    const duration = serviceType === "restaurant" ? 1 : 2;
+    const duration = this.getServiceDuration(serviceType);
 
     for (let hour = 8; hour <= 20; hour++) {
       const slotEnd = hour + duration;
       if (slotEnd > 21) continue;
+
       const isOccupied = occupiedTimes.some(
         (occupied) =>
           (hour >= occupied.start && hour < occupied.end) ||
@@ -343,13 +500,24 @@ class TravelScheduler {
         return hour >= 8 && hour <= 18;
       case "restaurant":
         return (hour >= 11 && hour <= 12) || (hour >= 18 && hour <= 20);
+      case "hotel":
+        return hour === 12 || hour === 21;
       default:
-        return true;
+        return hour >= 8 && hour <= 20;
     }
   }
 
   scheduleSingleDay(services, hotel, dayIndex, globalUsedServices = new Set()) {
     const dayEvents = [];
+
+    if (!hotel) {
+      hotel = this.createVirtualHotel(services);
+    }
+
+    if (!hotel || !hotel.lat || !hotel.lng) {
+      console.error("Hotel missing coordinates in scheduleSingleDay:", hotel);
+      return dayEvents;
+    }
 
     const timeFramework = [
       { time: 8, type: ["sight", "entertainment"], duration: 4 },
@@ -384,7 +552,19 @@ class TravelScheduler {
       );
 
       if (availableServices.length > 0) {
-        const sortedServices = availableServices.sort((a, b) => {
+        const validServices = availableServices.filter(
+          (s) => s.lat !== undefined && s.lng !== undefined
+        );
+
+        if (validServices.length === 0) {
+          console.warn(
+            "No valid services with coordinates found for slot:",
+            slot
+          );
+          return;
+        }
+
+        const sortedServices = validServices.sort((a, b) => {
           const distA = this.calculateDistance(
             currentLocation.lat,
             currentLocation.lng,
@@ -437,7 +617,33 @@ class TravelScheduler {
     numberOfDays = 3,
     maxIterations = 1000
   ) {
+    if (!Array.isArray(services) || services.length === 0) {
+      console.warn(
+        "Invalid services array for simulated annealing, returning empty schedule"
+      );
+      return Array.from({ length: numberOfDays }, (_, i) => ({
+        day: i + 1,
+        events: [],
+      }));
+    }
+
     let currentSchedule = this.optimizeSchedule(services, numberOfDays);
+
+    if (!currentSchedule || currentSchedule.length === 0) {
+      console.error(
+        "Failed to create initial schedule for simulated annealing"
+      );
+      return Array.from({ length: numberOfDays }, (_, i) => ({
+        day: i + 1,
+        events: [],
+      }));
+    }
+
+    const hasEvents = currentSchedule.some((day) => day.events.length > 0);
+    if (!hasEvents) {
+      return currentSchedule;
+    }
+
     let currentCost = this.calculateTotalCost(currentSchedule);
     let bestSchedule = JSON.parse(JSON.stringify(currentSchedule));
     let bestCost = currentCost;
@@ -478,12 +684,22 @@ class TravelScheduler {
       for (let i = 0; i < day.events.length - 1; i++) {
         const current = day.events[i].extendedProps.service;
         const next = day.events[i + 1].extendedProps.service;
-        totalDistance += this.calculateDistance(
-          current.lat,
-          current.lng,
-          next.lat,
-          next.lng
-        );
+
+        if (
+          current &&
+          next &&
+          current.lat !== undefined &&
+          current.lng !== undefined &&
+          next.lat !== undefined &&
+          next.lng !== undefined
+        ) {
+          totalDistance += this.calculateDistance(
+            current.lat,
+            current.lng,
+            next.lat,
+            next.lng
+          );
+        }
       }
     });
 
@@ -493,8 +709,18 @@ class TravelScheduler {
   generateNeighborSchedule(schedule, services) {
     const newSchedule = JSON.parse(JSON.stringify(schedule));
 
-    const randomDay = Math.floor(Math.random() * newSchedule.length);
-    const dayEvents = newSchedule[randomDay].events.filter(
+    const daysWithEvents = newSchedule.filter(
+      (day) =>
+        day.events.filter((e) => e.extendedProps.type !== "hotel").length >= 2
+    );
+
+    if (daysWithEvents.length === 0) {
+      return newSchedule;
+    }
+
+    const randomDay =
+      daysWithEvents[Math.floor(Math.random() * daysWithEvents.length)];
+    const dayEvents = randomDay.events.filter(
       (e) => e.extendedProps.type !== "hotel"
     );
 

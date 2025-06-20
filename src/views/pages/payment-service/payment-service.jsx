@@ -20,11 +20,13 @@ const PaymentService = () => {
   const [resList, setResList] = useState([]);
   const [hotelList, setHotelList] = useState([]);
   const [servicePayment, setServicePayment] = useState([]);
+  const [endDate, setEndDate] = useState("");
   useEffect(() => {
     const getRealRepo = async () => {
       try {
         const response = await repoApi.getADemoRepo(id);
         setServicePayment(response.data.data.servicepayment);
+        setEndDate(response.data.data.endDate);
         const enterRes = await entertainmentApi.getListEntertaiments();
         const resRes = await restaurantApi.getRestaurants();
         const hotelRes = await hotelApi.getListHotels();
@@ -101,6 +103,7 @@ const PaymentService = () => {
               <PaymentEntertainment
                 listService={enterList}
                 repoId={id}
+                date={endDate}
                 servicePayment={servicePayment.filter(
                   (payment) => payment.service_type === "entertainment"
                 )}
@@ -115,6 +118,7 @@ const PaymentService = () => {
               <PaymentHotel
                 listService={hotelList}
                 repoId={id}
+                date={endDate}
                 servicePayment={servicePayment.filter(
                   (payment) => payment.service_type === "hotel"
                 )}
@@ -129,6 +133,7 @@ const PaymentService = () => {
               <PaymentRestaurant
                 listService={resList}
                 repoId={id}
+                date={endDate}
                 servicePayment={servicePayment.filter(
                   (payment) => payment.service_type === "restaurant"
                 )}

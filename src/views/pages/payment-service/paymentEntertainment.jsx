@@ -1,16 +1,30 @@
 import ListPayment from "components/list-display/payment-list";
 import CardPaymentEnter from "components/payment-card/card-enter";
-const PaymentEntertainment = ({ listService, repoId, servicePayment }) => {
-  // console.log("service payment ", servicePayment);
+import { Empty } from "antd";
+const PaymentEntertainment = ({
+  listService,
+  repoId,
+  servicePayment,
+  date,
+}) => {
   return (
     <div>
-      <ListPayment
-        listServices={listService}
-        CardComponent={CardPaymentEnter}
-        link="entertainment"
-        repoId={repoId}
-        servicePayment={servicePayment}
-      />
+      {listService.length === 0 ? (
+        <>
+          <Empty />
+        </>
+      ) : (
+        <>
+          <ListPayment
+            listServices={listService}
+            CardComponent={CardPaymentEnter}
+            link="entertainment"
+            repoId={repoId}
+            date={date}
+            servicePayment={servicePayment}
+          />
+        </>
+      )}
     </div>
   );
 };

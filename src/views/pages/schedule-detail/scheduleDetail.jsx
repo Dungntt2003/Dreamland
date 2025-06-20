@@ -23,7 +23,6 @@ import reverseFormat from "utils/reverseFormatRepo";
 import aiApi from "api/aiApi";
 import Markdown from "react-markdown";
 import TextToSpeech from "components/text-to-speech/TTP";
-import VietnameseTextReader from "components/text-to-speech/ttv";
 import generateItineraryDescription from "utils/genDescription";
 import { getAllServices, mapEventToServices } from "utils/getEventService";
 import CostCalculator from "components/cost-calculate/cost";
@@ -206,9 +205,9 @@ const ScheduleDetail = () => {
     if (value === "link") {
       handleShare();
     } else if (value === "facebook") {
-      const url = "https://63stravel.com/vn/travel";
+      const currentUrl = window.location.href;
       const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-        url
+        currentUrl
       )}`;
       window.open(facebookUrl, "_blank");
     }
@@ -370,8 +369,7 @@ const ScheduleDetail = () => {
                     style={{ display: "flex", justifyContent: "space-around" }}
                     className="text-to-speech-container"
                   >
-                    <TextToSpeech text={experience.slice(0, 200)} />
-                    <VietnameseTextReader text={experience.slice(0, 300)} />
+                    <TextToSpeech text={experience.slice(0, 400)} />
                   </div>
                   <div style={{ marginLeft: "16px" }}>
                     <Button

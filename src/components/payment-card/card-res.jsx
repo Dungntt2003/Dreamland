@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import RestaurantDefaultImg from "assets/image/restaurant-default.png";
 const { Meta } = Card;
 
-const CardPaymentRestaurant = ({ item, link, repoId, checkPayment }) => {
+const CardPaymentRestaurant = ({ item, link, repoId, checkPayment, date }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -61,9 +61,11 @@ const CardPaymentRestaurant = ({ item, link, repoId, checkPayment }) => {
                   </>
                 ) : (
                   <>
-                    <Button className="button" onClick={handleClick}>
-                      Đặt bàn
-                    </Button>
+                    {new Date(date) >= new Date() && (
+                      <Button className="button" onClick={handleClick}>
+                        Đặt vé
+                      </Button>
+                    )}
                   </>
                 )}
               </div>

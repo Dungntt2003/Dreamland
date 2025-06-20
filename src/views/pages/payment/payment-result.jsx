@@ -59,7 +59,9 @@ const PaymentResult = () => {
       console.log(paymentData);
       if (paymentData) {
         sendEmail({
-          email: paymentData.email || "nguyenthuydung55555@gmail.com",
+          email: paymentData.email
+            ? paymentData.email
+            : "nguyenthuydung55555@gmail.com",
           name: paymentData.name,
           payment: {
             service_name: paymentData.service_type,
@@ -77,9 +79,9 @@ const PaymentResult = () => {
         console.warn("paymentData is null or undefined. Email not sent.");
       }
       setStatus("success");
-      // setTimeout(() => {
-      //   navigate(`/payment-info?repoId=${repoId}&serviceId=${serviceId}`);
-      // }, 5000);
+      setTimeout(() => {
+        navigate(`/payment-info?repoId=${repoId}&serviceId=${serviceId}`);
+      }, 5000);
     } else {
       updateStatus("fail");
       setStatus("failed");

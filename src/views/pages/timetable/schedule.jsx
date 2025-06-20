@@ -226,12 +226,14 @@ const DraggableCalendar = () => {
   const handleSave = () => {
     const allEvents = calendarRef.current.getApi().getEvents();
 
-    const eventData = allEvents.map((event) => ({
-      title: event.title.replace(/^×\s*/, ""),
-      id: event.id,
-      start: event.start,
-      end: event.end ? event.end : event.start,
-    }));
+    const eventData = allEvents
+      .filter((event) => !event.title.trim().endsWith("Điểm nghỉ ngơi"))
+      .map((event) => ({
+        title: event.title.replace(/^×\s*/, ""),
+        id: event.id,
+        start: event.start,
+        end: event.end ? event.end : event.start,
+      }));
 
     const jsonData = {
       id: id,
@@ -244,12 +246,14 @@ const DraggableCalendar = () => {
   const handleFinish = () => {
     const allEvents = calendarRef.current.getApi().getEvents();
 
-    const eventData = allEvents.map((event) => ({
-      title: event.title.replace(/^×\s*/, ""),
-      id: event.id,
-      start: event.start,
-      end: event.end ? event.end : event.start,
-    }));
+    const eventData = allEvents
+      .filter((event) => !event.title.trim().endsWith("Điểm nghỉ ngơi"))
+      .map((event) => ({
+        title: event.title.replace(/^×\s*/, ""),
+        id: event.id,
+        start: event.start,
+        end: event.end ? event.end : event.start,
+      }));
     const formatDate = (dateString) => {
       const options = {
         year: "numeric",
@@ -393,12 +397,14 @@ const DraggableCalendar = () => {
   const showModal = () => {
     const allEvents = calendarRef.current.getApi().getEvents();
 
-    const eventData = allEvents.map((event) => ({
-      title: event.title.replace(/^×\s*/, ""),
-      id: event.id,
-      start: event.start,
-      end: event.end ? event.end : event.start,
-    }));
+    const eventData = allEvents
+      .filter((event) => !event.title.trim().endsWith("Điểm nghỉ ngơi"))
+      .map((event) => ({
+        title: event.title.replace(/^×\s*/, ""),
+        id: event.id,
+        start: event.start,
+        end: event.end ? event.end : event.start,
+      }));
     const eventServices = mapEventToServices(eventData, services);
     console.log(eventServices);
     setEventServices(eventServices);

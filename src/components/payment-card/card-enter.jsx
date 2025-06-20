@@ -4,7 +4,7 @@ import { faLocationDot, faMoneyBill } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 const { Meta } = Card;
 
-const CardPaymentEnter = ({ item, link, repoId, checkPayment }) => {
+const CardPaymentEnter = ({ item, link, repoId, checkPayment, date }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -67,9 +67,11 @@ const CardPaymentEnter = ({ item, link, repoId, checkPayment }) => {
                   </>
                 ) : (
                   <>
-                    <Button className="button" onClick={handleClick}>
-                      Đặt vé
-                    </Button>
+                    {new Date(date) >= new Date() && (
+                      <Button className="button" onClick={handleClick}>
+                        Đặt vé
+                      </Button>
+                    )}
                   </>
                 )}
               </div>

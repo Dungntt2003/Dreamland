@@ -47,11 +47,11 @@ const RepoList = () => {
         style={{
           display: "flex",
           flexWrap: "wrap",
-          // justifyContent: "space-evenly",
         }}
       >
         {repo
           .filter((item) => item.isHidden === false)
+          .sort((a, b) => new Date(b.startDate) - new Date(a.startDate))
           .map((item, index) => (
             <CardRepo
               item={item}
