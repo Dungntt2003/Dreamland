@@ -8,10 +8,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPen,
   faMap,
+  faCopy,
   faBook,
   faMoneyBill,
   faTimeline,
   faMoneyCheckDollar,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import toast, { Toaster } from "react-hot-toast";
 import FullCalendar from "@fullcalendar/react";
@@ -26,7 +28,10 @@ import TextToSpeech from "components/text-to-speech/TTP";
 import generateItineraryDescription from "utils/genDescription";
 import { getAllServices, mapEventToServices } from "utils/getEventService";
 import CostCalculator from "components/cost-calculate/cost";
+import { useAuth } from "context/authContext";
+import demoRepoApi from "api/demoRepoApi";
 const ScheduleDetail = () => {
+  const { id: userId } = useAuth();
   const { id } = useParams();
   const navigate = useNavigate();
   const calendarRef = useRef(null);
@@ -38,6 +43,7 @@ const ScheduleDetail = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpenDes, setIsModalOpenDes] = useState(false);
   const [isModalOpenCost, setIsModalOpenCost] = useState(false);
+  const [isModalOpenRemove, setIsModalOpenRemove] = useState(false);
   const [date, setDate] = useState(null);
   const [destination, setDestination] = useState("");
   const [experience, setExperience] = useState(null);
@@ -154,6 +160,28 @@ const ScheduleDetail = () => {
     }
   };
 
+  const showModalRemove = () => {
+    setIsModalOpenRemove(true);
+  };
+  const handleOkRemove = () => {
+    const removeRepo = async () => {
+      try {
+        await repoApi.deleteRepo(id);
+        toast.success("Xóa lộ trình thành công");
+        setTimeout(() => {
+          navigate("/repository");
+        }, 3000);
+      } catch (error) {
+        console.error("Error removing repo:", error);
+        toast.error("Xóa lộ trình thất bại");
+      }
+    };
+    removeRepo();
+  };
+  const handleCancelRemove = () => {
+    setIsModalOpenRemove(false);
+  };
+
   const showModal = () => {
     setIsModalOpen(true);
     setExperience(null);
@@ -233,6 +261,48 @@ const ScheduleDetail = () => {
     }
   };
 
+  const handleCopy = () => {
+    const params = {
+      name: `${repo.name} - Bản sao`,
+      description: repo.description,
+      destination: repo.destination,
+      startDate: repo.startDate,
+      endDate: repo.endDate,
+      plan: repo.plan ? repo.plan : null,
+      experience: repo.experience ? repo.experience : null,
+      numberPeople: repo.numberPeople,
+      isHidden: false,
+      user_id: userId,
+    };
+    const createCopy = async () => {
+      try {
+        const response = await repoApi.createARepo(params);
+        const repo_id = response.data.data.id;
+
+        const addServiceCalls = repo.demorepodetail.map((service) =>
+          demoRepoApi.addAService({
+            service_id: service.service_id,
+            repository_id: repo_id,
+            service_type: service.service_type,
+          })
+        );
+
+        await Promise.all(addServiceCalls);
+
+        toast.success("Tạo bản sao thành công");
+
+        setTimeout(() => {
+          navigate("/repository");
+        }, 3000);
+      } catch (error) {
+        console.log("Error creating copy:", error);
+        toast.error("Tạo bản sao thất bại");
+      }
+    };
+
+    createCopy();
+  };
+
   return (
     <div style={{ padding: "16px" }}>
       <div
@@ -263,6 +333,17 @@ const ScheduleDetail = () => {
           <Button className="button" onClick={handleEdit}>
             <FontAwesomeIcon icon={faPen} />
             Chỉnh sửa
+          </Button>
+          <Button className="button" onClick={handleCopy}>
+            <FontAwesomeIcon icon={faCopy} />
+            Tạo bản sao
+          </Button>
+          <Button
+            className="button button-delete-repo"
+            onClick={showModalRemove}
+          >
+            <FontAwesomeIcon icon={faTrash} />
+            Xóa lộ trình
           </Button>
           <Button className="button" onClick={handleReturnHomepage}>
             Trở về trang chủ
@@ -423,6 +504,22 @@ const ScheduleDetail = () => {
             numberOfNights={numberOfNights}
           />
         </div>
+      </Modal>
+      <Modal
+        title="❗ Xác nhận xóa lộ trình"
+        open={isModalOpenRemove}
+        onOk={handleOkRemove}
+        onCancel={handleCancelRemove}
+        okText="Xóa"
+        cancelText="Hủy"
+        className="custom-delete-modal"
+      >
+        <p>
+          Bạn có chắc chắn muốn <strong>xóa</strong> lộ trình này không?
+        </p>
+        <p style={{ color: "red", fontWeight: "500" }}>
+          Hành động này sẽ <u>không thể hoàn tác</u>.
+        </p>
       </Modal>
     </div>
   );

@@ -171,3 +171,8 @@ body {
 .icon-success:hover {
   transform: scale(1.2);
 }
+
+.button.button-delete-repo {
+  background-color: red !important;
+  color: white !important;
+}

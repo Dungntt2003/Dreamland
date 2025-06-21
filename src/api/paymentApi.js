@@ -5,10 +5,6 @@ const paymentApi = {
     const url = "/payment/create-payment";
     return axiosGeneral.post(url, params);
   },
-  paymentReturn: () => {
-    const url = "/payment/vnpay-return";
-    return axiosGeneral.get(url);
-  },
   createPayment: (params) => {
     const url = "/payment/create";
     return axiosClient.post(url, params);
@@ -23,6 +19,10 @@ const paymentApi = {
   },
   getPayment: (repoId, serviceId) => {
     const url = `/payment/${repoId}/${serviceId}`;
+    return axiosClient.get(url);
+  },
+  getPaymentOfRepo: (repoId) => {
+    const url = `/payment/${repoId}`;
     return axiosClient.get(url);
   },
 };

@@ -5,6 +5,10 @@ const repoApi = {
     const url = `/repositories/${id}`;
     return axiosClient.get(url);
   },
+  deleteRepo: (id) => {
+    const url = `/repositories/${id}`;
+    return axiosClient.delete(url);
+  },
   createARepo: (params) => {
     const url = "/repositories";
     return axiosClient.post(url, params);

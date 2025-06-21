@@ -9,6 +9,7 @@ import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import toast, { Toaster } from "react-hot-toast";
 import EditRepo from "assets/image/edit-repo.png";
+import paymentApi from "api/paymentApi";
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
@@ -18,6 +19,7 @@ const ScheduleEdit = () => {
   const [form] = useForm();
   const [repo, setRepo] = useState([]);
   const [plan, setPlan] = useState([]);
+  const [payment, setPayment] = useState([]);
   const { RangePicker } = DatePicker;
   const dateFormat = "YYYY/MM/DD";
   const { TextArea } = Input;
@@ -36,6 +38,18 @@ const ScheduleEdit = () => {
   }, [id]);
 
   useEffect(() => {
+    const getPayments = async () => {
+      try {
+        const response = await paymentApi.getPaymentOfRepo(id);
+        setPayment(response.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getPayments();
+  }, [id]);
+
+  useEffect(() => {
     form.setFieldsValue({
       name: repo.name,
       description: repo.description,
@@ -49,48 +63,86 @@ const ScheduleEdit = () => {
   }, [repo, form]);
 
   const onFinish = (values) => {
-    const filteredPlans = plan.filter((item) => {
-      const [dateStr, timeRange] = item.label.split(", ");
-      const [startTimeStr, endTimeStr] = timeRange.split(" - ");
-      const start = dayjs(`${dateStr} ${startTimeStr}`, "DD/MM/YYYY HH:mm");
-      const end = dayjs(`${dateStr} ${endTimeStr}`, "DD/MM/YYYY HH:mm");
+    const oldStart = dayjs(repo.startDate);
+    const oldEnd = dayjs(repo.endDate);
+    const newStart = values.rangeDate[0];
+    const newEnd = values.rangeDate[1];
 
-      const [rangeStart, rangeEnd] = values.rangeDate;
-      const extendedRangeEnd = rangeEnd.add(1, "day");
-      return (
-        start.isSameOrAfter(rangeStart) && end.isSameOrBefore(extendedRangeEnd)
-      );
-    });
-    // console.log(filteredPlans);
-    const startDate = values.rangeDate[0]
-      ? values.rangeDate[0].format("YYYY-MM-DD")
-      : null;
-    const endDate = values.rangeDate[1]
-      ? values.rangeDate[1].format("YYYY-MM-DD")
-      : null;
+    const isDisjoint =
+      newEnd.isBefore(oldStart, "day") || newStart.isAfter(oldEnd, "day");
+
+    let updatedPlan = [...plan];
+    let updatedExperience = repo.experience ? repo.experience : null;
+
+    if (isDisjoint) {
+      const diffDays = newStart.diff(oldStart, "day");
+
+      updatedPlan = plan.map((item) => {
+        const [dateStr, timeRange] = item.label.split(", ");
+        const oldDate = dayjs(dateStr, "DD/MM/YYYY");
+        const newDate = oldDate.add(diffDays + 1, "day");
+        const newLabel = `${newDate.format("DD/MM/YYYY")}, ${timeRange}`;
+        return { ...item, label: newLabel };
+      });
+
+      if (repo.experience) {
+        const dateRegex = /\d{2}\/\d{2}\/\d{4}/g;
+        updatedExperience = repo.experience.replace(dateRegex, (match) => {
+          const oldDate = dayjs(match, "DD/MM/YYYY");
+          if (!oldDate.isValid()) return match;
+          const newDate = oldDate.add(diffDays + 1, "day");
+          return newDate.format("DD/MM/YYYY");
+        });
+      }
+    } else {
+      updatedPlan = plan.filter((item) => {
+        const [dateStr, timeRange] = item.label.split(", ");
+        const [startTimeStr, endTimeStr] = timeRange.split(" - ");
+        const start = dayjs(`${dateStr} ${startTimeStr}`, "DD/MM/YYYY HH:mm");
+        const end = dayjs(`${dateStr} ${endTimeStr}`, "DD/MM/YYYY HH:mm");
+
+        const [rangeStart, rangeEnd] = values.rangeDate;
+        const extendedRangeEnd = rangeEnd.add(1, "day");
+
+        return (
+          start.isSameOrAfter(rangeStart) &&
+          end.isSameOrBefore(extendedRangeEnd)
+        );
+      });
+    }
+
+    const startDate = newStart.format("YYYY-MM-DD");
+    const endDate = newEnd.format("YYYY-MM-DD");
+
     const params = {
       name: values.name,
       description: values.description,
       numberPeople: values.numberPeople,
-      startDate: startDate,
-      endDate: endDate,
-      plan: filteredPlans,
+      startDate,
+      endDate,
+      plan: updatedPlan,
+      experience: updatedExperience,
     };
+    // console.log("Params to update:", params);
+    const isDateChanged =
+      !newStart.isSame(oldStart, "day") || !newEnd.isSame(oldEnd, "day");
+
     const updateRepoWithPlan = async () => {
       try {
         const response = await repoApi.updatePlan(id, params);
-
-        console.log(response);
         toast.success("Cập nhật mô tả thành công");
-        setTimeout(() => {
-          navigate(`/schedule/${id}`);
-        }, 2000);
+        setTimeout(() => navigate(`/schedule/${id}`), 2000);
       } catch (error) {
-        console.log(error);
-        toast.error(error.response.data.message);
+        toast.error(error.response?.data?.message || "Lỗi cập nhật lịch trình");
       }
     };
-    updateRepoWithPlan();
+
+    if (payment.some((item) => item.result === "success" && isDateChanged)) {
+      toast.error("Không thể chỉnh sửa lịch trình đã thanh toán");
+      return;
+    } else {
+      updateRepoWithPlan();
+    }
   };
 
   const handleRepoEdit = () => {

@@ -294,6 +294,7 @@ const DraggableCalendar = () => {
       try {
         const response = await repoApi.updatePlan(id, {
           plan: resultArray,
+          experience: null,
         });
 
         console.log(response);
