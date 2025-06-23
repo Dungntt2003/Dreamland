@@ -94,11 +94,11 @@ const HotelItem = ({
             }
           />
         </Link>
-        {checkSightExist(item.id) === false ? (
+        {checkSightExist(item.id, "hotel") === false ? (
           <Button
             className="button"
             style={{ width: "100%", marginTop: "16px" }}
-            onClick={() => handleAddRepo(item.id)}
+            onClick={() => handleAddRepo(item.id, "hotel")}
           >
             THÊM VÀO LỘ TRÌNH
           </Button>
@@ -109,7 +109,7 @@ const HotelItem = ({
               width: "100%",
               marginTop: "16px",
             }}
-            onClick={() => handleRemoveService(item.id)}
+            onClick={() => handleRemoveService(item.id, "hotel")}
           >
             LOẠI KHỎI LỘ TRÌNH
           </Button>

@@ -51,8 +51,33 @@ const CostCalculator = ({ eventData, numberOfNights }) => {
 
   useEffect(() => {
     let hasHandledHotel = false;
+    const seenTitles = new Set();
+    let firstResortFound = false;
 
-    const breakdown = eventData
+    const filteredEventData = eventData.filter((item) => {
+      const title = item.title;
+
+      if (title.startsWith("Nghỉ trưa tại")) {
+        return false;
+      }
+
+      if (title.startsWith("Nghỉ dưỡng tại")) {
+        if (!firstResortFound) {
+          firstResortFound = true;
+        } else {
+          return false;
+        }
+      }
+
+      if (seenTitles.has(title)) {
+        return false;
+      }
+
+      seenTitles.add(title);
+      return true;
+    });
+
+    const breakdown = filteredEventData
       .map((item) => {
         const serviceInfo = getServiceType(item.title);
         let cost = 0;
@@ -101,7 +126,7 @@ const CostCalculator = ({ eventData, numberOfNights }) => {
       .filter(Boolean);
 
     setCostBreakdown(breakdown);
-
+    // console.log("Cost Breakdown:", breakdown);
     const total = breakdown.reduce((sum, item) => sum + item.cost, 0);
     setTotalCost(total);
   }, [eventData]);

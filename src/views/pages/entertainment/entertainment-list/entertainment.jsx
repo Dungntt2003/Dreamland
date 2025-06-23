@@ -24,6 +24,7 @@ const Entertainment = ({ data, count, handleUpdateCount, destinationArr }) => {
   const { id } = useParams();
   const [searchTerm, setSearchTerm] = useState("");
   const [serviceId, setServiceId] = useState(null);
+  const [serviceType, setServiceType] = useState("");
   const [nearServices, setNearServices] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [search, setSearch] = useState(false);
@@ -57,7 +58,7 @@ const Entertainment = ({ data, count, handleUpdateCount, destinationArr }) => {
       try {
         const response = await nearByApi.getNearServices(
           serviceId,
-          "entertainment",
+          serviceType,
           30
         );
         setNearServices(response.data.nearby);
@@ -66,17 +67,20 @@ const Entertainment = ({ data, count, handleUpdateCount, destinationArr }) => {
       }
     };
     getNearServices();
-  }, [serviceId]);
+  }, [serviceId, serviceType]);
 
-  const checkSightExist = (entertainment_id) => {
-    const found = data.find((item) => item.service_id === entertainment_id);
+  const checkSightExist = (entertainment_id, type) => {
+    const found = data.find(
+      (item) =>
+        item.service_id === entertainment_id && item.service_type === type
+    );
     return found !== undefined;
   };
 
-  const handleAddRepo = (service_id) => {
+  const handleAddRepo = (service_id, type) => {
     const params = {
       service_id: service_id,
-      service_type: "entertainment",
+      service_type: type,
       repository_id: id,
     };
 
@@ -92,21 +96,16 @@ const Entertainment = ({ data, count, handleUpdateCount, destinationArr }) => {
     };
     addToRepo();
     setServiceId(service_id);
+    setServiceType(type);
   };
 
-  const handleRemoveService = (service_id) => {
+  const handleRemoveService = (service_id, type) => {
     const removeService = async () => {
       try {
-        const response = await demoRepoApi.removeService(
-          service_id,
-          "entertainment",
-          id
-        );
+        const response = await demoRepoApi.removeService(service_id, type, id);
         handleUpdateCount(count - 1);
         const index = data.findIndex(
-          (item) =>
-            item.service_id === service_id &&
-            item.service_type === "entertainment"
+          (item) => item.service_id === service_id && item.service_type === type
         );
         if (index !== -1) data.splice(index, 1);
       } catch (error) {

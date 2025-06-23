@@ -63,7 +63,7 @@ const CardPaymentRestaurant = ({ item, link, repoId, checkPayment, date }) => {
                   <>
                     {new Date(date) >= new Date() && (
                       <Button className="button" onClick={handleClick}>
-                        Đặt vé
+                        Đặt bàn
                       </Button>
                     )}
                   </>

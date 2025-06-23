@@ -95,11 +95,11 @@ const RestaurantItem = ({
             }
           />
         </Link>
-        {checkSightExist(item.id) === false ? (
+        {checkSightExist(item.id, "restaurant") === false ? (
           <Button
             className="button"
             style={{ width: "100%", marginTop: "16px" }}
-            onClick={() => handleAddRepo(item.id)}
+            onClick={() => handleAddRepo(item.id, "restaurant")}
           >
             THÊM VÀO LỘ TRÌNH
           </Button>
@@ -110,7 +110,7 @@ const RestaurantItem = ({
               width: "100%",
               marginTop: "16px",
             }}
-            onClick={() => handleRemoveService(item.id)}
+            onClick={() => handleRemoveService(item.id, "restaurant")}
           >
             LOẠI KHỎI LỘ TRÌNH
           </Button>

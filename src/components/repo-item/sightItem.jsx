@@ -94,11 +94,11 @@ const SightItem = ({
             }
           />
         </Link>
-        {checkSightExist(item.id) === false ? (
+        {checkSightExist(item.id, "sight") === false ? (
           <Button
             className="button"
             style={{ width: "100%", marginTop: "16px" }}
-            onClick={() => handleAddRepo(item.id)}
+            onClick={() => handleAddRepo(item.id, "sight")}
           >
             THÊM VÀO LỘ TRÌNH
           </Button>
@@ -109,7 +109,7 @@ const SightItem = ({
               width: "100%",
               marginTop: "16px",
             }}
-            onClick={() => handleRemoveService(item.id)}
+            onClick={() => handleRemoveService(item.id, "sight")}
           >
             LOẠI KHỎI LỘ TRÌNH
           </Button>
