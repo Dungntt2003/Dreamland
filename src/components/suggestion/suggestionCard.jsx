@@ -12,15 +12,16 @@ const SuggestionSection = ({
   type,
   handleRemoveService,
 }) => {
-  const itemsPerPage = 4;
+  const [itemsPerPage, setItemsPerPage] = useState(4);
 
   const [currentPages, setCurrentPages] = useState({});
 
-  const handleChangePage = (destination, page) => {
+  const handleChangePage = (destination, page, pageSize) => {
     setCurrentPages((prev) => ({
       ...prev,
       [destination]: page,
     }));
+    setItemsPerPage(pageSize);
   };
 
   return (
@@ -75,7 +76,14 @@ const SuggestionSection = ({
                 current={currentPage}
                 pageSize={itemsPerPage}
                 total={cards.length}
-                onChange={(page) => handleChangePage(destination, page)}
+                onChange={(page, pageSize) =>
+                  handleChangePage(destination, page, pageSize)
+                }
+                onShowSizeChange={(current, size) =>
+                  handleChangePage(destination, current, size)
+                }
+                pageSizeOptions={["4", "8", "12"]}
+                showSizeChanger
                 style={{ marginTop: "20px", textAlign: "center" }}
               />
             )}

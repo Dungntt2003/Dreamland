@@ -10,6 +10,7 @@ const ListDisplay = ({ listServices, CardComponent, link }) => {
   const { id } = useAuth();
   const [likedServices, setLikedServices] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(8);
   const [filteredData, setFilteredData] = useState([]);
   const [provinces, setProvinces] = useState([]);
   const [search, setSearch] = useState(false);
@@ -51,7 +52,6 @@ const ListDisplay = ({ listServices, CardComponent, link }) => {
       setFilter(false);
   }, [sortRating, selectedLocation, checked]);
 
-  const itemsPerPage = 8;
   useEffect(() => {
     const getProvinces = async () => {
       try {
@@ -79,8 +79,9 @@ const ListDisplay = ({ listServices, CardComponent, link }) => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = listServices.slice(indexOfFirstItem, indexOfLastItem);
-  const handleChangePage = (page) => {
+  const handlePaginationChange = (page, pageSize) => {
     setCurrentPage(page);
+    setItemsPerPage(pageSize);
   };
 
   const checkMatch = (link, type) => {
@@ -197,7 +198,10 @@ const ListDisplay = ({ listServices, CardComponent, link }) => {
             current={currentPage}
             pageSize={itemsPerPage}
             total={listServices.length}
-            onChange={handleChangePage}
+            showSizeChanger
+            onChange={handlePaginationChange}
+            onShowSizeChange={handlePaginationChange}
+            pageSizeOptions={["8", "12", "16", "20"]}
             style={{ marginTop: "20px", textAlign: "center" }}
           />
         </>
