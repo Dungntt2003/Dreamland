@@ -131,7 +131,7 @@ const ScheduleEdit = () => {
       try {
         const response = await repoApi.updatePlan(id, params);
         toast.success("Cập nhật mô tả thành công");
-        setTimeout(() => navigate(`/schedule/${id}`), 2000);
+        setTimeout(() => navigate(`/schedule-detail/${id}`), 2000);
       } catch (error) {
         toast.error(error.response?.data?.message || "Lỗi cập nhật lịch trình");
       }

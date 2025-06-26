@@ -2,7 +2,7 @@ import "../../sightseeing/sight-view/sightView";
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
-import { Input, FloatButton } from "antd";
+import { Input, FloatButton, Empty } from "antd";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -18,11 +18,10 @@ import SuggestionSection from "components/suggestion/suggestionCard";
 import nearByApi from "api/nearbyApi";
 import PaginationSection from "components/paginationItem/paginationSection";
 import getNearCard from "utils/nearCard";
-
+const { Search } = Input;
 const HotelView = ({ data, count, handleUpdateCount, destinationArr }) => {
   const { id: user_id } = useAuth();
   const { id } = useParams();
-  const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [serviceId, setServiceId] = useState(null);
   const [serviceType, setServiceType] = useState("");
@@ -130,20 +129,33 @@ const HotelView = ({ data, count, handleUpdateCount, destinationArr }) => {
     />
   ));
 
-  const handleSearch = (e) => {
-    if (e.target.value === "") {
-      setSearch(false);
+  const normalizeText = (text) => {
+    return text
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+  };
+
+  const handleSearch = (value, _e, info) => {
+    if (!value || value.trim() === "") {
       setFilteredData(hotelData);
-      setSearchTerm("");
+      setSearch(false);
       return;
     }
     setSearch(true);
-    const keyword = e.target.value.toLowerCase();
-    setSearchTerm(keyword);
-    const filtered = hotelData.filter((item) =>
-      item.name.toLowerCase().includes(keyword)
+    const keyword = normalizeText(value);
+
+    const filteredByDestination = hotelData.filter((hotel) => {
+      return destinationArr.some((destination) =>
+        hotel.address.toLowerCase().includes(destination.toLowerCase())
+      );
+    });
+
+    const finalFiltered = filteredByDestination.filter((item) =>
+      normalizeText(item.name).includes(normalizeText(keyword))
     );
-    setFilteredData(filtered);
+
+    setFilteredData(finalFiltered);
   };
 
   return (
@@ -151,10 +163,9 @@ const HotelView = ({ data, count, handleUpdateCount, destinationArr }) => {
       <div
         style={{ display: "flex", justifyContent: "center", margin: "16px 0" }}
       >
-        <Input
-          placeholder="Nhập tên khách sạn bạn muốn tìm"
-          value={searchTerm}
-          onChange={handleSearch}
+        <Search
+          placeholder="Nhập tên địa điểm bạn muốn tìm"
+          onSearch={handleSearch}
           className="create-trip-step1-input"
         />
       </div>
@@ -226,18 +237,26 @@ const HotelView = ({ data, count, handleUpdateCount, destinationArr }) => {
             style={{
               display: "flex",
               flexWrap: "wrap",
-              justifyContent: "space-between",
+              gap: "16px",
             }}
           >
-            {filteredData.map((hotel) => (
-              <HotelItem
-                key={hotel.id}
-                item={hotel}
-                checkSightExist={checkSightExist}
-                handleAddRepo={handleAddRepo}
-                active={checkMatchService(likedServices, hotel.id, "hotel")}
-              />
-            ))}
+            {filteredData.length === 0 ? (
+              <>
+                <Empty />
+              </>
+            ) : (
+              <div>
+                {filteredData.map((hotel) => (
+                  <HotelItem
+                    key={hotel.id}
+                    item={hotel}
+                    checkSightExist={checkSightExist}
+                    handleAddRepo={handleAddRepo}
+                    active={checkMatchService(likedServices, hotel.id, "hotel")}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </>
       )}

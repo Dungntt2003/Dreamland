@@ -1,13 +1,14 @@
-import { useEffect, useState } from "react";
-import { Pagination, Input, Select, Radio } from "antd";
+import { useEffect, useState, useMemo } from "react";
+import { Pagination, Input, Select, Radio, Empty } from "antd";
 import publicApi from "api/publicApi";
 import likeApi from "api/likeApi";
 import { useAuth } from "context/authContext";
 import formatLocation from "utils/formatLocation";
+import PaginationSection from "components/paginationItem/paginationSection";
+const { Search } = Input;
 const ListDisplay = ({ listServices, CardComponent, link }) => {
   const { id } = useAuth();
   const [likedServices, setLikedServices] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [filteredData, setFilteredData] = useState([]);
   const [provinces, setProvinces] = useState([]);
@@ -97,21 +98,25 @@ const ListDisplay = ({ listServices, CardComponent, link }) => {
         service.service_id === id && checkMatch(link, service.service_type)
     );
   };
+  const normalizeText = (text) => {
+    return text
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+  };
 
-  const handleSearch = (e) => {
-    if (e.target.value === "") {
-      setSearch(false);
+  const handleSearch = (value, _e, info) => {
+    if (!value || value.trim() === "") {
       setFilteredData(listServices);
-      setSearchTerm("");
+      setSearch(false);
       return;
     }
     setSearch(true);
-    const keyword = e.target.value.toLowerCase();
-    setSearchTerm(keyword);
-    const filtered = listServices.filter((item) => {
-      return item.name.toLowerCase().includes(keyword);
-    });
-    // console.log(filtered);
+    const keyword = normalizeText(value);
+
+    const filtered = listServices.filter((item) =>
+      normalizeText(item.name).includes(keyword)
+    );
     setFilteredData(filtered);
   };
 
@@ -119,10 +124,9 @@ const ListDisplay = ({ listServices, CardComponent, link }) => {
     <div style={{ padding: "16px" }}>
       <div className="list-play-search">
         <div style={{ width: "40%" }}>
-          <Input
+          <Search
             placeholder="Nhập tên địa điểm"
-            value={searchTerm}
-            onChange={handleSearch}
+            onSearch={handleSearch}
             style={{
               width: "100%",
             }}
@@ -206,16 +210,26 @@ const ListDisplay = ({ listServices, CardComponent, link }) => {
               // justifyContent: "space-between",
             }}
           >
-            {filteredData.map((item) => {
-              return (
-                <CardComponent
-                  item={item}
-                  key={item.id}
-                  link={link}
-                  active={checkLiked(item.id, link)}
+            {filteredData.length === 0 ? (
+              <>
+                <Empty />
+              </>
+            ) : (
+              <>
+                <PaginationSection
+                  data={filteredData.map((item) => {
+                    return (
+                      <CardComponent
+                        item={item}
+                        key={item.id}
+                        link={link}
+                        active={checkLiked(item.id, link)}
+                      />
+                    );
+                  })}
                 />
-              );
-            })}
+              </>
+            )}
           </div>
         </>
       )}
