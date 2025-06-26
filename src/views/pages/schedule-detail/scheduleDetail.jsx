@@ -1,6 +1,6 @@
 import "./scheduleDetail.scss";
 import { useEffect, useState, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import repoApi from "api/repoApi";
 import { Timeline, Button, Select, FloatButton, Modal } from "antd";
 import ExportToDOCX from "utils/exportToDOCX";
@@ -30,12 +30,18 @@ import { getAllServices, mapEventToServices } from "utils/getEventService";
 import CostCalculator from "components/cost-calculate/cost";
 import { useAuth } from "context/authContext";
 import demoRepoApi from "api/demoRepoApi";
+import entertainmentApi from "api/entertainmentApi";
+import sightApi from "api/sightApi";
+import restaurantApi from "api/restaurantApi";
+import hotelApi from "api/hotelApi";
 const ScheduleDetail = () => {
   const { id: userId } = useAuth();
   const { id } = useParams();
   const navigate = useNavigate();
   const calendarRef = useRef(null);
   const [services, setServices] = useState([]);
+  const [listServices, setListServices] = useState([]);
+  const [plan, setPlan] = useState([]);
   const [eventServices, setEventServices] = useState([]);
   const [repo, setRepo] = useState(null);
   const [events, setEvents] = useState([]);
@@ -95,8 +101,70 @@ const ScheduleDetail = () => {
   }, [id]);
 
   useEffect(() => {
+    const getAllServices = async () => {
+      try {
+        const sightResponse = await sightApi.getAllSights();
+        const entertainmentResponse =
+          await entertainmentApi.getListEntertaiments();
+        const restaurantResponse = await restaurantApi.getRestaurants();
+        const hotelResponse = await hotelApi.getListHotels();
+
+        let combinedData = [
+          ...sightResponse.data.data,
+          ...entertainmentResponse.data.data,
+          ...restaurantResponse.data.data,
+          ...hotelResponse.data.data,
+        ];
+
+        setListServices(combinedData);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getAllServices();
+  }, [id]);
+
+  useEffect(() => {
     getAllServices().then(setServices);
   }, []);
+
+  useEffect(() => {
+    if (repo && repo.plan && listServices.length > 0) {
+      const mappedLocations = repo.plan
+        .map((p) => {
+          const matchedServices = listServices.filter(
+            (s) => p.children && p.children.trim().endsWith(s.name.trim())
+          );
+          const firstMatch = matchedServices[0];
+          if (!firstMatch) return null;
+
+          let routePrefix = "";
+
+          if (p.children.startsWith("Tham quan")) {
+            routePrefix = "sight-seeing-detail";
+          } else if (p.children.startsWith("Vui chơi")) {
+            routePrefix = "entertainment-detail";
+          } else if (p.children.startsWith("Ăn")) {
+            routePrefix = "restaurant-detail";
+          } else if (p.children.startsWith("Nghỉ dưỡng")) {
+            routePrefix = "hotel-detail";
+          } else {
+            return null;
+          }
+
+          return {
+            label: p.label,
+            children: (
+              <Link to={`/${routePrefix}/${firstMatch.id}`}>{p.children}</Link>
+            ),
+          };
+        })
+        .filter(Boolean);
+      // console.log(mappedLocations);
+      setPlan(mappedLocations);
+    }
+  }, [repo, listServices]);
 
   const showModalDes = () => {
     setIsModalOpenDes(true);
@@ -365,7 +433,7 @@ const ScheduleDetail = () => {
         className="schedule-detail-container"
       >
         <div className="timeline-container">
-          <Timeline mode="left" items={item} />
+          <Timeline mode="left" items={plan} />
         </div>
         <div id="kt_docs_fullcalendar_drag">
           <FullCalendar

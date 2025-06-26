@@ -52,7 +52,6 @@ const Homepage = () => {
     };
     getSight();
   }, []);
-  const dataImg = [Home1, Home2, Home3, Home5, Home6];
 
   const options = provinces.map((item) => {
     return { value: item.name, label: item.name };
@@ -109,18 +108,9 @@ const Homepage = () => {
           <div className="home-content">
             <div>
               <p className="home-content-title">Bạn muốn đi đâu ?</p>
-              <div>
-                <Select
-                  mode="multiple"
-                  showSearch
-                  placeholder="Chọn tỉnh/thành phố"
-                  optionFilterProp="label"
-                  options={options}
-                  className="home-select-province"
-                />
-              </div>
+
               <Button className="button" onClick={handleClick}>
-                Tiếp tục <FontAwesomeIcon icon={faArrowRight} />
+                Nhấn ngay để bắt đầu <FontAwesomeIcon icon={faArrowRight} />
               </Button>
             </div>
           </div>
