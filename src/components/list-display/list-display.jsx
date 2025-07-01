@@ -207,13 +207,7 @@ const ListDisplay = ({ listServices, CardComponent, link }) => {
         </>
       ) : (
         <>
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              // justifyContent: "space-between",
-            }}
-          >
+          <div>
             {filteredData.length === 0 ? (
               <>
                 <Empty />

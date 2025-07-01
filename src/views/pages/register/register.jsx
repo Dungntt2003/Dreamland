@@ -214,6 +214,11 @@ const Register = () => {
                     pattern: /^[0-9]+$/,
                     message: "Số điện thoại chỉ được chứa chữ số!",
                   },
+                  {
+                    min: 9,
+                    max: 12,
+                    message: "Số điện thoại phải có từ 9 đến 12 chữ số!",
+                  },
                 ]}
               >
                 <Input

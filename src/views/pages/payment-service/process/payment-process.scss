@@ -132,26 +132,26 @@
   border: 1px solid var(--pastel-green-secondary);
   box-shadow: 0 4px 12px var(--shadow-light);
   transition: all 0.3s ease;
+
+  .room-image {
+    width: 200px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid var(--pastel-green-secondary);
+    transition: all 0.3s ease;
+  }
+
+  .room-image:hover {
+    border-color: var(--pastel-green-primary);
+    transform: scale(1.02);
+  }
 }
 
 .room-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 24px var(--shadow-medium);
   border-color: var(--pastel-green-primary);
-}
-
-.room-image {
-  width: 200px;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 8px;
-  border: 2px solid var(--pastel-green-secondary);
-  transition: all 0.3s ease;
-}
-
-.room-image:hover {
-  border-color: var(--pastel-green-primary);
-  transform: scale(1.02);
 }
 
 .ant-table {

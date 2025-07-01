@@ -45,16 +45,13 @@ const Footer = () => {
         <h4 className="section-title">{t("quick_links")}</h4>
         <ul className="footer-links">
           <li>
-            <a href="#">{t("place_attract")}</a>
+            <a href="/sight">{t("place_attract")}</a>
           </li>
           <li>
-            <a href="#">{t("accommodation")}</a>
+            <a href="/hotel">{t("accommodation")}</a>
           </li>
           <li>
-            <a href="#">{t("culinary")}</a>
-          </li>
-          <li>
-            <a href="#">{t("guide")}</a>
+            <a href="/restaurant">{t("culinary")}</a>
           </li>
         </ul>
       </div>
@@ -63,10 +60,10 @@ const Footer = () => {
         <h4 className="section-title">{t("account")}</h4>
         <ul className="footer-links">
           <li>
-            <a href="#">{t("login")}</a>
+            <a href="/login">{t("login")}</a>
           </li>
           <li>
-            <a href="#">{t("register")}</a>
+            <a href="/register">{t("register")}</a>
           </li>
           <li>
             <a href="#">{t("profile")}</a>

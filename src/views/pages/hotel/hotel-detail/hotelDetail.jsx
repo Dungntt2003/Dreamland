@@ -304,7 +304,7 @@ const HotelDetail = () => {
                       Quy định nhận phòng: <br />
                       Khi đến nhận phòng, quý khách vui lòng mang theo: <br />
                       - CCCD hoặc passport. <br />
-                      - Phiếu xác nhận đặt phòng của Best Price <br />
+                      - Phiếu xác nhận đặt phòng của Smart Trip <br />
                     </p>
                   </div>
                 </div>
@@ -325,13 +325,13 @@ const HotelDetail = () => {
                   </div>
                   <div>
                     Phí hủy đổi đặt phòng = phí hủy/đổi của khách sạn + phí xử
-                    lý giao dịch của Best Price. <br />
+                    lý giao dịch của Smart Trip. <br />
                     Phí hủy/đổi của khách sạn được chính khách sạn quy định như
                     sau: <br />
                     Khách hàng đặt phòng sẽ không được quyền hoàn phòng, hủy đặt
                     phòng nhưng được phép thay đổi đơn đặt phòng. <br />
                     <br />
-                    Phí xử lý giao dịch của Best Price: <br />
+                    Phí xử lý giao dịch của Smart Trip: <br />
                     - Đặt dịch vụ dưới 3 triệu: 2% tổng giá trị đặt phòng (tối
                     thiểu 30.000 đ) <br />- Đặt dịch vụ trên 3 triệu: 1,5% tổng
                     giá trị đặt phòng <br />
