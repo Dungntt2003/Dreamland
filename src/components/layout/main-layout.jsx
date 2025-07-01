@@ -15,7 +15,6 @@ const MainLayout = (props) => {
           // padding: "16px",
         }}
       >
-        {/* Your main content goes here */}
         {props.component}
       </main>
       <footer>

@@ -98,28 +98,22 @@ const MapComponent = ({ locations }) => {
   }, [MAPBOX_TOKEN]);
 
   const clearMapObjects = useCallback(() => {
-    // Xóa tất cả markers
     markersRef.current.forEach((marker) => marker.remove());
     markersRef.current = [];
 
-    // Xóa popup hiện tại
     if (currentPopup.current) {
       currentPopup.current.remove();
       currentPopup.current = null;
     }
 
-    // Xóa route layer và source nếu tồn tại
     if (mapInstance.current) {
       try {
-        // Kiểm tra và xóa layer trước
         if (
           mapInstance.current.getLayer &&
           mapInstance.current.getLayer("route")
         ) {
           mapInstance.current.removeLayer("route");
         }
-
-        // Kiểm tra và xóa source sau
         if (
           mapInstance.current.getSource &&
           mapInstance.current.getSource("route")
@@ -210,7 +204,6 @@ const MapComponent = ({ locations }) => {
   );
 
   const showPopup = useCallback((content, lngLat) => {
-    // Đóng popup hiện tại nếu có
     if (currentPopup.current) {
       currentPopup.current.remove();
     }
@@ -235,10 +228,8 @@ const MapComponent = ({ locations }) => {
     if (!mapInstance.current || coordinates.length === 0) return;
 
     const displayMap = async () => {
-      // Xóa các objects cũ trước
       clearMapObjects();
 
-      // Thêm markers cho từng địa điểm
       coordinates.forEach((loc, index) => {
         const markerElement = document.createElement("div");
         markerElement.className = "custom-marker";
@@ -271,13 +262,11 @@ const MapComponent = ({ locations }) => {
         markersRef.current.push(marker);
       });
 
-      // Tạo route nếu có từ 2 điểm trở lên
       if (coordinates.length > 1) {
         const route = await createRoute(coordinates);
 
         if (route) {
           try {
-            // Thêm source cho route
             mapInstance.current.addSource("route", {
               type: "geojson",
               data: {
@@ -287,7 +276,6 @@ const MapComponent = ({ locations }) => {
               },
             });
 
-            // Thêm layer để hiển thị route
             mapInstance.current.addLayer({
               id: "route",
               type: "line",
@@ -302,16 +290,14 @@ const MapComponent = ({ locations }) => {
               },
             });
 
-            // Cập nhật thống kê
-            const totalDistance = route.distance / 1000; // km
-            const totalDuration = route.duration / 60; // phút
+            const totalDistance = route.distance / 1000;
+            const totalDuration = route.duration / 60;
 
             setSummary({
               distance: totalDistance.toFixed(2) + " km",
               duration: Math.floor(totalDuration) + " phút",
             });
 
-            // Thêm markers cho từng đoạn đường
             if (route.legs) {
               route.legs.forEach((leg, index) => {
                 if (index < coordinates.length - 1) {
@@ -372,7 +358,6 @@ const MapComponent = ({ locations }) => {
         }
       }
 
-      // Điều chỉnh view để hiển thị tất cả điểm
       if (coordinates.length > 0) {
         const bounds = new mapboxgl.LngLatBounds();
         coordinates.forEach((coord) => {
@@ -382,7 +367,6 @@ const MapComponent = ({ locations }) => {
       }
     };
 
-    // Đợi map sẵn sàng trước khi hiển thị
     if (mapInstance.current.loaded()) {
       displayMap();
     } else {
